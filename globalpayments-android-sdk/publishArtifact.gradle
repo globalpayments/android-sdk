@@ -1,0 +1,89 @@
+apply plugin: "maven-publish"
+apply plugin: "com.jfrog.bintray"
+
+// Artifact parameters
+def sdkGroupId = 'com.globalpayments.android'
+def sdkArtifactId = 'globalpayments-android-sdk'
+def sdkVersion = '1.0'
+
+// Bintray authentication parameters (Should be declared as environment variables for security reasons)
+def bintrayUser = System.getenv('BINTRAY_USER')
+def bintrayKey = System.getenv('BINTRAY_KEY')
+def bintrayGPGPassphrase = System.getenv('BINTRAY_GPG_PASSPHRASE')
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                artifact androidJavadocsJar
+                artifact androidSourcesJar
+
+                groupId = sdkGroupId
+                artifactId = sdkArtifactId
+                version = sdkVersion
+
+                pom {
+                    name = sdkArtifactId
+                    description = 'The official Android SDK for Global Payments API.'
+                    url = 'https://developer.globalpay.com'
+
+                    licenses {
+                        license {
+                            name = 'The MIT License (MIT)'
+                            url = 'https://opensource.org/licenses/MIT'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'globalpayments'
+                            name = 'Global Payments'
+                            email = 'developers@globalpay.com'
+                        }
+                    }
+
+                    scm {
+                        connection = 'scm:git:git://github.com/globalpayments/android-sdk.git'
+                        developerConnection = 'scm:git:ssh://github.com/globalpayments/android-sdk.git'
+                        url = 'https://github.com/globalpayments/android-sdk'
+                    }
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = bintrayUser
+    key = bintrayKey
+    publications = ['release']
+    publish = true
+    override = true
+    pkg {
+        repo = 'maven'
+        name = sdkArtifactId
+        desc = 'The official Android SDK for Global Payments API.'
+        websiteUrl = 'https://developer.globalpay.com'
+        licenses = ["MIT"]
+        vcsUrl = 'https://github.com/globalpayments/android-sdk'
+        publicDownloadNumbers = true
+        version {
+            name = sdkVersion
+            released = new Date()
+            gpg {
+                sign = true
+                passphrase = bintrayGPGPassphrase
+            }
+        }
+    }
+}
+
+task printBintrayEnv() {
+    doLast {
+        println "bintrayUser: " + bintrayUser
+        println "bintrayKey: " + bintrayKey
+        println "bintrayGPGPassphrase: " + bintrayGPGPassphrase
+    }
+}

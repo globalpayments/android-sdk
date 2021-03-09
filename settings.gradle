@@ -1,0 +1,2 @@
+include ':globalpayments-android-sdk', ':sample-app'
+rootProject.name = "GlobalPayments-Android-SDK"

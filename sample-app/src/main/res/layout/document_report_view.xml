@@ -1,0 +1,97 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cvDocumentReport"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/size_16dp"
+    android:visibility="gone"
+    app:cardCornerRadius="@dimen/size_8dp"
+    tools:visibility="visible">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_16dp"
+        android:animateLayoutChanges="true"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:useDefaultMargins="true">
+
+        <TextView
+            android:id="@+id/tvDocumentHeader"
+            style="@style/ListItem.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:gravity="center_horizontal"
+            android:text="@string/dispute_document"
+            android:textAllCaps="true"
+            android:textSize="@dimen/text_size_16sp" />
+
+        <TextView
+            android:id="@+id/tvLabelDocumentId"
+            style="@style/ListItem.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:textSize="@dimen/text_size_16sp"
+            android:layout_marginTop="@dimen/size_12dp"
+            android:gravity="center_horizontal"
+            android:text="@string/document_id" />
+
+        <TextView
+            android:id="@+id/tvDocumentId"
+            style="@style/ListItem.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:gravity="center_horizontal"
+            tools:text="@string/default_test_document_id" />
+
+        <TextView
+            android:id="@+id/tvLabelBase64Content"
+            style="@style/ListItem.Label"
+            android:textSize="@dimen/text_size_16sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="@dimen/size_12dp"
+            android:gravity="center_horizontal"
+            android:text="@string/base64_content_preview" />
+
+        <TextView
+            android:id="@+id/tvBase64Content"
+            style="@style/ListItem.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:maxLines="10"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false"
+            tools:text="@string/default_test_base64_content" />
+
+        <Button
+            android:id="@+id/btExportAsPDF"
+            style="@style/Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/export_as_pdf_file" />
+
+        <Button
+            android:id="@+id/btViewAsPDF"
+            style="@style/Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/view_as_pdf_file" />
+
+    </GridLayout>
+</androidx.cardview.widget.CardView>
