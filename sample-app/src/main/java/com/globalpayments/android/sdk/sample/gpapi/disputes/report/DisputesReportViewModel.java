@@ -1,0 +1,241 @@
+package com.globalpayments.android.sdk.sample.gpapi.disputes.report;
+
+import android.app.Application;
+import android.net.Uri;
+import android.util.Base64;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+import com.global.api.builders.TransactionReportBuilder;
+import com.global.api.entities.reporting.DisputeSummary;
+import com.global.api.entities.reporting.DisputeSummaryList;
+import com.global.api.entities.reporting.SearchCriteriaBuilder;
+import com.global.api.services.ReportingService;
+import com.globalpayments.android.sdk.TaskExecutor;
+import com.globalpayments.android.sdk.sample.R;
+import com.globalpayments.android.sdk.sample.common.ActionLiveData;
+import com.globalpayments.android.sdk.sample.common.base.BaseAndroidViewModel;
+import com.globalpayments.android.sdk.sample.gpapi.disputes.report.model.DisputesReportParametersModel;
+import com.globalpayments.android.sdk.sample.gpapi.disputes.report.model.DocumentContent;
+import com.globalpayments.android.sdk.sample.gpapi.disputes.report.model.DocumentReportModel;
+import com.globalpayments.android.sdk.utils.FileUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.List;
+
+import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
+import static com.globalpayments.android.sdk.utils.ContextUtils.getAppDocumentsDirectory;
+import static com.globalpayments.android.sdk.utils.ContextUtils.getOutputStreamForUri;
+
+public class DisputesReportViewModel extends BaseAndroidViewModel {
+    private static final String TEMPORARY_PDF_FILE_NAME = "temporary_file.pdf";
+
+    private final MutableLiveData<List<DisputeSummary>> disputesLiveData = new MutableLiveData<>();
+    private final MutableLiveData<DocumentContent> documentContentLiveData = new MutableLiveData<>();
+    private final MutableLiveData<File> documentTemporaryFileLiveData = new ActionLiveData<>();
+
+    public DisputesReportViewModel(@NonNull Application application) {
+        super(application);
+    }
+
+    public LiveData<List<DisputeSummary>> getDisputesLiveData() {
+        return disputesLiveData;
+    }
+
+    public LiveData<DocumentContent> getDocumentContentLiveData() {
+        return documentContentLiveData;
+    }
+
+    public LiveData<File> getDocumentTemporaryFileLiveData() {
+        return documentTemporaryFileLiveData;
+    }
+
+    public void getDisputesList(DisputesReportParametersModel disputesReportParametersModel) {
+        showProgress();
+
+        TaskExecutor.executeAsync(new TaskExecutor.Task<List<DisputeSummary>>() {
+            @Override
+            public List<DisputeSummary> executeAsync() throws Exception {
+                return executeGetDisputesListRequest(disputesReportParametersModel);
+            }
+
+            @Override
+            public void onSuccess(List<DisputeSummary> value) {
+                showResult(value);
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                showError(exception);
+            }
+        });
+    }
+
+    public void getDisputeById(String disputeId, boolean fromSettlements) {
+        showProgress();
+
+        TaskExecutor.executeAsync(new TaskExecutor.Task<DisputeSummary>() {
+            @Override
+            public DisputeSummary executeAsync() throws Exception {
+                return executeGetDisputeByIdRequest(disputeId, fromSettlements);
+            }
+
+            @Override
+            public void onSuccess(DisputeSummary value) {
+                showResult(Collections.singletonList(value));
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                showError(exception);
+            }
+        });
+    }
+
+    public void getDocument(DocumentReportModel documentReportModel) {
+        showProgress();
+
+        TaskExecutor.executeAsync(new TaskExecutor.Task<DocumentContent>() {
+            @Override
+            public DocumentContent executeAsync() throws Exception {
+                return executeGetDocumentRequest(documentReportModel);
+            }
+
+            @Override
+            public void onSuccess(DocumentContent value) {
+                showDocumentContent(value);
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                showError(exception);
+            }
+        });
+    }
+
+    private void showDocumentContent(DocumentContent documentContent) {
+        hideProgress();
+        documentContentLiveData.setValue(documentContent);
+    }
+
+    private void showResult(List<DisputeSummary> disputes) {
+        if (disputes == null || disputes.isEmpty()) {
+            showError(new Exception("Empty Disputes List"));
+        } else {
+            hideProgress();
+            disputesLiveData.setValue(disputes);
+        }
+    }
+
+    public void exportDocumentContentToUri(Uri uri, String base64Content) {
+        TaskExecutor.executeAsync(new TaskExecutor.Task<Boolean>() {
+            @Override
+            public Boolean executeAsync() throws Exception {
+                byte[] bytesArray = Base64.decode(base64Content, Base64.DEFAULT);
+                OutputStream outputStream = getOutputStreamForUri(uri, getApplication());
+                return FileUtils.writeByteArrayToOutputStream(bytesArray, outputStream);
+            }
+
+            @Override
+            public void onSuccess(Boolean value) {
+                int message = value ? R.string.success : R.string.common_error_unknown;
+                Toast.makeText(getApplication(), message, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                Toast.makeText(getApplication(), R.string.common_error_unknown, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void exportDocumentContentToTempFile(String base64Content) {
+        TaskExecutor.executeAsync(new TaskExecutor.Task<File>() {
+            @Override
+            public File executeAsync() throws Exception {
+                byte[] bytesArray = Base64.decode(base64Content, Base64.DEFAULT);
+                File file = new File(getAppDocumentsDirectory(getApplication()), TEMPORARY_PDF_FILE_NAME);
+                return FileUtils.writeByteArrayToFile(bytesArray, file) ? file : null;
+            }
+
+            @Override
+            public void onSuccess(File value) {
+                documentTemporaryFileLiveData.setValue(value);
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                documentTemporaryFileLiveData.setValue(null);
+            }
+        });
+    }
+
+    private DocumentContent executeGetDocumentRequest(DocumentReportModel documentReportModel) throws Exception {
+        DocumentContent documentContent = new DocumentContent();
+
+        String documentId = documentReportModel.getDocumentId();
+
+        String filename;
+        if (documentId.equalsIgnoreCase("text")) {
+            filename = "test_text.pdf";
+        } else if (documentId.equalsIgnoreCase("image")) {
+            filename = "gp_logo.png";
+        } else if (documentId.equalsIgnoreCase("big")) {
+            filename = "big.pdf";
+        } else {
+            filename = "gp_logo.pdf";
+        }
+
+        File file = new File(getAppDocumentsDirectory(getApplication()), filename);
+        FileInputStream inputStream = new FileInputStream(file);
+
+        byte[] byteArray = FileUtils.readIntoByteArray(inputStream);
+        String base64EncodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+        documentContent.setBase64Content(base64EncodedFile);
+        documentContent.setDocumentId(documentId);
+
+        return documentContent;
+    }
+
+    private DisputeSummary executeGetDisputeByIdRequest(String disputeId, boolean fromSettlements) throws Exception {
+        TransactionReportBuilder<DisputeSummary> reportBuilder = fromSettlements
+                ? ReportingService.settlementDisputeDetail(disputeId)
+                : ReportingService.disputeDetail(disputeId);
+
+        return reportBuilder.execute(DEFAULT_GPAPI_CONFIG);
+    }
+
+    private List<DisputeSummary> executeGetDisputesListRequest(DisputesReportParametersModel parametersModel) throws Exception {
+        TransactionReportBuilder<DisputeSummaryList> reportBuilder = parametersModel.isFromSettlements()
+                ? ReportingService.findSettlementDisputes()
+                : ReportingService.findDisputes();
+
+        SearchCriteriaBuilder<DisputeSummaryList> searchBuilder = reportBuilder.getSearchBuilder();
+
+        reportBuilder.setPage(parametersModel.getPage());
+        reportBuilder.setPageSize(parametersModel.getPageSize());
+        reportBuilder.setDisputeOrderBy(parametersModel.getOrderBy());
+        reportBuilder.setDisputeOrder(parametersModel.getOrder());
+
+        searchBuilder.setAquirerReferenceNumber(parametersModel.getArn());
+        searchBuilder.setCardBrand(parametersModel.getBrand());
+        searchBuilder.setDisputeStatus(parametersModel.getStatus());
+        searchBuilder.setDisputeStage(parametersModel.getStage());
+        searchBuilder.setStartStageDate(parametersModel.getFromStageTimeCreated());
+        searchBuilder.setEndStageDate(parametersModel.getToStageTimeCreated());
+        searchBuilder.setAdjustmentFunding(parametersModel.getAdjustmentFunding());
+        searchBuilder.setStartAdjustmentDate(parametersModel.getFromAdjustmentTimeCreated());
+        searchBuilder.setEndAdjustmentDate(parametersModel.getToAdjustmentTimeCreated());
+        searchBuilder.setMerchantId(parametersModel.getSystemMID());
+        searchBuilder.setSystemHierarchy(parametersModel.getSystemHierarchy());
+
+        return reportBuilder.execute(DEFAULT_GPAPI_CONFIG);
+    }
+}

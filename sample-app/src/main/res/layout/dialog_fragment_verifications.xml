@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_16dp"
+        android:animateLayoutChanges="true"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:useDefaultMargins="true">
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:text="@string/payment_card"
+            android:textSize="@dimen/text_size_18sp" />
+
+        <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
+            android:id="@+id/cardModelsSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:layout_marginBottom="@dimen/size_8dp" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/card_number" />
+
+        <EditText
+            android:id="@+id/etCardNumber"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.5"
+            android:background="@null"
+            android:inputType="number"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            tools:text="4263970000005262" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/expiry_month" />
+
+        <EditText
+            android:id="@+id/etExpiryMonth"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.5"
+            android:background="@null"
+            android:inputType="number"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            tools:text="5" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/expiry_year" />
+
+        <EditText
+            android:id="@+id/etExpiryYear"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.5"
+            android:background="@null"
+            android:inputType="number"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            tools:text="2023" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/cvn_cvv" />
+
+        <EditText
+            android:id="@+id/etCvnCvv"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.5"
+            android:background="@null"
+            android:inputType="number"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            tools:text="852" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="@dimen/size_16dp"
+            android:layout_marginBottom="@dimen/size_8dp"
+            android:text="@string/other_parameters"
+            android:textSize="@dimen/text_size_18sp" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/currency" />
+
+        <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
+            android:id="@+id/currenciesSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.5" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="@dimen/size_16dp"
+            android:text="@string/idempotency_key" />
+
+        <EditText
+            android:id="@+id/etIdempotencyKey"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.5"
+            android:layout_marginTop="@dimen/size_16dp"
+            android:background="@null"
+            android:hint="@string/optional"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btSubmit"
+            style="@style/Button.Big"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:text="@string/submit" />
+
+    </GridLayout>
+</androidx.core.widget.NestedScrollView>

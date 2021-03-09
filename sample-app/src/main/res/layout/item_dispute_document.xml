@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/size_16dp"
+    android:layout_marginTop="@dimen/size_8dp"
+    android:layout_marginEnd="@dimen/size_16dp"
+    android:layout_marginBottom="@dimen/size_4dp"
+    app:cardCornerRadius="@dimen/size_8dp"
+    tools:visibility="visible">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_12dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/size_8dp">
+
+            <TextView
+                style="@style/Dialog.Label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/size_8dp"
+                android:layout_weight="1"
+                android:text="@string/file_name" />
+
+            <TextView
+                android:id="@+id/tvFilename"
+                style="@style/Dialog.Value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:gravity="end"
+                tools:text="proof_of_delivery.pdf" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/size_8dp">
+
+            <TextView
+                style="@style/Dialog.Label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/size_8dp"
+                android:layout_weight="1"
+                android:text="@string/document_type" />
+
+            <TextView
+                android:id="@+id/tvType"
+                style="@style/Dialog.Value"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:gravity="end"
+                tools:text="PROOF_OF_DELIVERY" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btRemove"
+            style="@style/Button.Red"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:text="@string/remove_document" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

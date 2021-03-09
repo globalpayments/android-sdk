@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <GridLayout
+        android:id="@+id/glContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_16dp"
+        android:animateLayoutChanges="true"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:useDefaultMargins="true">
+
+        <TextView
+            android:id="@+id/tvHeader"
+            style="@style/Dialog.Header"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:layout_marginBottom="@dimen/size_8dp"
+            android:gravity="center_horizontal"
+            android:text="@string/report_parameters" />
+
+        <TextView
+            android:id="@+id/tvLabelFromSettlements"
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_marginBottom="@dimen/size_8dp"
+            android:text="@string/get_from_settlements" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbFromSettlements"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:layout_marginBottom="@dimen/size_8dp"
+            android:checked="false" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/page" />
+
+        <EditText
+            android:id="@+id/etPage"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:background="@null"
+            android:inputType="number"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            android:text="@string/default_page" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/page_size" />
+
+        <EditText
+            android:id="@+id/etPageSize"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:background="@null"
+            android:inputType="number"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            android:text="@string/default_page_size" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/order_by" />
+
+        <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
+            android:id="@+id/orderBySpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/order" />
+
+        <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
+            android:id="@+id/orderSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/arn" />
+
+        <EditText
+            android:id="@+id/etArn"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:background="@null"
+            android:hint="@string/empty"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/brand" />
+
+        <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
+            android:id="@+id/brandSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/status" />
+
+        <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
+            android:id="@+id/statusSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/stage" />
+
+        <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
+            android:id="@+id/stageSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/from_stage_time_created" />
+
+        <TextView
+            android:id="@+id/tvFromStageTimeCreated"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:hint="@string/empty"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            android:textIsSelectable="false" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/to_stage_time_created" />
+
+        <TextView
+            android:id="@+id/tvToStageTimeCreated"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:hint="@string/empty"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            android:textIsSelectable="false" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/adjustment_funding" />
+
+        <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
+            android:id="@+id/adjustmentFundingSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/from_adjustment_time_created" />
+
+        <TextView
+            android:id="@+id/tvFromAdjustmentTimeCreated"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:hint="@string/empty"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            android:textIsSelectable="false" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/to_adjustment_time_created" />
+
+        <TextView
+            android:id="@+id/tvToAdjustmentTimeCreated"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:hint="@string/empty"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            android:textIsSelectable="false" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/system_mid" />
+
+        <EditText
+            android:id="@+id/etSystemMID"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:background="@null"
+            android:hint="@string/empty"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/system_hierarchy" />
+
+        <EditText
+            android:id="@+id/etSystemHierarchy"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:background="@null"
+            android:hint="@string/empty"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp" />
+
+        <TextView
+            android:id="@+id/tvLabelDisputeId"
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/dispute_id" />
+
+        <EditText
+            android:id="@+id/etDisputeId"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:background="@null"
+            android:hint="@string/empty"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            android:text="@string/default_test_dispute_id" />
+
+        <TextView
+            android:id="@+id/tvLabelDocumentId"
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/document_id" />
+
+        <EditText
+            android:id="@+id/etDocumentId"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:background="@null"
+            android:hint="@string/empty"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            android:text="@string/default_test_document_id" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btSubmit"
+            style="@style/Button.Big"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:layout_columnWeight="1"
+            android:text="@string/submit" />
+
+    </GridLayout>
+</androidx.core.widget.NestedScrollView>

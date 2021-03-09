@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="currencies">
+        <item>USD</item>
+        <item>GBP</item>
+        <item>CAD</item>
+        <item>SGD</item>
+        <item>EUR</item>
+        <item>JPY</item>
+        <item>TND</item>
+    </string-array>
+    <string-array name="currencies_transaction_report">
+        <item>USD</item>
+        <item>CAD</item>
+        <item>SBD</item>
+        <item>EUR</item>
+        <item>JPY</item>
+    </string-array>
+    <string-array name="brands">
+        <item>VISA</item>
+        <item>MASTERCARD</item>
+        <item>AMEX</item>
+        <item>DINERS</item>
+        <item>DISCOVER</item>
+        <item>JCB</item>
+    </string-array>
+    <string-array name="brands_disputes">
+        <item>VISA</item>
+        <item>MASTERCARD</item>
+        <item>AMEX</item>
+        <item>DISCOVER</item>
+    </string-array>
+</resources>

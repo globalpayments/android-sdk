@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.globalpayments.android.sdk.sample.common.views.CustomToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/accessTokenButton"
+        style="@style/Button.Main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/access_token" />
+
+    <Button
+        android:id="@+id/transactionsButton"
+        style="@style/Button.Main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/transactions" />
+
+    <Button
+        android:id="@+id/verificationsButton"
+        style="@style/Button.Main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/verifications" />
+
+    <Button
+        android:id="@+id/paymentMethodsButton"
+        style="@style/Button.Main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/payment_methods" />
+
+    <Button
+        android:id="@+id/depositsButton"
+        style="@style/Button.Main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/deposits" />
+
+    <Button
+        android:id="@+id/disputesButton"
+        style="@style/Button.Main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/disputes" />
+</LinearLayout>

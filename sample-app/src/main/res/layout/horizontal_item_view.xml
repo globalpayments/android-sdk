@@ -1,0 +1,26 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="android.widget.RelativeLayout">
+
+    <TextView
+        android:id="@+id/labelTextView"
+        style="@style/ListItem.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="@dimen/size_8dp"
+        tools:text="System:" />
+
+    <TextView
+        android:id="@+id/valueTextView"
+        style="@style/ListItem.Value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@id/labelTextView"
+        android:gravity="end"
+        tools:text="" />
+
+</merge>

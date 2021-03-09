@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.globalpayments.android.sdk.sample.common.views.CustomToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btInitiatePaymentMethodOperation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/initiate_payment_method_operation" />
+
+    <TextView
+        android:id="@+id/errorTextView"
+        style="@style/ErrorText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="@dimen/size_16dp"
+        android:visibility="gone"
+        tools:text="Error"
+        tools:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:indeterminate="true"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvPaymentMethodOperation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/size_16dp"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/size_8dp"
+        tools:visibility="visible">
+
+        <com.globalpayments.android.sdk.sample.gpapi.paymentmethod.operations.PaymentMethodOperationView
+            android:id="@+id/paymentMethodOperationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_12dp"
+            android:layout_marginBottom="@dimen/size_16dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

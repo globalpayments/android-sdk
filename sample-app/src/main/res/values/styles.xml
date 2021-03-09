@@ -1,0 +1,68 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorHighlight">@color/colorTextHighlight</item>
+    </style>
+
+    <style name="ListItem">
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="ListItem.Label">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ListItem.Value">
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
+    <style name="Dialog">
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="Dialog.Header">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_size_18sp</item>
+    </style>
+
+    <style name="Dialog.Label">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Dialog.Value">
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
+    <style name="Button" parent="Widget.AppCompat.Button">
+        <item name="android:textSize">@dimen/text_size_12sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:backgroundTint">@color/buttonBackgroundColor</item>
+    </style>
+
+    <style name="Button.Red">
+        <item name="android:backgroundTint">@color/buttonBackgroundColorRed</item>
+    </style>
+
+    <style name="Button.Big">
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+    </style>
+
+    <style name="Button.Main">
+        <item name="android:textSize">@dimen/text_size_35sp</item>
+        <item name="android:backgroundTint">@null</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="ErrorText">
+        <item name="android:textSize">@dimen/text_size_14sp</item>
+        <item name="android:textColor">@color/colorRed</item>
+    </style>
+
+</resources>
