@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.global.api.builders.TransactionReportBuilder;
 import com.global.api.entities.reporting.DepositSummary;
-import com.global.api.entities.reporting.DepositSummaryList;
+import com.global.api.entities.reporting.DepositSummaryPaged;
 import com.global.api.entities.reporting.SearchCriteriaBuilder;
 import com.global.api.services.ReportingService;
 import com.globalpayments.android.sdk.TaskExecutor;
@@ -82,23 +82,26 @@ public class DepositsViewModel extends BaseViewModel {
     }
 
     private List<DepositSummary> executeGetDepositsListRequest(DepositParametersModel parametersModel) throws Exception {
-        TransactionReportBuilder<DepositSummaryList> reportBuilder = ReportingService.findDeposits();
-        SearchCriteriaBuilder<DepositSummaryList> searchBuilder = reportBuilder.getSearchBuilder();
+        int page = parametersModel.getPage();
+        int pageSize = parametersModel.getPageSize();
 
-        reportBuilder.setPage(parametersModel.getPage());
-        reportBuilder.setPageSize(parametersModel.getPageSize());
+        TransactionReportBuilder<DepositSummaryPaged> reportBuilder = ReportingService.findDepositsPaged(page, pageSize);
+        SearchCriteriaBuilder<DepositSummaryPaged> searchBuilder = reportBuilder.getSearchBuilder();
+
+        reportBuilder.setPage(page);
+        reportBuilder.setPageSize(pageSize);
         reportBuilder.setDepositOrderBy(parametersModel.getOrderBy());
-        reportBuilder.setDepositOrder(parametersModel.getOrder());
+        reportBuilder.setOrder(parametersModel.getOrder());
 
         searchBuilder.setStartDate(parametersModel.getFromTimeCreated());
         searchBuilder.setEndDate(parametersModel.getToTimeCreated());
-        searchBuilder.setDepositId(parametersModel.getId());
+        searchBuilder.setDepositReference(parametersModel.getId());
         searchBuilder.setDepositStatus(parametersModel.getStatus());
         searchBuilder.setAmount(parametersModel.getAmount());
         searchBuilder.setAccountNumberLastFour(parametersModel.getMaskedAccountNumberLast4());
         searchBuilder.setMerchantId(parametersModel.getSystemMID());
         searchBuilder.setSystemHierarchy(parametersModel.getSystemHierarchy());
 
-        return reportBuilder.execute(DEFAULT_GPAPI_CONFIG);
+        return reportBuilder.execute(DEFAULT_GPAPI_CONFIG).getResults();
     }
 }

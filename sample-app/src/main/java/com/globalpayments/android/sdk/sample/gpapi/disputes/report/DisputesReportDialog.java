@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import com.global.api.entities.enums.AdjustmentFunding;
 import com.global.api.entities.enums.DisputeSortProperty;
 import com.global.api.entities.enums.DisputeStage;
 import com.global.api.entities.enums.DisputeStatus;
@@ -53,7 +52,6 @@ public class DisputesReportDialog extends BaseDialogFragment {
     private CustomSpinner stageSpinner;
     private TextView tvFromStageTimeCreated;
     private TextView tvToStageTimeCreated;
-    private CustomSpinner adjustmentFundingSpinner;
     private TextView tvFromAdjustmentTimeCreated;
     private TextView tvToAdjustmentTimeCreated;
     private EditText etSystemMID;
@@ -113,7 +111,6 @@ public class DisputesReportDialog extends BaseDialogFragment {
         stageSpinner = findViewById(R.id.stageSpinner);
         tvFromStageTimeCreated = findViewById(R.id.tvFromStageTimeCreated);
         tvToStageTimeCreated = findViewById(R.id.tvToStageTimeCreated);
-        adjustmentFundingSpinner = findViewById(R.id.adjustmentFundingSpinner);
         tvFromAdjustmentTimeCreated = findViewById(R.id.tvFromAdjustmentTimeCreated);
         tvToAdjustmentTimeCreated = findViewById(R.id.tvToAdjustmentTimeCreated);
         etSystemMID = findViewById(R.id.etSystemMID);
@@ -198,12 +195,10 @@ public class DisputesReportDialog extends BaseDialogFragment {
     private void initSpinners() {
         orderBySpinner.init(DisputeSortProperty.values());
         orderBySpinner.selectItem(DisputeSortProperty.FromStageTimeCreated);
-
         orderSpinner.init(SortDirection.values());
         brandSpinner.init(getResources().getStringArray(R.array.brands_disputes), true);
         statusSpinner.init(DisputeStatus.values(), true);
         stageSpinner.init(DisputeStage.values(), true);
-        adjustmentFundingSpinner.init(AdjustmentFunding.values(), true);
     }
 
     private DisputesReportParametersModel buildDisputesReportParametersModel() {
@@ -227,7 +222,6 @@ public class DisputesReportDialog extends BaseDialogFragment {
         disputesReportParametersModel.setStage(stageSpinner.getSelectedOption());
         disputesReportParametersModel.setFromStageTimeCreated(getDate(tvFromStageTimeCreated));
         disputesReportParametersModel.setToStageTimeCreated(getDate(tvToStageTimeCreated));
-        disputesReportParametersModel.setAdjustmentFunding(adjustmentFundingSpinner.getSelectedOption());
         disputesReportParametersModel.setFromAdjustmentTimeCreated(getDate(tvFromAdjustmentTimeCreated));
         disputesReportParametersModel.setToAdjustmentTimeCreated(getDate(tvToAdjustmentTimeCreated));
         disputesReportParametersModel.setSystemMID(etSystemMID.getText().toString());

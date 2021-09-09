@@ -11,7 +11,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.global.api.builders.TransactionReportBuilder;
 import com.global.api.entities.reporting.DisputeSummary;
-import com.global.api.entities.reporting.DisputeSummaryList;
+import com.global.api.entities.reporting.DisputeSummaryPaged;
 import com.global.api.entities.reporting.SearchCriteriaBuilder;
 import com.global.api.services.ReportingService;
 import com.globalpayments.android.sdk.TaskExecutor;
@@ -213,16 +213,17 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
     }
 
     private List<DisputeSummary> executeGetDisputesListRequest(DisputesReportParametersModel parametersModel) throws Exception {
-        TransactionReportBuilder<DisputeSummaryList> reportBuilder = parametersModel.isFromSettlements()
-                ? ReportingService.findSettlementDisputes()
-                : ReportingService.findDisputes();
+        int page = parametersModel.getPage();
+        int pageSize = parametersModel.getPageSize();
 
-        SearchCriteriaBuilder<DisputeSummaryList> searchBuilder = reportBuilder.getSearchBuilder();
+        TransactionReportBuilder<DisputeSummaryPaged> reportBuilder = parametersModel.isFromSettlements()
+                ? ReportingService.findSettlementDisputesPaged(page, pageSize)
+                : ReportingService.findDisputesPaged(page, pageSize);
 
-        reportBuilder.setPage(parametersModel.getPage());
-        reportBuilder.setPageSize(parametersModel.getPageSize());
+        SearchCriteriaBuilder<DisputeSummaryPaged> searchBuilder = reportBuilder.getSearchBuilder();
+
         reportBuilder.setDisputeOrderBy(parametersModel.getOrderBy());
-        reportBuilder.setDisputeOrder(parametersModel.getOrder());
+        reportBuilder.setOrder(parametersModel.getOrder());
 
         searchBuilder.setAquirerReferenceNumber(parametersModel.getArn());
         searchBuilder.setCardBrand(parametersModel.getBrand());
@@ -230,12 +231,9 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
         searchBuilder.setDisputeStage(parametersModel.getStage());
         searchBuilder.setStartStageDate(parametersModel.getFromStageTimeCreated());
         searchBuilder.setEndStageDate(parametersModel.getToStageTimeCreated());
-        searchBuilder.setAdjustmentFunding(parametersModel.getAdjustmentFunding());
-        searchBuilder.setStartAdjustmentDate(parametersModel.getFromAdjustmentTimeCreated());
-        searchBuilder.setEndAdjustmentDate(parametersModel.getToAdjustmentTimeCreated());
         searchBuilder.setMerchantId(parametersModel.getSystemMID());
         searchBuilder.setSystemHierarchy(parametersModel.getSystemHierarchy());
 
-        return reportBuilder.execute(DEFAULT_GPAPI_CONFIG);
+        return reportBuilder.execute(DEFAULT_GPAPI_CONFIG).getResults();
     }
 }

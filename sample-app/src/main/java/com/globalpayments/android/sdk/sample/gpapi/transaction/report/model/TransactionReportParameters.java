@@ -24,7 +24,7 @@ public class TransactionReportParameters {
     private String brand;
     private String brandReference;
     private String authCode;
-    private String reference;
+    private String depositReference;
     private TransactionStatus status;
     private Date fromTimeCreated;
     private Date toTimeCreated;
@@ -46,7 +46,6 @@ public class TransactionReportParameters {
     // Settlements fields
     private DepositStatus depositStatus;
     private String arn;
-    private String depositId;
     private Date fromDepositTimeCreated;
     private Date toDepositTimeCreated;
     private Date fromBatchTimeCreated;
@@ -190,12 +189,12 @@ public class TransactionReportParameters {
         this.authCode = authCode;
     }
 
-    public String getReference() {
-        return reference;
+    public String getDepositReference() {
+        return depositReference;
     }
 
-    public void setReference(String reference) {
-        this.reference = reference;
+    public void setDepositReference(String depositReference) {
+        this.depositReference = depositReference;
     }
 
     public TransactionStatus getStatus() {
@@ -276,14 +275,6 @@ public class TransactionReportParameters {
 
     public void setArn(String arn) {
         this.arn = arn;
-    }
-
-    public String getDepositId() {
-        return depositId;
-    }
-
-    public void setDepositId(String depositId) {
-        this.depositId = depositId;
     }
 
     public Date getFromDepositTimeCreated() {

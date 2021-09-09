@@ -17,6 +17,7 @@ import com.globalpayments.android.sdk.sample.gpapi.paymentmethod.operations.mode
 import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewsVisibility;
 
 public class PaymentMethodOperationDialog extends BaseDialogFragment {
+
     private CustomSpinner paymentMethodOperationSpinner;
 
     // Payment Method Id views
@@ -34,8 +35,6 @@ public class PaymentMethodOperationDialog extends BaseDialogFragment {
     private EditText etExpiryMonth;
     private EditText etExpiryYear;
     private EditText etCvnCvv;
-
-    private EditText etIdempotencyKey;
 
     public static PaymentMethodOperationDialog newInstance(Fragment targetFragment) {
         PaymentMethodOperationDialog paymentMethodOperationDialog = new PaymentMethodOperationDialog();
@@ -64,7 +63,6 @@ public class PaymentMethodOperationDialog extends BaseDialogFragment {
         etExpiryMonth = findViewById(R.id.etExpiryMonth);
         etExpiryYear = findViewById(R.id.etExpiryYear);
         etCvnCvv = findViewById(R.id.etCvnCvv);
-        etIdempotencyKey = findViewById(R.id.etIdempotencyKey);
 
         initSpinners();
 
@@ -89,7 +87,6 @@ public class PaymentMethodOperationDialog extends BaseDialogFragment {
                 handlePaymentCardViewsVisibility(true);
                 break;
 
-            case DETOKENIZE:
             case DELETE:
                 handlePaymentMethodIdViewsVisibility(true);
                 handlePaymentCardViewsVisibility(false);
@@ -136,7 +133,6 @@ public class PaymentMethodOperationDialog extends BaseDialogFragment {
 
         paymentMethodOperationModel.setPaymentMethodId(etPaymentMethodId.getText().toString());
         paymentMethodOperationModel.setPaymentMethodOperationType(paymentMethodOperationSpinner.getSelectedOption());
-        paymentMethodOperationModel.setIdempotencyKey(etIdempotencyKey.getText().toString());
 
         return paymentMethodOperationModel;
     }
@@ -155,4 +151,5 @@ public class PaymentMethodOperationDialog extends BaseDialogFragment {
     public interface Callback {
         void onSubmitPaymentMethodOperationModel(PaymentMethodOperationModel paymentMethodOperationModel);
     }
+
 }

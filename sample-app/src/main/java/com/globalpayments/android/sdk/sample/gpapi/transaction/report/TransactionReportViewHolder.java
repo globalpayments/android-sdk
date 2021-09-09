@@ -21,6 +21,8 @@ import static com.globalpayments.android.sdk.sample.common.Constants.ROTATED_DEG
 import static com.globalpayments.android.sdk.sample.common.views.Position.BOTTOM;
 import static com.globalpayments.android.sdk.sample.common.views.Position.SECOND;
 import static com.globalpayments.android.sdk.sample.common.views.Position.TOP;
+import static com.globalpayments.android.sdk.utils.DateUtils.YYYY_MM_DD;
+import static com.globalpayments.android.sdk.utils.DateUtils.getDateFormatted;
 import static com.globalpayments.android.sdk.utils.Utils.getAmount;
 import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewVisibility;
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
@@ -35,11 +37,16 @@ public class TransactionReportViewHolder extends BaseViewHolder<TransactionSumma
     private ItemView timeCreatedItemView;
     private ItemView statusItemView;
     private ItemView typeItemView;
+
+    // Expandable group
     private ItemView channelItemView;
     private ItemView amountItemView;
     private ItemView currencyItemView;
     private ItemView referenceItemView;
     private ItemView clientTransIdItemView;
+    private ItemView depositIdItemView;
+    private ItemView depositTimeCreatedItemView;
+    private ItemView depositStatusItemView;
     private ItemView batchIdItemView;
     private ItemView countryItemView;
     private ItemView originalTransIdItemView;
@@ -47,10 +54,12 @@ public class TransactionReportViewHolder extends BaseViewHolder<TransactionSumma
     private ItemView entryModeItemView;
     private ItemView nameItemView;
     private ItemView cardTypeItemView;
-    private ItemView authcodeItemView;
+    private ItemView authCodeItemView;
     private ItemView brandReferenceItemView;
     private ItemView arnItemView;
     private ItemView maskedCardNumberItemView;
+    private ItemView systemMidItemView;
+    private ItemView systemHierarchyItemView;
 
     private boolean isItemExpanded;
     private boolean isExpandedByDefault;
@@ -84,6 +93,9 @@ public class TransactionReportViewHolder extends BaseViewHolder<TransactionSumma
         currencyItemView = ItemView.create(context, R.string.currency, expandableContainer);
         referenceItemView = ItemView.create(context, R.string.reference, expandableContainer);
         clientTransIdItemView = ItemView.create(context, R.string.client_transaction_id, expandableContainer);
+        depositIdItemView = ItemView.create(context, R.string.deposit_id, expandableContainer);
+        depositTimeCreatedItemView = ItemView.create(context, R.string.deposit_time_created, expandableContainer);
+        depositStatusItemView = ItemView.create(context, R.string.deposit_status, expandableContainer);
         batchIdItemView = ItemView.create(context, R.string.batch_id, expandableContainer);
         countryItemView = ItemView.create(context, R.string.country, expandableContainer);
         originalTransIdItemView = ItemView.create(context, R.string.original_transaction_id, expandableContainer);
@@ -91,10 +103,12 @@ public class TransactionReportViewHolder extends BaseViewHolder<TransactionSumma
         entryModeItemView = ItemView.create(context, R.string.entry_mode, expandableContainer);
         nameItemView = ItemView.create(context, R.string.name, expandableContainer);
         cardTypeItemView = ItemView.create(context, R.string.card_type, expandableContainer);
-        authcodeItemView = ItemView.create(context, R.string.auth_code, expandableContainer);
+        authCodeItemView = ItemView.create(context, R.string.auth_code, expandableContainer);
         brandReferenceItemView = ItemView.create(context, R.string.brand_reference, expandableContainer);
         arnItemView = ItemView.create(context, R.string.aquirer_reference_number, expandableContainer);
-        maskedCardNumberItemView = ItemView.create(context, R.string.masked_card_number, expandableContainer, BOTTOM);
+        maskedCardNumberItemView = ItemView.create(context, R.string.masked_card_number, expandableContainer);
+        systemMidItemView = ItemView.create(context, R.string.system_mid, expandableContainer);
+        systemHierarchyItemView = ItemView.create(context, R.string.system_hierarchy, expandableContainer, BOTTOM);
 
         arrow.setOnClickListener(v -> toggleView());
     }
@@ -113,6 +127,9 @@ public class TransactionReportViewHolder extends BaseViewHolder<TransactionSumma
         currencyItemView.setValue(transactionSummary.getCurrency());
         referenceItemView.setValue(transactionSummary.getReferenceNumber());
         clientTransIdItemView.setValue(transactionSummary.getClientTransactionId());
+        depositIdItemView.setValueOrHide(transactionSummary.getDepositReference());
+        depositTimeCreatedItemView.setValueOrHide(getDateFormatted(transactionSummary.getDepositDate(), YYYY_MM_DD));
+        depositStatusItemView.setValueOrHide(transactionSummary.getDepositStatus());
         batchIdItemView.setValue(transactionSummary.getBatchSequenceNumber());
         countryItemView.setValueOrHide(transactionSummary.getCountry());
         originalTransIdItemView.setValueOrHide(transactionSummary.getOriginalTransactionId());
@@ -120,10 +137,12 @@ public class TransactionReportViewHolder extends BaseViewHolder<TransactionSumma
         entryModeItemView.setValue(transactionSummary.getEntryMode());
         nameItemView.setValueOrHide(transactionSummary.getCardHolderName());
         cardTypeItemView.setValue(transactionSummary.getCardType());
-        authcodeItemView.setValue(transactionSummary.getAuthCode());
+        authCodeItemView.setValue(transactionSummary.getAuthCode());
         brandReferenceItemView.setValue(transactionSummary.getBrandReference());
-        arnItemView.setValueOrHide(transactionSummary.getAquirerReferenceNumber());
+        arnItemView.setValueOrHide(transactionSummary.getAcquirerReferenceNumber());
         maskedCardNumberItemView.setValue(transactionSummary.getMaskedCardNumber());
+        systemMidItemView.setValueOrHide(transactionSummary.getMerchantId());
+        systemHierarchyItemView.setValueOrHide(transactionSummary.getMerchantHierarchy());
     }
 
     private void handleFoldState(boolean expand) {

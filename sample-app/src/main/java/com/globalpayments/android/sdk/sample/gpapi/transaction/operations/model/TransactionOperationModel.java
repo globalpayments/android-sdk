@@ -11,6 +11,7 @@ public class TransactionOperationModel {
     private String currency;
     private TransactionOperationType transactionOperationType;
     private String idempotencyKey;
+    private boolean isRequestedMultiUseToken;
 
     public String getCardNumber() {
         return cardNumber;
@@ -74,5 +75,13 @@ public class TransactionOperationModel {
 
     public void setIdempotencyKey(String idempotencyKey) {
         this.idempotencyKey = idempotencyKey;
+    }
+
+    public boolean isRequestedMultiUseToken() {
+        return isRequestedMultiUseToken;
+    }
+
+    public void setRequestedMultiUseToken(boolean requestedMultiUseToken) {
+        isRequestedMultiUseToken = requestedMultiUseToken;
     }
 }

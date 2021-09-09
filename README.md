@@ -11,12 +11,12 @@ You can find more information on how to use this SDK and sign up for a free Glob
 
 ## Installation
 
-Declare jcenter repository in the root build.gradle file:
+Declare mavenCentral repository in the root build.gradle file:
 
 ```Gradle
 allprojects {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 ```
@@ -25,7 +25,7 @@ Declare dependency in the app build.gradle file:
 
 ```Gradle
 dependencies {
-    implementation 'com.globalpayments.android:globalpayments-android-sdk:1.0'
+    implementation 'com.heartlandpaymentsystems:globalpayments-android-sdk:1.0'
 }
 ```
 

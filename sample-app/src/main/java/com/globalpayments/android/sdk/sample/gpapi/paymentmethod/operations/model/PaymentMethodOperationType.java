@@ -3,6 +3,5 @@ package com.globalpayments.android.sdk.sample.gpapi.paymentmethod.operations.mod
 public enum PaymentMethodOperationType {
     TOKENIZE,
     EDIT,
-    DETOKENIZE,
     DELETE;
 }

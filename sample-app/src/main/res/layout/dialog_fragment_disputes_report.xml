@@ -203,19 +203,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
-            android:text="@string/adjustment_funding" />
-
-        <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
-            android:id="@+id/adjustmentFundingSpinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1.3" />
-
-        <TextView
-            style="@style/Dialog.Label"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
             android:text="@string/from_adjustment_time_created" />
 
         <TextView

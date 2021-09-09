@@ -1,6 +1,5 @@
 package com.globalpayments.android.sdk.sample.gpapi.disputes.report.model;
 
-import com.global.api.entities.enums.AdjustmentFunding;
 import com.global.api.entities.enums.DisputeSortProperty;
 import com.global.api.entities.enums.DisputeStage;
 import com.global.api.entities.enums.DisputeStatus;
@@ -19,7 +18,6 @@ public class DisputesReportParametersModel {
     private DisputeStage stage;
     private Date fromStageTimeCreated;
     private Date toStageTimeCreated;
-    private AdjustmentFunding adjustmentFunding;
     private Date fromAdjustmentTimeCreated;
     private Date toAdjustmentTimeCreated;
     private String systemMID;
@@ -105,14 +103,6 @@ public class DisputesReportParametersModel {
 
     public void setToStageTimeCreated(Date toStageTimeCreated) {
         this.toStageTimeCreated = toStageTimeCreated;
-    }
-
-    public AdjustmentFunding getAdjustmentFunding() {
-        return adjustmentFunding;
-    }
-
-    public void setAdjustmentFunding(AdjustmentFunding adjustmentFunding) {
-        this.adjustmentFunding = adjustmentFunding;
     }
 
     public Date getFromAdjustmentTimeCreated() {

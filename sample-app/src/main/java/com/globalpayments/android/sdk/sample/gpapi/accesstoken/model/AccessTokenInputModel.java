@@ -9,6 +9,7 @@ public class AccessTokenInputModel {
     private int secondsToExpire;
     private Environment environment;
     private IntervalToExpire intervalToExpire;
+    private String[] permissions;
 
     public String getAppId() {
         return appId;
@@ -48,5 +49,13 @@ public class AccessTokenInputModel {
 
     public void setIntervalToExpire(IntervalToExpire intervalToExpire) {
         this.intervalToExpire = intervalToExpire;
+    }
+
+    public String[] getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String[] permissions) {
+        this.permissions = permissions;
     }
 }

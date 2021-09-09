@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00796B</color>
-    <color name="colorPrimaryDark">#009688</color>
-    <color name="colorAccent">#009688</color>
-    <color name="buttonBackgroundColor">#00796B</color>
+    <color name="colorPrimary">#006bc3</color>
+    <color name="colorPrimaryDark">#00467f</color>
+    <color name="colorAccent">#006bc3</color>
+    <color name="buttonBackgroundColor">#006bc3</color>
     <color name="buttonBackgroundColorRed">#D32F2F</color>
-    <color name="colorJsonValue">#017A6F</color>
+    <color name="colorJsonValue">#0062b2</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorRed">#D32F2F</color>
     <color name="colorBackground">#F5F5F5</color>
-    <color name="colorHeaderItemBackground">#26A69A</color>
+    <color name="colorHeaderItemBackground">#0062b2</color>
     <color name="colorTextHighlight">#D4D8D8</color>
-    <color name="colorHighlight">#4DB6AC</color>
+    <color name="colorHighlight">#1a98ff</color>
     <color name="colorHintInputHeader">#B4808080</color>
     <color name="colorBlack">#000000</color>
 </resources>

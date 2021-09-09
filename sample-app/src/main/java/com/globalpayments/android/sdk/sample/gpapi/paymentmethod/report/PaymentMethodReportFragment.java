@@ -1,32 +1,32 @@
 package com.globalpayments.android.sdk.sample.gpapi.paymentmethod.report;
 
+import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
+import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
+
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.global.api.entities.Transaction;
+import com.global.api.entities.reporting.StoredPaymentMethodSummary;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar;
-import com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE;
-import com.globalpayments.android.sdk.sample.gpapi.paymentmethod.report.model.PaymentMethodReportParameters;
 
 import java.util.List;
 
-import static com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE.BY_ID;
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
-import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
-
 public class PaymentMethodReportFragment extends BaseFragment implements PaymentMethodReportDialog.Callback {
+
     private ProgressBar progressBar;
     private TextView errorTextView;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewById;
+    private RecyclerView recyclerViewList;
 
-    private PaymentMethodReportAdapter paymentMethodReportAdapter;
+    private PaymentMethodReportByIdAdapter paymentMethodReportByIdAdapter;
+    private PaymentMethodReportListAdapter paymentMethodReportListAdapter;
     private PaymentMethodReportViewModel paymentMethodReportViewModel;
 
     @Override
@@ -37,7 +37,8 @@ public class PaymentMethodReportFragment extends BaseFragment implements Payment
     @Override
     protected void initDependencies() {
         paymentMethodReportViewModel = new ViewModelProvider(this).get(PaymentMethodReportViewModel.class);
-        paymentMethodReportAdapter = new PaymentMethodReportAdapter();
+        paymentMethodReportByIdAdapter = new PaymentMethodReportByIdAdapter();
+        paymentMethodReportListAdapter = new PaymentMethodReportListAdapter();
     }
 
     @Override
@@ -49,19 +50,21 @@ public class PaymentMethodReportFragment extends BaseFragment implements Payment
         progressBar = findViewById(R.id.progressBar);
         errorTextView = findViewById(R.id.errorTextView);
 
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setAdapter(paymentMethodReportAdapter);
+        recyclerViewById = findViewById(R.id.recyclerViewById);
+        recyclerViewById.setAdapter(paymentMethodReportByIdAdapter);
+
+        recyclerViewList = findViewById(R.id.recyclerViewList);
+        recyclerViewList.setAdapter(paymentMethodReportListAdapter);
 
         Button btGetPaymentMethodsList = findViewById(R.id.btGetPaymentMethodsList);
-        btGetPaymentMethodsList.setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Not implemented in the sdk", Toast.LENGTH_LONG).show());
+        btGetPaymentMethodsList.setOnClickListener(v -> onSubmitPaymentMethodReportParameters());
 
         Button btGetPaymentMethodById = findViewById(R.id.btGetPaymentMethodById);
-        btGetPaymentMethodById.setOnClickListener(v -> showPaymentMethodReportDialog(BY_ID));
+        btGetPaymentMethodById.setOnClickListener(v -> showPaymentMethodReportDialog());
     }
 
-    private void showPaymentMethodReportDialog(TYPE type) {
-        PaymentMethodReportDialog paymentMethodReportDialog = PaymentMethodReportDialog.newInstance(this, type);
+    private void showPaymentMethodReportDialog() {
+        PaymentMethodReportDialog paymentMethodReportDialog = PaymentMethodReportDialog.newInstance(this);
         paymentMethodReportDialog.show(requireFragmentManager(), PaymentMethodReportDialog.class.getSimpleName());
     }
 
@@ -69,7 +72,8 @@ public class PaymentMethodReportFragment extends BaseFragment implements Payment
     protected void initSubscriptions() {
         paymentMethodReportViewModel.getProgressStatus().observe(this, show -> {
             if (show) {
-                hideView(recyclerView);
+                hideView(recyclerViewById);
+                hideView(recyclerViewList);
                 hideView(errorTextView);
                 showView(progressBar);
             } else {
@@ -78,26 +82,37 @@ public class PaymentMethodReportFragment extends BaseFragment implements Payment
         });
 
         paymentMethodReportViewModel.getError().observe(this, errorMessage -> {
-            hideView(recyclerView);
+            hideView(recyclerViewById);
+            hideView(recyclerViewList);
             showView(errorTextView);
             errorTextView.setText(errorMessage);
         });
 
         paymentMethodReportViewModel.getPaymentMethodsLiveData().observe(this, paymentMethods -> {
             hideView(errorTextView);
-            showView(recyclerView);
-            submitPaymentMethods(paymentMethods);
+            hideView(recyclerViewList);
+            showView(recyclerViewById);
+            submitPaymentMethodsById(paymentMethods);
+        });
+
+        paymentMethodReportViewModel.getPaymentMethodsListLiveData().observe(this, storedPaymentMethodSummaryList -> {
+            hideView(errorTextView);
+            hideView(recyclerViewById);
+            showView(recyclerViewList);
+            submitPaymentMethodsList(storedPaymentMethodSummaryList);
         });
     }
 
-    private void submitPaymentMethods(List<Transaction> paymentMethods) {
-        paymentMethodReportAdapter.submitList(paymentMethods);
+    private void submitPaymentMethodsById(List<Transaction> paymentMethods) {
+        paymentMethodReportByIdAdapter.submitList(paymentMethods);
     }
 
+    private void submitPaymentMethodsList(List<StoredPaymentMethodSummary> storedPaymentMethodSummaryList) {
+        paymentMethodReportListAdapter.submitList(storedPaymentMethodSummaryList);
+    }
 
-    @Override
-    public void onSubmitPaymentMethodReportParameters(PaymentMethodReportParameters paymentMethodReportParameters) {
-        paymentMethodReportViewModel.getPaymentMethodList(paymentMethodReportParameters);
+    public void onSubmitPaymentMethodReportParameters() {
+        paymentMethodReportViewModel.getPaymentMethodList();
     }
 
     @Override

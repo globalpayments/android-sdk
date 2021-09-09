@@ -251,7 +251,7 @@ public class TransactionReportDialog extends BaseDialogFragment {
     }
 
     private void initSpinners() {
-        orderBySpinner.init(TransactionSortProperty.values());
+        orderBySpinner.init(new TransactionSortProperty[]{TransactionSortProperty.Id, TransactionSortProperty.TimeCreated, TransactionSortProperty.Type});
         orderBySpinner.selectItem(TransactionSortProperty.TimeCreated);
 
         orderSpinner.init(SortDirection.values());
@@ -338,7 +338,7 @@ public class TransactionReportDialog extends BaseDialogFragment {
         transactionReportParameters.setBrand(brandSpinner.getSelectedOption());
         transactionReportParameters.setBrandReference(etBrandReference.getText().toString());
         transactionReportParameters.setAuthCode(etAuthCode.getText().toString());
-        transactionReportParameters.setReference(etReference.getText().toString());
+        transactionReportParameters.setDepositReference(etReference.getText().toString());
         transactionReportParameters.setStatus(statusSpinner.getSelectedOption());
         transactionReportParameters.setFromTimeCreated(getDate(tvFromTimeCreated));
         transactionReportParameters.setToTimeCreated(getDate(tvToTimeCreated));
@@ -346,7 +346,6 @@ public class TransactionReportDialog extends BaseDialogFragment {
         if (fromSettlements) {
             transactionReportParameters.setDepositStatus(depositStatusSpinner.getSelectedOption());
             transactionReportParameters.setArn(etArn.getText().toString());
-            transactionReportParameters.setDepositId(etDepositId.getText().toString());
             transactionReportParameters.setFromDepositTimeCreated(getDate(tvFromDepositTimeCreated));
             transactionReportParameters.setToDepositTimeCreated(getDate(tvToDepositTimeCreated));
             transactionReportParameters.setFromBatchTimeCreated(getDate(tvFromBatchTimeCreated));
@@ -408,4 +407,5 @@ public class TransactionReportDialog extends BaseDialogFragment {
 
         void onSubmitTransactionId(String transactionId);
     }
+
 }

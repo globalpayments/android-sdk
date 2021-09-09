@@ -35,8 +35,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1.5"
-            android:hint="@string/empty"
             android:background="@null"
+            android:hint="@string/empty"
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp" />
 
@@ -103,6 +103,104 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1.5" />
 
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/set_permissions" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbSetPermissions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:checked="false" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbActPostMultiple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="ACT_POST_Multiple" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbActGetSingle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="ACT_GET_Single" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbActGetList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="ACT_GET_List" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbAccGetList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="ACC_GET_List" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbAccGetSingle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="ACC_GET_Single" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbGetSingle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="GET_Single" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbPmtPostDetokenize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="PMT_POST_Detokenize" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbPmtPostSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="PMT_POST_Search" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbPmtGetList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="ACT_POST_Multiple" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbPmtPostCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="PMT_POST_Create" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbPmtGetSingle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="PMT_GET_Single" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbPmtPatchEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="PMT_PATCH_Edit" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btSubmit"
             style="@style/Button.Big"
@@ -113,4 +211,5 @@
             android:text="@string/submit" />
 
     </GridLayout>
+
 </androidx.core.widget.NestedScrollView>

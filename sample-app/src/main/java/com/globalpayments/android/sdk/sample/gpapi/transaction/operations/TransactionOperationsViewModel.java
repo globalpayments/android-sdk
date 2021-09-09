@@ -45,7 +45,7 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
 
         if (!configureService(gpApiConfig, gpapiConfiguration, TRANSACTION_OPERATIONS_GPAPI_CONFIG)) {
             Toast.makeText(getApplication(), R.string.configure_service_failed, Toast.LENGTH_LONG).show();
-        };
+        }
     }
 
     private void showResult(Transaction transaction) {
@@ -84,6 +84,7 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
         BigDecimal amount = transactionOperationModel.getAmount();
         String currency = transactionOperationModel.getCurrency();
         String idempotencyKey = transactionOperationModel.getIdempotencyKey();
+        boolean isRequestedMultiUseToken = transactionOperationModel.isRequestedMultiUseToken();
 
         Transaction transaction = null;
 
@@ -93,6 +94,7 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
                 transaction = card
                         .authorize(amount)
                         .withCurrency(currency)
+                        .withRequestMultiUseToken(isRequestedMultiUseToken)
                         .withIdempotencyKey(idempotencyKey)
                         .execute(TRANSACTION_OPERATIONS_GPAPI_CONFIG);
                 break;
@@ -101,6 +103,7 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
                 transaction = card
                         .charge(amount)
                         .withCurrency(currency)
+                        .withRequestMultiUseToken(isRequestedMultiUseToken)
                         .withIdempotencyKey(idempotencyKey)
                         .execute(TRANSACTION_OPERATIONS_GPAPI_CONFIG);
                 break;

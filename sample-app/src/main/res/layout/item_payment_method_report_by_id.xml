@@ -9,9 +9,10 @@
     android:layout_marginBottom="@dimen/size_8dp"
     app:cardCornerRadius="@dimen/size_8dp">
 
-    <com.globalpayments.android.sdk.sample.gpapi.paymentmethod.report.PaymentMethodView
-        android:id="@+id/paymentMethodView"
+    <com.globalpayments.android.sdk.sample.gpapi.paymentmethod.report.PaymentMethodViewById
+        android:id="@+id/paymentMethodViewById"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/size_16dp"/>
+        android:layout_marginBottom="@dimen/size_16dp" />
+
 </androidx.cardview.widget.CardView>

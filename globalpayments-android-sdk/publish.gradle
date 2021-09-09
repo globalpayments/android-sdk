@@ -1,15 +1,21 @@
 apply plugin: "maven-publish"
-apply plugin: "com.jfrog.bintray"
+apply plugin: 'signing'
 
 // Artifact parameters
-def sdkGroupId = 'com.globalpayments.android'
+def sdkGroupId = 'com.heartlandpaymentsystems'
 def sdkArtifactId = 'globalpayments-android-sdk'
-def sdkVersion = '1.0'
+def sdkVersion = '1.1'
 
-// Bintray authentication parameters (Should be declared as environment variables for security reasons)
-def bintrayUser = System.getenv('BINTRAY_USER')
-def bintrayKey = System.getenv('BINTRAY_KEY')
-def bintrayGPGPassphrase = System.getenv('BINTRAY_GPG_PASSPHRASE')
+// publish.properties should contain signing properties and maven central credentials
+File publishPropertiesFile = file('publish.properties')
+Properties publishProperties = new Properties()
+new FileInputStream(publishPropertiesFile).withCloseable { is -> publishProperties.load(is) }
+
+ext["signing.keyId"] = publishProperties["signing.keyId"]
+ext["signing.password"] = publishProperties["signing.password"]
+ext["signing.secretKeyRingFile"] = publishProperties["signing.secretKeyRingFile"]
+ext["mavenCentralRepoUsername"] = publishProperties["mavenCentralRepoUsername"]
+ext["mavenCentralRepoPassword"] = publishProperties["mavenCentralRepoPassword"]
 
 afterEvaluate {
     publishing {
@@ -52,38 +58,20 @@ afterEvaluate {
                 }
             }
         }
-    }
-}
 
-bintray {
-    user = bintrayUser
-    key = bintrayKey
-    publications = ['release']
-    publish = true
-    override = true
-    pkg {
-        repo = 'maven'
-        name = sdkArtifactId
-        desc = 'The official Android SDK for Global Payments API.'
-        websiteUrl = 'https://developer.globalpay.com'
-        licenses = ["MIT"]
-        vcsUrl = 'https://github.com/globalpayments/android-sdk'
-        publicDownloadNumbers = true
-        version {
-            name = sdkVersion
-            released = new Date()
-            gpg {
-                sign = true
-                passphrase = bintrayGPGPassphrase
+        repositories {
+            maven {
+                name = "MavenCentral"
+                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username mavenCentralRepoUsername
+                    password mavenCentralRepoPassword
+                }
             }
         }
     }
 }
 
-task printBintrayEnv() {
-    doLast {
-        println "bintrayUser: " + bintrayUser
-        println "bintrayKey: " + bintrayKey
-        println "bintrayGPGPassphrase: " + bintrayGPGPassphrase
-    }
+signing {
+    sign publishing.publications
 }

@@ -1,6 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi.accesstoken;
 
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.fragment.app.DialogFragment;
@@ -11,7 +12,12 @@ import com.global.api.entities.enums.IntervalToExpire;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseDialogFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomSpinner;
-import com.globalpayments.android.sdk.sample.gpapi.accesstoken.model.AccessTokenInputModel;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewsVisibility;
 
 public class AccessTokenDialog extends BaseDialogFragment {
     private EditText etAppId;
@@ -19,6 +25,25 @@ public class AccessTokenDialog extends BaseDialogFragment {
     private EditText etSecondsToExpire;
     private CustomSpinner environmentSpinner;
     private CustomSpinner intervalToExpireSpinner;
+    private CheckBox cbSetPermissions;
+
+    // permissions
+    private CheckBox cbActPostMultiple;
+    private CheckBox cbActGetSingle;
+    private CheckBox cbActGetList;
+    private CheckBox cbAccGetList;
+    private CheckBox cbAccGetSingle;
+    private CheckBox cbGetSingle;
+    private CheckBox cbPmtPostDetokenize;
+    private CheckBox cbPmtPostSearch;
+    private CheckBox cbPmtGetList;
+    private CheckBox cbPmtPostCreate;
+    private CheckBox cbPmtGetSingle;
+    private CheckBox cbPmtPatchEdit;
+
+    List<CheckBox> checkboxes;
+
+    private List<String> permissions = new ArrayList<>();
 
     public static AccessTokenDialog newInstance(Fragment targetFragment) {
         AccessTokenDialog accessTokenDialog = new AccessTokenDialog();
@@ -40,36 +65,104 @@ public class AccessTokenDialog extends BaseDialogFragment {
         environmentSpinner = findViewById(R.id.environmentSpinner);
         intervalToExpireSpinner = findViewById(R.id.intervalToExpireSpinner);
 
+        cbSetPermissions = findViewById(R.id.cbSetPermissions);
+
+        // permissions
+        cbActPostMultiple = findViewById(R.id.cbActPostMultiple);
+        cbActGetSingle = findViewById(R.id.cbActGetSingle);
+        cbActGetList = findViewById(R.id.cbActGetList);
+        cbAccGetList = findViewById(R.id.cbAccGetList);
+        cbAccGetSingle = findViewById(R.id.cbAccGetSingle);
+        cbGetSingle = findViewById(R.id.cbGetSingle);
+        cbPmtPostDetokenize = findViewById(R.id.cbPmtPostDetokenize);
+        cbPmtPostSearch = findViewById(R.id.cbPmtPostSearch);
+        cbPmtGetList = findViewById(R.id.cbPmtGetList);
+        cbPmtPostCreate = findViewById(R.id.cbPmtPostCreate);
+        cbPmtGetSingle = findViewById(R.id.cbPmtGetSingle);
+        cbPmtPatchEdit = findViewById(R.id.cbPmtPatchEdit);
+
         environmentSpinner.init(Environment.values());
         intervalToExpireSpinner.init(IntervalToExpire.values());
 
         Button btSubmit = findViewById(R.id.btSubmit);
         btSubmit.setOnClickListener(v -> submitAccessTokenInputModel());
+
+        configureViews();
     }
 
-    private AccessTokenInputModel buildAccessTokenInputModel() {
-        AccessTokenInputModel accessTokenInputModel = new AccessTokenInputModel();
-        accessTokenInputModel.setAppId(etAppId.getText().toString());
-        accessTokenInputModel.setAppKey(etAppKey.getText().toString());
-        accessTokenInputModel.setSecondsToExpire(Integer.parseInt(etSecondsToExpire.getText().toString()));
-        accessTokenInputModel.setEnvironment(environmentSpinner.getSelectedOption());
-        accessTokenInputModel.setIntervalToExpire(intervalToExpireSpinner.getSelectedOption());
-        return accessTokenInputModel;
+    private void configureViews() {
+        checkboxes = Arrays.asList(
+                cbActPostMultiple,
+                cbActGetSingle,
+                cbActGetList,
+                cbAccGetList,
+                cbAccGetSingle,
+                cbGetSingle,
+                cbPmtPostDetokenize,
+                cbPmtPostSearch,
+                cbPmtGetList,
+                cbPmtPostCreate,
+                cbPmtGetSingle,
+                cbPmtPatchEdit);
+        cbSetPermissions.setOnCheckedChangeListener((buttonView, isChecked) -> handleSetPermissionsViewsVisibility(isChecked));
+        handleSetPermissionsViewsVisibility(false);
+    }
+
+    private void handleSetPermissionsViewsVisibility(boolean setPermissions) {
+        handleViewsVisibility(setPermissions,
+                cbActPostMultiple,
+                cbActGetSingle,
+                cbActGetList,
+                cbAccGetList,
+                cbAccGetSingle,
+                cbGetSingle,
+                cbPmtPostDetokenize,
+                cbPmtPostSearch,
+                cbPmtGetList,
+                cbPmtPostCreate,
+                cbPmtGetSingle,
+                cbPmtPatchEdit
+        );
+        resetAllCheckbox();
+    }
+
+    private void resetAllCheckbox() {
+        for (CheckBox checkBox : this.checkboxes) {
+            checkBox.setChecked(false);
+        }
+    }
+
+    private String[] getPermissions() {
+        for (CheckBox checkBox : this.checkboxes) {
+            if (checkBox.isChecked()) {
+                permissions.add(checkBox.getText().toString());
+            }
+        }
+        return permissions.toArray(new String[0]);
     }
 
     private void submitAccessTokenInputModel() {
-        AccessTokenInputModel accessTokenInputModel = buildAccessTokenInputModel();
-
         Fragment targetFragment = getTargetFragment();
         if (targetFragment instanceof Callback) {
             Callback callback = (Callback) targetFragment;
-            callback.onSubmitAccessTokenInputModel(accessTokenInputModel);
+            callback.onSubmitAccessTokenInputModel(
+                    etAppId.getText().toString(),
+                    etAppKey.getText().toString(),
+                    environmentSpinner.getSelectedOption(),
+                    Integer.parseInt(etSecondsToExpire.getText().toString()),
+                    intervalToExpireSpinner.getSelectedOption(),
+                    getPermissions());
         }
-
         dismiss();
     }
 
     public interface Callback {
-        void onSubmitAccessTokenInputModel(AccessTokenInputModel accessTokenInputModel);
+        void onSubmitAccessTokenInputModel(String appId,
+                                           String appKey,
+                                           Environment environment,
+                                           int secondsToExpire,
+                                           IntervalToExpire intervalToExpire,
+                                           String[] permissions);
     }
+
 }

@@ -5,9 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.global.api.builders.TransactionReportBuilder;
 import com.global.api.entities.TransactionSummary;
-import com.global.api.entities.TransactionSummaryList;
 import com.global.api.entities.exceptions.ApiException;
-import com.global.api.entities.reporting.SearchCriteriaBuilder;
+import com.global.api.entities.reporting.TransactionSummaryPaged;
 import com.global.api.services.ReportingService;
 import com.globalpayments.android.sdk.TaskExecutor;
 import com.globalpayments.android.sdk.sample.common.base.BaseViewModel;
@@ -19,6 +18,7 @@ import java.util.List;
 import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
 
 public class TransactionReportViewModel extends BaseViewModel {
+
     private MutableLiveData<List<TransactionSummary>> transactionsLiveData = new MutableLiveData<>();
 
     public LiveData<List<TransactionSummary>> getTransactionsLiveData() {
@@ -77,67 +77,19 @@ public class TransactionReportViewModel extends BaseViewModel {
     }
 
     private TransactionSummary executeGetTransactionByIdRequest(String transactionId) throws ApiException {
-        return ReportingService
-                .transactionDetail(transactionId)
-                .execute(DEFAULT_GPAPI_CONFIG);
+        return ReportingService.transactionDetail(transactionId).execute(DEFAULT_GPAPI_CONFIG);
     }
 
-    private List<TransactionSummary> executeGetTransactionListRequest(TransactionReportParameters reportParameters)
-            throws ApiException {
-        return getTransactionReportBuilder(reportParameters)
-                .execute(DEFAULT_GPAPI_CONFIG);
+    private List<TransactionSummary> executeGetTransactionListRequest(
+            TransactionReportParameters reportParameters) throws ApiException {
+        return getTransactionReportBuilder(reportParameters).execute(DEFAULT_GPAPI_CONFIG).getResults();
     }
 
-    private TransactionReportBuilder<TransactionSummaryList> getTransactionReportBuilder(
+    private TransactionReportBuilder<TransactionSummaryPaged> getTransactionReportBuilder(
             TransactionReportParameters reportParameters) {
-
-        TransactionReportBuilder<TransactionSummaryList> transactionReportBuilder = reportParameters.isFromSettlements()
-                ? ReportingService.findSettlementTransactions()
-                : ReportingService.findTransactions();
-
-        SearchCriteriaBuilder<TransactionSummaryList> searchBuilder = transactionReportBuilder.getSearchBuilder();
-
-        transactionReportBuilder.setPage(reportParameters.getPage());
-        transactionReportBuilder.setPageSize(reportParameters.getPageSize());
-        transactionReportBuilder.setTransactionOrder(reportParameters.getOrder());
-        transactionReportBuilder.setTransactionOrderBy(reportParameters.getOrderBy());
-
-        searchBuilder.setCardNumberFirstSix(reportParameters.getNumberFirst6());
-        searchBuilder.setCardNumberLastFour(reportParameters.getNumberLast4());
-        searchBuilder.setCardBrand(reportParameters.getBrand());
-        searchBuilder.setBrandReference(reportParameters.getBrandReference());
-        searchBuilder.setAuthCode(reportParameters.getAuthCode());
-        searchBuilder.setReferenceNumber(reportParameters.getReference());
-        searchBuilder.setTransactionStatus(reportParameters.getStatus());
-        searchBuilder.setStartDate(reportParameters.getFromTimeCreated());
-        searchBuilder.setEndDate(reportParameters.getToTimeCreated());
-
-        if (reportParameters.isFromSettlements()) {
-            searchBuilder.setDepositStatus(reportParameters.getDepositStatus());
-            searchBuilder.setAquirerReferenceNumber(reportParameters.getArn());
-            searchBuilder.setDepositId(reportParameters.getDepositId());
-            searchBuilder.setStartDepositDate(reportParameters.getFromDepositTimeCreated());
-            searchBuilder.setEndDepositDate(reportParameters.getToDepositTimeCreated());
-            searchBuilder.setStartBatchDate(reportParameters.getFromBatchTimeCreated());
-            searchBuilder.setEndBatchDate(reportParameters.getToBatchTimeCreated());
-            searchBuilder.setMerchantId(reportParameters.getSystemMID());
-            searchBuilder.setSystemHierarchy(reportParameters.getSystemHierarchy());
-        } else {
-            transactionReportBuilder.setTransactionId(reportParameters.getId());
-
-            searchBuilder.setPaymentType(reportParameters.getType());
-            searchBuilder.setChannel(reportParameters.getChannel());
-            searchBuilder.setAmount(reportParameters.getAmount());
-            searchBuilder.setCurrency(reportParameters.getCurrency());
-            searchBuilder.setTokenFirstSix(reportParameters.getTokenFirst6());
-            searchBuilder.setTokenLastFour(reportParameters.getTokenLast4());
-            searchBuilder.setAccountName(reportParameters.getAccountName());
-            searchBuilder.setCountry(reportParameters.getCountry());
-            searchBuilder.setBatchId(reportParameters.getBatchId());
-            searchBuilder.setPaymentEntryMode(reportParameters.getEntryMode());
-            searchBuilder.setName(reportParameters.getName());
-        }
-
-        return transactionReportBuilder;
+        return reportParameters.isFromSettlements()
+                ? ReportingService.findSettlementTransactionsPaged(reportParameters.getPage(), reportParameters.getPageSize())
+                : ReportingService.findTransactionsPaged(reportParameters.getPage(), reportParameters.getPageSize());
     }
+
 }

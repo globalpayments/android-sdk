@@ -7,10 +7,11 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.global.api.entities.enums.Environment;
+import com.global.api.entities.enums.IntervalToExpire;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar;
-import com.globalpayments.android.sdk.sample.gpapi.accesstoken.model.AccessTokenInputModel;
 
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
 import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
@@ -80,7 +81,12 @@ public class AccessTokenFragment extends BaseFragment implements AccessTokenDial
     }
 
     @Override
-    public void onSubmitAccessTokenInputModel(AccessTokenInputModel accessTokenInputModel) {
-        accessTokenViewModel.getAccessTokenInfo(accessTokenInputModel);
+    public void onSubmitAccessTokenInputModel(String appId,
+                                              String appKey,
+                                              Environment environment,
+                                              int secondsToExpire,
+                                              IntervalToExpire intervalToExpire,
+                                              String[] permissions) {
+        accessTokenViewModel.getAccessTokenInfo(appId, appKey, environment, secondsToExpire, intervalToExpire, permissions);
     }
 }
