@@ -1,5 +1,13 @@
 package com.globalpayments.android.sdk.sample.gpapi.disputes.report;
 
+import static com.globalpayments.android.sdk.sample.common.Constants.CREATE_FILE_REQUEST_CODE;
+import static com.globalpayments.android.sdk.sample.gpapi.disputes.report.DisputesReportDialog.TYPE.DISPUTE_BY_DEPOSIT_ID;
+import static com.globalpayments.android.sdk.sample.gpapi.disputes.report.DisputesReportDialog.TYPE.DISPUTE_BY_ID;
+import static com.globalpayments.android.sdk.sample.gpapi.disputes.report.DisputesReportDialog.TYPE.DISPUTE_LIST;
+import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
+import static com.globalpayments.android.sdk.utils.ViewUtils.hideViews;
+import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -27,13 +35,6 @@ import com.globalpayments.android.sdk.utils.IntentUtils;
 
 import java.io.File;
 import java.util.List;
-
-import static com.globalpayments.android.sdk.sample.common.Constants.CREATE_FILE_REQUEST_CODE;
-import static com.globalpayments.android.sdk.sample.gpapi.disputes.report.DisputesReportDialog.TYPE.DISPUTE_BY_ID;
-import static com.globalpayments.android.sdk.sample.gpapi.disputes.report.DisputesReportDialog.TYPE.DISPUTE_LIST;
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideViews;
-import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
 
 public class DisputesReportFragment extends BaseFragment implements DisputesReportDialog.Callback {
     private ProgressBar progressBar;
@@ -90,6 +91,9 @@ public class DisputesReportFragment extends BaseFragment implements DisputesRepo
 
         Button btGetDisputeById = findViewById(R.id.btGetDisputeById);
         btGetDisputeById.setOnClickListener(v -> showDisputesReportDialog(DISPUTE_BY_ID));
+
+        Button btGetDisputeByDepositId = findViewById(R.id.btGetDisputeByDepositId);
+        btGetDisputeByDepositId.setOnClickListener(v -> showDisputesReportDialog(DISPUTE_BY_DEPOSIT_ID));
 
         Button btGetDocumentById = findViewById(R.id.btGetDocumentById);
 //        btGetDocumentById.setOnClickListener(v -> showDisputesReportDialog(DOCUMENT_BY_ID));
@@ -234,6 +238,11 @@ public class DisputesReportFragment extends BaseFragment implements DisputesRepo
     @Override
     public void onSubmitDisputeId(String disputeId, boolean fromSettlements) {
         disputesReportViewModel.getDisputeById(disputeId, fromSettlements);
+    }
+
+    @Override
+    public void onSubmitDisputeByDepositId(String disputeId) {
+        disputesReportViewModel.getDisputeByDepositId(disputeId);
     }
 
     @Override

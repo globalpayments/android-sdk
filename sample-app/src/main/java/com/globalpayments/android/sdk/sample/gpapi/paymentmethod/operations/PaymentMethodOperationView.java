@@ -1,5 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi.paymentmethod.operations;
 
+import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
@@ -9,8 +11,6 @@ import androidx.annotation.Nullable;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.views.ItemView;
 import com.globalpayments.android.sdk.sample.gpapi.paymentmethod.operations.model.PaymentMethodOperationUIModel;
-
-import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
 
 public class PaymentMethodOperationView extends LinearLayout {
     private ItemView idItemView;

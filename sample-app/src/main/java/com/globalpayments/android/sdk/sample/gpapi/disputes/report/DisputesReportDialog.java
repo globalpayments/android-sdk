@@ -1,5 +1,12 @@
 package com.globalpayments.android.sdk.sample.gpapi.disputes.report;
 
+import static com.globalpayments.android.sdk.sample.common.Constants.DIALOG_TYPE;
+import static com.globalpayments.android.sdk.utils.DateUtils.YYYY_MM_DD;
+import static com.globalpayments.android.sdk.utils.Utils.isNotNull;
+import static com.globalpayments.android.sdk.utils.Utils.safeParseInt;
+import static com.globalpayments.android.sdk.utils.ViewUtils.hideAllViewsExcluding;
+import static com.globalpayments.android.sdk.utils.ViewUtils.hideViews;
+
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
@@ -29,13 +36,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-
-import static com.globalpayments.android.sdk.sample.common.Constants.DIALOG_TYPE;
-import static com.globalpayments.android.sdk.utils.DateUtils.YYYY_MM_DD;
-import static com.globalpayments.android.sdk.utils.Utils.isNotNull;
-import static com.globalpayments.android.sdk.utils.Utils.safeParseInt;
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideAllViewsExcluding;
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideViews;
 
 public class DisputesReportDialog extends BaseDialogFragment {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat(YYYY_MM_DD, Locale.getDefault());
@@ -132,6 +132,9 @@ public class DisputesReportDialog extends BaseDialogFragment {
             case DISPUTE_BY_ID:
                 handleDisputeByIdViewsVisibility();
                 break;
+            case DISPUTE_BY_DEPOSIT_ID:
+                handleDisputeByDepositIdViewsVisibility();
+                break;
             case DOCUMENT_BY_ID:
                 handleDocumentByIdViewsVisibility();
                 break;
@@ -153,6 +156,16 @@ public class DisputesReportDialog extends BaseDialogFragment {
                 cbFromSettlements,
                 btSubmit
         );
+    }
+
+    private void handleDisputeByDepositIdViewsVisibility() {
+        hideAllViewsExcluding(glContainer,
+                tvHeader,
+                tvLabelDisputeId,
+                etDisputeId,
+                btSubmit
+        );
+        tvLabelDisputeId.setText(R.string.deposit_id);
     }
 
     private void handleDocumentByIdViewsVisibility() {
@@ -263,6 +276,9 @@ public class DisputesReportDialog extends BaseDialogFragment {
                 case DISPUTE_BY_ID:
                     callback.onSubmitDisputeId(etDisputeId.getText().toString(), cbFromSettlements.isChecked());
                     break;
+                case DISPUTE_BY_DEPOSIT_ID:
+                    callback.onSubmitDisputeByDepositId(etDisputeId.getText().toString());
+                    break;
                 case DOCUMENT_BY_ID:
                     DocumentReportModel documentReportModel = buildDocumentReportModel();
                     callback.onSubmitDocumentReportModel(documentReportModel);
@@ -273,17 +289,20 @@ public class DisputesReportDialog extends BaseDialogFragment {
         dismiss();
     }
 
+    public enum TYPE {
+        DISPUTE_LIST,
+        DISPUTE_BY_ID,
+        DISPUTE_BY_DEPOSIT_ID,
+        DOCUMENT_BY_ID
+    }
+
     public interface Callback {
         void onSubmitDisputesReportParametersModel(DisputesReportParametersModel disputesReportParametersModel);
 
         void onSubmitDisputeId(String disputeId, boolean fromSettlements);
 
-        void onSubmitDocumentReportModel(DocumentReportModel documentReportModel);
-    }
+        void onSubmitDisputeByDepositId(String disputeId);
 
-    public enum TYPE {
-        DISPUTE_LIST,
-        DISPUTE_BY_ID,
-        DOCUMENT_BY_ID;
+        void onSubmitDocumentReportModel(DocumentReportModel documentReportModel);
     }
 }

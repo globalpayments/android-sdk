@@ -20,11 +20,10 @@ import java.util.List;
 
 public class PaymentMethodReportViewModel extends BaseViewModel {
 
+    private final MutableLiveData<List<Transaction>> paymentMethodsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<StoredPaymentMethodSummary>> paymentMethodsListLiveData = new MutableLiveData<>();
     int page = 1;
     int pageSize = 5;
-
-    private MutableLiveData<List<Transaction>> paymentMethodsLiveData = new MutableLiveData<>();
-    private MutableLiveData<List<StoredPaymentMethodSummary>> paymentMethodsListLiveData = new MutableLiveData<>();
 
     public LiveData<List<Transaction>> getPaymentMethodsLiveData() {
         return paymentMethodsLiveData;

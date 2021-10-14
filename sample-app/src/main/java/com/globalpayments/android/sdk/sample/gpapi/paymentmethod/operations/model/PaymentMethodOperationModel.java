@@ -7,7 +7,6 @@ public class PaymentMethodOperationModel {
     private String cvnCvv;
     private String paymentMethodId;
     private PaymentMethodOperationType paymentMethodOperationType;
-    private String idempotencyKey;
 
     public String getCardNumber() {
         return cardNumber;
@@ -55,13 +54,5 @@ public class PaymentMethodOperationModel {
 
     public void setPaymentMethodOperationType(PaymentMethodOperationType paymentMethodOperationType) {
         this.paymentMethodOperationType = paymentMethodOperationType;
-    }
-
-    public String getIdempotencyKey() {
-        return idempotencyKey;
-    }
-
-    public void setIdempotencyKey(String idempotencyKey) {
-        this.idempotencyKey = idempotencyKey;
     }
 }

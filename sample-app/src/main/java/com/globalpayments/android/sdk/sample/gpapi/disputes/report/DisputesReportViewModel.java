@@ -1,5 +1,9 @@
 package com.globalpayments.android.sdk.sample.gpapi.disputes.report;
 
+import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
+import static com.globalpayments.android.sdk.utils.ContextUtils.getAppDocumentsDirectory;
+import static com.globalpayments.android.sdk.utils.ContextUtils.getOutputStreamForUri;
+
 import android.app.Application;
 import android.net.Uri;
 import android.util.Base64;
@@ -12,7 +16,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.global.api.builders.TransactionReportBuilder;
 import com.global.api.entities.reporting.DisputeSummary;
 import com.global.api.entities.reporting.DisputeSummaryPaged;
-import com.global.api.entities.reporting.SearchCriteriaBuilder;
+import com.global.api.entities.reporting.SearchCriteria;
 import com.global.api.services.ReportingService;
 import com.globalpayments.android.sdk.TaskExecutor;
 import com.globalpayments.android.sdk.sample.R;
@@ -29,11 +33,10 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 
-import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
-import static com.globalpayments.android.sdk.utils.ContextUtils.getAppDocumentsDirectory;
-import static com.globalpayments.android.sdk.utils.ContextUtils.getOutputStreamForUri;
-
 public class DisputesReportViewModel extends BaseAndroidViewModel {
+
+    private static final int PAGE_BY_DEPOSIT_ID = 1;
+    private static final int PAGE_SIZE_BY_DEPOSIT_ID = 1;
     private static final String TEMPORARY_PDF_FILE_NAME = "temporary_file.pdf";
 
     private final MutableLiveData<List<DisputeSummary>> disputesLiveData = new MutableLiveData<>();
@@ -63,6 +66,27 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
             @Override
             public List<DisputeSummary> executeAsync() throws Exception {
                 return executeGetDisputesListRequest(disputesReportParametersModel);
+            }
+
+            @Override
+            public void onSuccess(List<DisputeSummary> value) {
+                showResult(value);
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                showError(exception);
+            }
+        });
+    }
+
+    public void getDisputeByDepositId(String depositId) {
+        showProgress();
+
+        TaskExecutor.executeAsync(new TaskExecutor.Task<List<DisputeSummary>>() {
+            @Override
+            public List<DisputeSummary> executeAsync() throws Exception {
+                return executeGetDisputeByDepositRequest(depositId);
             }
 
             @Override
@@ -208,32 +232,25 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
         TransactionReportBuilder<DisputeSummary> reportBuilder = fromSettlements
                 ? ReportingService.settlementDisputeDetail(disputeId)
                 : ReportingService.disputeDetail(disputeId);
-
         return reportBuilder.execute(DEFAULT_GPAPI_CONFIG);
     }
 
     private List<DisputeSummary> executeGetDisputesListRequest(DisputesReportParametersModel parametersModel) throws Exception {
         int page = parametersModel.getPage();
         int pageSize = parametersModel.getPageSize();
-
         TransactionReportBuilder<DisputeSummaryPaged> reportBuilder = parametersModel.isFromSettlements()
                 ? ReportingService.findSettlementDisputesPaged(page, pageSize)
                 : ReportingService.findDisputesPaged(page, pageSize);
-
-        SearchCriteriaBuilder<DisputeSummaryPaged> searchBuilder = reportBuilder.getSearchBuilder();
-
         reportBuilder.setDisputeOrderBy(parametersModel.getOrderBy());
         reportBuilder.setOrder(parametersModel.getOrder());
-
-        searchBuilder.setAquirerReferenceNumber(parametersModel.getArn());
-        searchBuilder.setCardBrand(parametersModel.getBrand());
-        searchBuilder.setDisputeStatus(parametersModel.getStatus());
-        searchBuilder.setDisputeStage(parametersModel.getStage());
-        searchBuilder.setStartStageDate(parametersModel.getFromStageTimeCreated());
-        searchBuilder.setEndStageDate(parametersModel.getToStageTimeCreated());
-        searchBuilder.setMerchantId(parametersModel.getSystemMID());
-        searchBuilder.setSystemHierarchy(parametersModel.getSystemHierarchy());
-
         return reportBuilder.execute(DEFAULT_GPAPI_CONFIG).getResults();
     }
+
+    private List<DisputeSummary> executeGetDisputeByDepositRequest(String depositId) throws Exception {
+        TransactionReportBuilder<DisputeSummaryPaged> reportBuilder =
+                ReportingService.findSettlementDisputesPaged(PAGE_BY_DEPOSIT_ID, PAGE_SIZE_BY_DEPOSIT_ID);
+        reportBuilder.where(SearchCriteria.DepositId, depositId);
+        return reportBuilder.execute(DEFAULT_GPAPI_CONFIG).getResults();
+    }
+
 }

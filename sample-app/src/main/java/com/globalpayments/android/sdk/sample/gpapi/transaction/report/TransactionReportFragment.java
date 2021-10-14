@@ -1,5 +1,10 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.report;
 
+import static com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE.BY_ID;
+import static com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE.LIST;
+import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
+import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
+
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -15,11 +20,6 @@ import com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.report.model.TransactionReportParameters;
 
 import java.util.List;
-
-import static com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE.BY_ID;
-import static com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE.LIST;
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
-import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
 
 public class TransactionReportFragment extends BaseFragment implements TransactionReportDialog.Callback {
     private ProgressBar progressBar;

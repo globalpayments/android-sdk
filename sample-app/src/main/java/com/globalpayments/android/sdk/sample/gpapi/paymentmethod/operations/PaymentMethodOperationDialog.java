@@ -1,5 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi.paymentmethod.operations;
 
+import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewsVisibility;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,8 +15,6 @@ import com.globalpayments.android.sdk.sample.common.base.BaseDialogFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomSpinner;
 import com.globalpayments.android.sdk.sample.gpapi.paymentmethod.operations.model.PaymentMethodOperationModel;
 import com.globalpayments.android.sdk.sample.gpapi.paymentmethod.operations.model.PaymentMethodOperationType;
-
-import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewsVisibility;
 
 public class PaymentMethodOperationDialog extends BaseDialogFragment {
 

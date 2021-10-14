@@ -33,6 +33,13 @@
             android:text="@string/get_dispute_by_id" />
 
         <Button
+            android:id="@+id/btGetDisputeByDepositId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/get_dispute_by_deposit_id" />
+
+        <Button
             android:id="@+id/btGetDocumentById"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

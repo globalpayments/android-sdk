@@ -1,5 +1,16 @@
 package com.globalpayments.android.sdk.sample.gpapi.configuration;
 
+import static com.globalpayments.android.sdk.sample.utils.GPAPIConfigurationUtils.initializeDefaultGPAPIConfiguration;
+import static com.globalpayments.android.sdk.utils.DateUtils.YYYY_MM_DD;
+import static com.globalpayments.android.sdk.utils.DateUtils.isValidDate;
+import static com.globalpayments.android.sdk.utils.Strings.EMPTY;
+import static com.globalpayments.android.sdk.utils.UriUtils.isValidUrl;
+import static com.globalpayments.android.sdk.utils.Utils.isNotNullOrBlank;
+import static com.globalpayments.android.sdk.utils.Utils.isNull;
+import static com.globalpayments.android.sdk.utils.Utils.isNullOrBlank;
+import static com.globalpayments.android.sdk.utils.Utils.safeParseInt;
+import static com.globalpayments.android.sdk.utils.ViewUtils.getEditTextValue;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,20 +25,14 @@ import com.globalpayments.android.sdk.sample.common.base.BaseFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomSpinner;
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar;
 import com.globalpayments.android.sdk.sample.gpapi.GPAPIActivity;
+import com.globalpayments.android.sdk.sample.gpapi.partials.CountryUtils;
 import com.globalpayments.android.sdk.sample.utils.AppPreferences;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import static com.globalpayments.android.sdk.sample.utils.GPAPIConfigurationUtils.initializeDefaultGPAPIConfiguration;
-import static com.globalpayments.android.sdk.utils.DateUtils.YYYY_MM_DD;
-import static com.globalpayments.android.sdk.utils.DateUtils.isValidDate;
-import static com.globalpayments.android.sdk.utils.Strings.EMPTY;
-import static com.globalpayments.android.sdk.utils.UriUtils.isValidUrl;
-import static com.globalpayments.android.sdk.utils.Utils.isNotNullOrBlank;
-import static com.globalpayments.android.sdk.utils.Utils.isNull;
-import static com.globalpayments.android.sdk.utils.Utils.isNullOrBlank;
-import static com.globalpayments.android.sdk.utils.Utils.safeParseInt;
-import static com.globalpayments.android.sdk.utils.ViewUtils.getEditTextValue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GPAPIConfigurationFragment extends BaseFragment {
     private static final String RECONFIGURATION = "RECONFIGURATION";
@@ -49,6 +54,7 @@ public class GPAPIConfigurationFragment extends BaseFragment {
 
     private CustomSpinner intervalToExpireSpinner;
     private CustomSpinner environmentSpinner;
+    private CustomSpinner selectCountrySpinner;
 
     private String emptyRequiredField;
     private String invalidServiceUrl;
@@ -124,6 +130,11 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         environmentSpinner = findViewById(R.id.environmentSpinner);
         environmentSpinner.init(Environment.values());
 
+        selectCountrySpinner = findViewById(R.id.selectionCountrySpinner);
+        List<String> listCountries = new ArrayList<>(CountryUtils.countryCodeMapByCountry.keySet());
+        Collections.sort(listCountries);
+        selectCountrySpinner.init(listCountries);
+
         etAppId.setOnFocusChangeListener(getFocusChangeListener(appIdTextInputLayout));
         etAppKey.setOnFocusChangeListener(getFocusChangeListener(appKeyTextInputLayout));
         etServiceUrl.setOnFocusChangeListener(getFocusChangeListener(serviceUrlTextInputLayout));
@@ -156,6 +167,7 @@ public class GPAPIConfigurationFragment extends BaseFragment {
                 etTokenSecondsToExpire.setText(String.valueOf(gpapiConfiguration.getTokenSecondsToExpire()));
                 intervalToExpireSpinner.selectItem(gpapiConfiguration.getTokenIntervalToExpire());
                 environmentSpinner.selectItem(gpapiConfiguration.getEnvironment());
+                selectCountrySpinner.selectItem(gpapiConfiguration.getSelectedCountry());
             }
         }
     }
@@ -170,9 +182,11 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         Integer tokenSecondsToExpire = safeParseInt(getEditTextValue(etTokenSecondsToExpire));
         IntervalToExpire tokenIntervalToExpire = intervalToExpireSpinner.getSelectedOption();
         Environment environment = environmentSpinner.getSelectedOption();
+        String selectedCountry = selectCountrySpinner.getSelectedOption();
 
         if (areAllInputValuesValid(appId, appKey, serviceUrl, apiVersion, tokenSecondsToExpire)) {
-            saveConfiguration(appId, appKey, serviceUrl, apiVersion, tokenSecondsToExpire, tokenIntervalToExpire, environment);
+            saveConfiguration(appId, appKey, serviceUrl, apiVersion, tokenSecondsToExpire,
+                    tokenIntervalToExpire, environment, selectedCountry);
             initGPAPIConfiguration();
             finish();
         }
@@ -196,7 +210,8 @@ public class GPAPIConfigurationFragment extends BaseFragment {
                                    String apiVersion,
                                    Integer tokenSecondsToExpire,
                                    IntervalToExpire tokenIntervalToExpire,
-                                   Environment environment) {
+                                   Environment environment,
+                                   String selectedCountry) {
 
         GPAPIConfiguration gpapiConfiguration = new GPAPIConfiguration();
         gpapiConfiguration.setAppId(appId);
@@ -206,6 +221,7 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         gpapiConfiguration.setTokenSecondsToExpire(tokenSecondsToExpire);
         gpapiConfiguration.setTokenIntervalToExpire(tokenIntervalToExpire);
         gpapiConfiguration.setEnvironment(environment);
+        gpapiConfiguration.setSelectedCountry(selectedCountry);
 
         appPreferences.saveGPAPIConfiguration(gpapiConfiguration);
     }
@@ -258,4 +274,5 @@ public class GPAPIConfigurationFragment extends BaseFragment {
 
         return areAllValuesValid;
     }
+
 }

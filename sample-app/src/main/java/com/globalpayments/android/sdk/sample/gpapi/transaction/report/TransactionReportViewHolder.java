@@ -1,5 +1,17 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.report;
 
+import static com.globalpayments.android.sdk.sample.common.Constants.INITIAL_DEGREE;
+import static com.globalpayments.android.sdk.sample.common.Constants.ROTATED_DEGREE;
+import static com.globalpayments.android.sdk.sample.common.views.Position.BOTTOM;
+import static com.globalpayments.android.sdk.sample.common.views.Position.SECOND;
+import static com.globalpayments.android.sdk.sample.common.views.Position.TOP;
+import static com.globalpayments.android.sdk.utils.DateUtils.YYYY_MM_DD;
+import static com.globalpayments.android.sdk.utils.DateUtils.getDateFormatted;
+import static com.globalpayments.android.sdk.utils.Utils.getAmount;
+import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewVisibility;
+import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
+import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
+
 import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,18 +27,6 @@ import com.globalpayments.android.sdk.sample.common.views.ItemView;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
-
-import static com.globalpayments.android.sdk.sample.common.Constants.INITIAL_DEGREE;
-import static com.globalpayments.android.sdk.sample.common.Constants.ROTATED_DEGREE;
-import static com.globalpayments.android.sdk.sample.common.views.Position.BOTTOM;
-import static com.globalpayments.android.sdk.sample.common.views.Position.SECOND;
-import static com.globalpayments.android.sdk.sample.common.views.Position.TOP;
-import static com.globalpayments.android.sdk.utils.DateUtils.YYYY_MM_DD;
-import static com.globalpayments.android.sdk.utils.DateUtils.getDateFormatted;
-import static com.globalpayments.android.sdk.utils.Utils.getAmount;
-import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewVisibility;
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
-import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
 
 public class TransactionReportViewHolder extends BaseViewHolder<TransactionSummary> {
     private LinearLayout rowsContainer;
@@ -54,7 +54,7 @@ public class TransactionReportViewHolder extends BaseViewHolder<TransactionSumma
     private ItemView entryModeItemView;
     private ItemView nameItemView;
     private ItemView cardTypeItemView;
-    private ItemView authCodeItemView;
+    private final boolean isExpandedByDefault;
     private ItemView brandReferenceItemView;
     private ItemView arnItemView;
     private ItemView maskedCardNumberItemView;
@@ -62,7 +62,7 @@ public class TransactionReportViewHolder extends BaseViewHolder<TransactionSumma
     private ItemView systemHierarchyItemView;
 
     private boolean isItemExpanded;
-    private boolean isExpandedByDefault;
+    private ItemView authCodeItemView;
 
     public TransactionReportViewHolder(@NonNull View itemView, boolean isExpandedByDefault) {
         super(itemView);

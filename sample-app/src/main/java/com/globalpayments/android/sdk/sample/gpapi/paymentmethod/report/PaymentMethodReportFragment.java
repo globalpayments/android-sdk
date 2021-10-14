@@ -119,4 +119,5 @@ public class PaymentMethodReportFragment extends BaseFragment implements Payment
     public void onSubmitPaymentMethodId(String paymentMethodId) {
         paymentMethodReportViewModel.getPaymentMethodById(paymentMethodId);
     }
+
 }

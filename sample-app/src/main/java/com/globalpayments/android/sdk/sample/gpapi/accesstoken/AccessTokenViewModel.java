@@ -13,7 +13,7 @@ import com.globalpayments.android.sdk.TaskExecutor;
 import com.globalpayments.android.sdk.sample.common.base.BaseViewModel;
 
 public class AccessTokenViewModel extends BaseViewModel {
-    private MutableLiveData<AccessTokenInfo> accessTokenInfoLiveData = new MutableLiveData<>();
+    private final MutableLiveData<AccessTokenInfo> accessTokenInfoLiveData = new MutableLiveData<>();
 
     public LiveData<AccessTokenInfo> getAccessTokenInfoLiveData() {
         return accessTokenInfoLiveData;

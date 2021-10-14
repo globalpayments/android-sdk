@@ -1,6 +1,5 @@
 package com.globalpayments.android.sdk.sample.gpapi.configuration;
 
-
 import com.global.api.entities.enums.Environment;
 import com.global.api.entities.enums.IntervalToExpire;
 
@@ -12,6 +11,7 @@ public class GPAPIConfiguration {
     private Integer tokenSecondsToExpire;
     private IntervalToExpire tokenIntervalToExpire;
     private Environment environment;
+    private String selectedCountry;
 
     public String getAppId() {
         return appId;
@@ -68,4 +68,13 @@ public class GPAPIConfiguration {
     public void setEnvironment(Environment environment) {
         this.environment = environment;
     }
+
+    public String getSelectedCountry() {
+        return selectedCountry;
+    }
+
+    public void setSelectedCountry(String selectedCountry) {
+        this.selectedCountry = selectedCountry;
+    }
+
 }

@@ -128,6 +128,7 @@
     <string name="error_no_app_to_handle_action">There are no applications available to handle this action.</string>
     <string name="common_error_unknown">Something went wrong, please try again.</string>
     <string name="get_document_by_id">Get Document By Id</string>
+    <string name="get_dispute_by_deposit_id">Get Dispute By Deposit Id</string>
     <string name="document_id">Document ID:</string>
     <string name="export_as_pdf_file">Export As PDF File</string>
     <string name="view_as_pdf_file">View As PDF File</string>
@@ -140,6 +141,7 @@
     <string name="service_url_configuration"><b>SERVICE URL</b> (optional)</string>
     <string name="api_version_configuration"><b>API VERSION</b> (optional)</string>
     <string name="token_seconds_to_expire_configuration"><b>TOKEN - SECONDS TO EXPIRE</b></string>
+    <string name="select_country_configuration"><b>SELECT YOUR COUNTRY</b></string>
     <string name="token_interval_to_expire_configuration"><b>TOKEN - INTERVAL TO EXPIRE</b></string>
     <string name="save_configuration">Save Configuration</string>
     <string name="empty_required_field">Empty required field !</string>

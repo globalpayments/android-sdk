@@ -14,4 +14,7 @@ public class Constants {
     public static final float INITIAL_DEGREE = 0.0f;
     public static final float ROTATED_DEGREE = 180.0f;
     public static final long ANIMATION_DURATION = 300;
+
+    public static final int PAGE = 1;
+    public static final int PAGE_SIZE = 5;
 }

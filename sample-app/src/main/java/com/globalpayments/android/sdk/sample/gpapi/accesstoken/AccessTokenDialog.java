@@ -1,5 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi.accesstoken;
 
+import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewsVisibility;
+
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -17,16 +19,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewsVisibility;
-
 public class AccessTokenDialog extends BaseDialogFragment {
     private EditText etAppId;
     private EditText etAppKey;
     private EditText etSecondsToExpire;
     private CustomSpinner environmentSpinner;
     private CustomSpinner intervalToExpireSpinner;
+    private final List<String> permissions = new ArrayList<>();
+    List<CheckBox> checkboxes;
     private CheckBox cbSetPermissions;
-
     // permissions
     private CheckBox cbActPostMultiple;
     private CheckBox cbActGetSingle;
@@ -40,10 +41,6 @@ public class AccessTokenDialog extends BaseDialogFragment {
     private CheckBox cbPmtPostCreate;
     private CheckBox cbPmtGetSingle;
     private CheckBox cbPmtPatchEdit;
-
-    List<CheckBox> checkboxes;
-
-    private List<String> permissions = new ArrayList<>();
 
     public static AccessTokenDialog newInstance(Fragment targetFragment) {
         AccessTokenDialog accessTokenDialog = new AccessTokenDialog();

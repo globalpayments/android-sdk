@@ -1,5 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.report;
 
+import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -15,11 +17,9 @@ import com.globalpayments.android.sdk.sample.gpapi.transaction.report.model.Tran
 import java.util.Collections;
 import java.util.List;
 
-import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
-
 public class TransactionReportViewModel extends BaseViewModel {
 
-    private MutableLiveData<List<TransactionSummary>> transactionsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<TransactionSummary>> transactionsLiveData = new MutableLiveData<>();
 
     public LiveData<List<TransactionSummary>> getTransactionsLiveData() {
         return transactionsLiveData;

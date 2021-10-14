@@ -1,5 +1,8 @@
 package com.globalpayments.android.sdk.sample.gpapi.accesstoken;
 
+import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
+import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
+
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -12,9 +15,6 @@ import com.global.api.entities.enums.IntervalToExpire;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar;
-
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
-import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
 
 public class AccessTokenFragment extends BaseFragment implements AccessTokenDialog.Callback {
     private ProgressBar progressBar;

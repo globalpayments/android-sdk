@@ -1,5 +1,8 @@
 package com.globalpayments.android.sdk.sample.gpapi.paymentmethod.operations;
 
+import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
+import static com.globalpayments.android.sdk.utils.Utils.isNullOrBlank;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -10,11 +13,8 @@ import com.globalpayments.android.sdk.sample.common.base.BaseViewModel;
 import com.globalpayments.android.sdk.sample.gpapi.paymentmethod.operations.model.PaymentMethodOperationModel;
 import com.globalpayments.android.sdk.sample.gpapi.paymentmethod.operations.model.PaymentMethodOperationUIModel;
 
-import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
-import static com.globalpayments.android.sdk.utils.Utils.isNullOrBlank;
-
 public class PaymentMethodOperationsViewModel extends BaseViewModel {
-    private MutableLiveData<PaymentMethodOperationUIModel> paymentMethodOperationUIModelLiveData = new MutableLiveData<>();
+    private final MutableLiveData<PaymentMethodOperationUIModel> paymentMethodOperationUIModelLiveData = new MutableLiveData<>();
 
     public LiveData<PaymentMethodOperationUIModel> getPaymentMethodOperationUIModelLiveData() {
         return paymentMethodOperationUIModelLiveData;

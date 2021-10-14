@@ -1,5 +1,8 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations;
 
+import static com.globalpayments.android.sdk.sample.utils.GPAPIConfigurationUtils.buildDefaultGpApiConfig;
+import static com.globalpayments.android.sdk.sample.utils.GPAPIConfigurationUtils.configureService;
+
 import android.app.Application;
 import android.widget.Toast;
 
@@ -21,13 +24,10 @@ import com.globalpayments.android.sdk.sample.utils.AppPreferences;
 
 import java.math.BigDecimal;
 
-import static com.globalpayments.android.sdk.sample.utils.GPAPIConfigurationUtils.buildDefaultGpApiConfig;
-import static com.globalpayments.android.sdk.sample.utils.GPAPIConfigurationUtils.configureService;
-
 public class TransactionOperationsViewModel extends BaseAndroidViewModel {
     private static final String TRANSACTION_OPERATIONS_GPAPI_CONFIG = "TRANSACTION_OPERATIONS_GPAPI_CONFIG";
 
-    private MutableLiveData<Transaction> transactionLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Transaction> transactionLiveData = new MutableLiveData<>();
 
     public TransactionOperationsViewModel(@NonNull Application application) {
         super(application);

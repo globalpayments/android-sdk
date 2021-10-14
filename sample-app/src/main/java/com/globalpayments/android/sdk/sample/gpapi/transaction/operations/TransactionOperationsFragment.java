@@ -1,5 +1,8 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations;
 
+import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
+import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,9 +18,6 @@ import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.TransactionOperationModel;
-
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
-import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
 
 public class TransactionOperationsFragment extends BaseFragment implements TransactionOperationDialog.Callback {
     private ProgressBar progressBar;

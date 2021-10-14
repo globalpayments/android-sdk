@@ -1,5 +1,13 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.report;
 
+import static com.globalpayments.android.sdk.sample.common.Constants.DIALOG_TYPE;
+import static com.globalpayments.android.sdk.utils.DateUtils.YYYY_MM_DD;
+import static com.globalpayments.android.sdk.utils.Utils.isNotNull;
+import static com.globalpayments.android.sdk.utils.Utils.safeParseBigDecimal;
+import static com.globalpayments.android.sdk.utils.Utils.safeParseInt;
+import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewsVisibility;
+import static com.globalpayments.android.sdk.utils.ViewUtils.hideAllViewsExcluding;
+
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.View;
@@ -33,14 +41,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-
-import static com.globalpayments.android.sdk.sample.common.Constants.DIALOG_TYPE;
-import static com.globalpayments.android.sdk.utils.DateUtils.YYYY_MM_DD;
-import static com.globalpayments.android.sdk.utils.Utils.isNotNull;
-import static com.globalpayments.android.sdk.utils.Utils.safeParseBigDecimal;
-import static com.globalpayments.android.sdk.utils.Utils.safeParseInt;
-import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewsVisibility;
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideAllViewsExcluding;
 
 public class TransactionReportDialog extends BaseDialogFragment {
     private static final String TRANSACTION_ID_EXAMPLE = "TRN_7g3faeVD43hkwAQ44k5vgTzl4tb1Ep";

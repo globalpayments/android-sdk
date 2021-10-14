@@ -1,5 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi.deposits;
 
+import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -14,8 +16,6 @@ import com.globalpayments.android.sdk.sample.gpapi.deposits.model.DepositParamet
 
 import java.util.Collections;
 import java.util.List;
-
-import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
 
 public class DepositsViewModel extends BaseViewModel {
     private final MutableLiveData<List<DepositSummary>> depositSummaryListLiveData = new MutableLiveData<>();
@@ -88,11 +88,8 @@ public class DepositsViewModel extends BaseViewModel {
         TransactionReportBuilder<DepositSummaryPaged> reportBuilder = ReportingService.findDepositsPaged(page, pageSize);
         SearchCriteriaBuilder<DepositSummaryPaged> searchBuilder = reportBuilder.getSearchBuilder();
 
-        reportBuilder.setPage(page);
-        reportBuilder.setPageSize(pageSize);
         reportBuilder.setDepositOrderBy(parametersModel.getOrderBy());
         reportBuilder.setOrder(parametersModel.getOrder());
-
         searchBuilder.setStartDate(parametersModel.getFromTimeCreated());
         searchBuilder.setEndDate(parametersModel.getToTimeCreated());
         searchBuilder.setDepositReference(parametersModel.getId());

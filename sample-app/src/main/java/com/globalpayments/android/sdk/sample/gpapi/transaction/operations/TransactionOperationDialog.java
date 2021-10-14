@@ -1,6 +1,9 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations;
 
+import static com.globalpayments.android.sdk.utils.Utils.safeParseBigDecimal;
+
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.fragment.app.DialogFragment;
@@ -15,8 +18,6 @@ import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.
 
 import java.math.BigDecimal;
 
-import static com.globalpayments.android.sdk.utils.Utils.safeParseBigDecimal;
-
 public class TransactionOperationDialog extends BaseDialogFragment {
     private CustomSpinner currenciesSpinner;
     private CustomSpinner transactionTypeSpinner;
@@ -26,6 +27,7 @@ public class TransactionOperationDialog extends BaseDialogFragment {
     private EditText etCvnCvv;
     private EditText etAmount;
     private EditText etIdempotencyKey;
+    private CheckBox cbRequestMultiUseToken;
 
     public static TransactionOperationDialog newInstance(Fragment targetFragment) {
         TransactionOperationDialog transactionOperationDialog = new TransactionOperationDialog();
@@ -47,6 +49,7 @@ public class TransactionOperationDialog extends BaseDialogFragment {
         etCvnCvv = findViewById(R.id.etCvnCvv);
         etAmount = findViewById(R.id.etAmount);
         etIdempotencyKey = findViewById(R.id.etIdempotencyKey);
+        cbRequestMultiUseToken = findViewById(R.id.cbRequestMultiUseToken);
         currenciesSpinner = findViewById(R.id.currenciesSpinner);
         transactionTypeSpinner = findViewById(R.id.transactionTypeSpinner);
         initSpinners();
@@ -84,6 +87,7 @@ public class TransactionOperationDialog extends BaseDialogFragment {
         transactionOperationModel.setCurrency(currenciesSpinner.getSelectedOption());
         transactionOperationModel.setTransactionOperationType(transactionTypeSpinner.getSelectedOption());
         transactionOperationModel.setIdempotencyKey(etIdempotencyKey.getText().toString());
+        transactionOperationModel.setRequestedMultiUseToken(cbRequestMultiUseToken.isChecked());
 
         return transactionOperationModel;
     }
@@ -92,8 +96,8 @@ public class TransactionOperationDialog extends BaseDialogFragment {
         TransactionOperationModel transactionOperationModel = buildTransactionOperationModel();
 
         Fragment targetFragment = getTargetFragment();
-        if (targetFragment instanceof TransactionOperationDialog.Callback) {
-            TransactionOperationDialog.Callback callback = (TransactionOperationDialog.Callback) targetFragment;
+        if (targetFragment instanceof Callback) {
+            Callback callback = (Callback) targetFragment;
             callback.onSubmitTransactionOperationModel(transactionOperationModel);
         }
         dismiss();

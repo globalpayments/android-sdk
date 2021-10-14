@@ -10,6 +10,7 @@ import static com.globalpayments.android.sdk.utils.Utils.isNullOrBlank;
 
 public class DateUtils {
     public static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    public static final String ISO_DATE_FORMAT_2 = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
 
     public static String getNowDateFormatted() {
