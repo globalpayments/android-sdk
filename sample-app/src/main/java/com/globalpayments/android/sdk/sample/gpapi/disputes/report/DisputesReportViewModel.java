@@ -14,6 +14,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.global.api.builders.TransactionReportBuilder;
+import com.global.api.entities.enums.DisputeSortProperty;
+import com.global.api.entities.reporting.DataServiceCriteria;
 import com.global.api.entities.reporting.DisputeSummary;
 import com.global.api.entities.reporting.DisputeSummaryPaged;
 import com.global.api.entities.reporting.SearchCriteria;
@@ -241,8 +243,19 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
         TransactionReportBuilder<DisputeSummaryPaged> reportBuilder = parametersModel.isFromSettlements()
                 ? ReportingService.findSettlementDisputesPaged(page, pageSize)
                 : ReportingService.findDisputesPaged(page, pageSize);
+        reportBuilder.orderBy(parametersModel.getOrderBy(), parametersModel.getOrder());
         reportBuilder.setDisputeOrderBy(parametersModel.getOrderBy());
-        reportBuilder.setOrder(parametersModel.getOrder());
+        reportBuilder.where(SearchCriteria.AquirerReferenceNumber, parametersModel.getArn())
+                .and(SearchCriteria.CardBrand, parametersModel.getBrand())
+                .and(SearchCriteria.DisputeStatus, parametersModel.getStatus())
+                .and(SearchCriteria.DisputeStage, parametersModel.getStage())
+                .and(DataServiceCriteria.StartStageDate, parametersModel.getFromStageTimeCreated())
+                .and(DataServiceCriteria.EndStageDate, parametersModel.getToStageTimeCreated())
+                .and(DataServiceCriteria.StartStageDate, parametersModel.getFromAdjustmentTimeCreated())
+                .and(DataServiceCriteria.EndStageDate, parametersModel.getToAdjustmentTimeCreated())
+                .and(DataServiceCriteria.MerchantId, parametersModel.getSystemMID())
+                .and(DataServiceCriteria.SystemHierarchy, parametersModel.getSystemHierarchy());
+
         return reportBuilder.execute(DEFAULT_GPAPI_CONFIG).getResults();
     }
 

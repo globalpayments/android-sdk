@@ -266,4 +266,25 @@
     <string name="java_enabled">Java enabled:</string>
     <string name="demo_auth_id">AUT_Sp9zarrRYEGivHXyy1MfVuP6jIWEbe</string>
     <string name="full_flow">Full Flow</string>
+    <string name="actions_report">Actions</string>
+    <string name="actions_list_report">Actions List</string>
+    <string name="actions_by_id_report">Actions By Id</string>
+    <string name="action_id">Action Id:</string>
+    <string name="report_type">Type:</string>
+    <string name="report_resouce">Resource:</string>
+    <string name="report_resource_id">Resource Id:</string>
+    <string name="report_resouce_status">Resource Status:</string>
+    <string name="report_from_time_created">From Time Created:</string>
+    <string name="report_to_time_created">To Time Created:</string>
+    <string name="report_version">Version:</string>
+    <string name="report_http_response_code">Http Response Code:</string>
+    <string name="report_response_code">Response Code:</string>
+    <string name="report_app_id">App Id:</string>
+    <string name="report_app_name">App Name:</string>
+    <string name="report_merchant_name">Merchant Name:</string>
+    <string name="report_account_name">Account Name:</string>
+    <string name="report_get_action_list">Get Action List</string>
+    <string name="report_get_action_by_id">Get Action By Id</string>
+    <string name="report_action_by_id">ACT_SDe8C3FL8w4d4yHf7btgL1xPWQac5j</string>
+    <string name="deposit_date_disputes">Deposit Date:</string>
 </resources>
