@@ -1,16 +1,14 @@
 package com.globalpayments.android.sdk.sample.gpapi;
 
 import android.widget.Button;
-
 import androidx.annotation.IdRes;
 import androidx.fragment.app.Fragment;
-
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar;
 import com.globalpayments.android.sdk.sample.gpapi.accesstoken.AccessTokenFragment;
-import com.globalpayments.android.sdk.sample.gpapi.actions.ActionsFragment;
 import com.globalpayments.android.sdk.sample.gpapi.actions.actionsReport.ActionsReportFragment;
+import com.globalpayments.android.sdk.sample.gpapi.batch.closeBatch.CloseFragment;
 import com.globalpayments.android.sdk.sample.gpapi.configuration.GPAPIConfigurationFragment;
 import com.globalpayments.android.sdk.sample.gpapi.deposits.DepositsFragment;
 import com.globalpayments.android.sdk.sample.gpapi.disputes.DisputesFragment;
@@ -39,6 +37,7 @@ public class GPAPIMainFragment extends BaseFragment {
         setButtonClickListener(R.id.depositsButton, new DepositsFragment());
         setButtonClickListener(R.id.disputesButton, new DisputesFragment());
         setButtonClickListener(R.id.actionsButton, new ActionsReportFragment());
+        setButtonClickListener(R.id.closeBatchButton, new CloseFragment());
     }
 
     private void setButtonClickListener(@IdRes int buttonId, Fragment fragment) {

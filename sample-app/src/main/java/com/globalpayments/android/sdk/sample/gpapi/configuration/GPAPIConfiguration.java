@@ -1,5 +1,6 @@
 package com.globalpayments.android.sdk.sample.gpapi.configuration;
 
+import com.global.api.entities.enums.Channel;
 import com.global.api.entities.enums.Environment;
 import com.global.api.entities.enums.IntervalToExpire;
 
@@ -9,6 +10,7 @@ public class GPAPIConfiguration {
     private String serviceUrl;
     private String apiVersion;
     private Integer tokenSecondsToExpire;
+    private Channel channel;
     private IntervalToExpire tokenIntervalToExpire;
     private Environment environment;
     private String selectedCountry;
@@ -77,4 +79,11 @@ public class GPAPIConfiguration {
         this.selectedCountry = selectedCountry;
     }
 
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+    }
 }

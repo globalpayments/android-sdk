@@ -73,7 +73,7 @@ public class TransactionView extends LinearLayout {
         statusItemView.setValue(transaction.getResponseMessage());
         amountItemView.setValue(getAmount(transaction.getBalanceAmount()));
         referenceItemView.setValue(transaction.getReferenceNumber());
-        batchIdItemView.setValue(transaction.getBatchSummary().getSequenceNumber());
+        batchIdItemView.setValue(transaction.getBatchSummary().getBatchReference());
         resultCodeItemView.setValue(transaction.getResponseCode());
 
         tokenItemView.setValueOrHide(transaction.getToken());

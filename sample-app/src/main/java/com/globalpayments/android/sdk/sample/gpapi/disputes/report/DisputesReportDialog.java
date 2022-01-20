@@ -54,6 +54,8 @@ public class DisputesReportDialog extends BaseDialogFragment {
     private TextView tvToStageTimeCreated;
     private TextView tvFromAdjustmentTimeCreated;
     private TextView tvToAdjustmentTimeCreated;
+    private TextView tvFromDepositTimeCreated;
+    private TextView tvToDepositTimeCreated;
     private EditText etSystemMID;
     private EditText etSystemHierarchy;
     private TextView tvLabelDisputeId;
@@ -113,6 +115,8 @@ public class DisputesReportDialog extends BaseDialogFragment {
         tvToStageTimeCreated = findViewById(R.id.tvToStageTimeCreated);
         tvFromAdjustmentTimeCreated = findViewById(R.id.tvFromAdjustmentTimeCreated);
         tvToAdjustmentTimeCreated = findViewById(R.id.tvToAdjustmentTimeCreated);
+        tvFromDepositTimeCreated = findViewById(R.id.tvFromDepositTimeCreated);
+        tvToDepositTimeCreated = findViewById(R.id.tvToDepositTimeCreated);
         etSystemMID = findViewById(R.id.etSystemMID);
         etSystemHierarchy = findViewById(R.id.etSystemHierarchy);
         tvLabelDisputeId = findViewById(R.id.tvLabelDisputeId);
@@ -203,6 +207,8 @@ public class DisputesReportDialog extends BaseDialogFragment {
         tvToStageTimeCreated.setOnClickListener(this::startDatePicker);
         tvFromAdjustmentTimeCreated.setOnClickListener(this::startDatePicker);
         tvToAdjustmentTimeCreated.setOnClickListener(this::startDatePicker);
+        tvFromDepositTimeCreated.setOnClickListener(this::startDatePicker);
+        tvToDepositTimeCreated.setOnClickListener(this::startDatePicker);
     }
 
     private void initSpinners() {
@@ -237,9 +243,10 @@ public class DisputesReportDialog extends BaseDialogFragment {
         disputesReportParametersModel.setToStageTimeCreated(getDate(tvToStageTimeCreated));
         disputesReportParametersModel.setFromAdjustmentTimeCreated(getDate(tvFromAdjustmentTimeCreated));
         disputesReportParametersModel.setToAdjustmentTimeCreated(getDate(tvToAdjustmentTimeCreated));
+        disputesReportParametersModel.setFromDepositTimeCreated(getDate(tvFromDepositTimeCreated));
+        disputesReportParametersModel.setToDepositTimeCreated(getDate(tvToDepositTimeCreated));
         disputesReportParametersModel.setSystemMID(etSystemMID.getText().toString());
         disputesReportParametersModel.setSystemHierarchy(etSystemHierarchy.getText().toString());
-
         disputesReportParametersModel.setFromSettlements(cbFromSettlements.isChecked());
 
         return disputesReportParametersModel;

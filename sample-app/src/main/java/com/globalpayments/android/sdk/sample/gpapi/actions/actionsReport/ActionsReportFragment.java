@@ -5,21 +5,17 @@ import static com.globalpayments.android.sdk.sample.gpapi.actions.actionsReport.
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideViews;
 import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
-
 import android.app.ProgressDialog;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.global.api.entities.reporting.ActionSummary;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar;
 import com.globalpayments.android.sdk.sample.gpapi.actions.actionsReport.model.ActionsReportParametersModel;
-
 import java.util.List;
 
 public class ActionsReportFragment extends BaseFragment implements ActionsDialog.Callback {

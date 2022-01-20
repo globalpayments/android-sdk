@@ -143,6 +143,7 @@
     <string name="token_seconds_to_expire_configuration"><b>TOKEN - SECONDS TO EXPIRE</b></string>
     <string name="select_country_configuration"><b>SELECT YOUR COUNTRY</b></string>
     <string name="token_interval_to_expire_configuration"><b>TOKEN - INTERVAL TO EXPIRE</b></string>
+    <string name="select_card_present_configuration">CARD PRESENT CONFIGURATION</string>
     <string name="save_configuration">Save Configuration</string>
     <string name="empty_required_field">Empty required field !</string>
     <string name="invalid_service_url">Invalid service url !</string>
@@ -207,7 +208,6 @@
     <string name="deposit_time_created">Deposit Time Created:</string>
     <string name="transaction">Transaction</string>
     <string name="request_multi_use_token">Request multi use Token ?</string>
-    <string name="authentications">Authentications</string>
     <string name="check_availability">Check Availability</string>
     <string name="initiate">Initiate</string>
     <string name="get_result">Get Result</string>
@@ -267,6 +267,7 @@
     <string name="demo_auth_id">AUT_Sp9zarrRYEGivHXyy1MfVuP6jIWEbe</string>
     <string name="full_flow">Full Flow</string>
     <string name="actions_report">Actions</string>
+    <string name="close_batch">Close Batch</string>
     <string name="actions_list_report">Actions List</string>
     <string name="actions_by_id_report">Actions By Id</string>
     <string name="action_id">Action Id:</string>
@@ -285,6 +286,22 @@
     <string name="report_account_name">Account Name:</string>
     <string name="report_get_action_list">Get Action List</string>
     <string name="report_get_action_by_id">Get Action By Id</string>
+    <string name="report_get_close_batch_by_id">Close Batch</string>
     <string name="report_action_by_id">ACT_SDe8C3FL8w4d4yHf7btgL1xPWQac5j</string>
     <string name="deposit_date_disputes">Deposit Date:</string>
+    <string name="use_3ds">Use 3DS:</string>
+    <string name="failed_challenge">"Failed challenge"</string>
+    <string name="close_batch_id">Batch Id:</string>
+    <string name="close_batch_time_last_updated">Last Time Updated:</string>
+    <string name="close_batch_status">Status:</string>
+    <string name="close_batch_amount">Amount:</string>
+    <string name="close_batch_currency">Currency:</string>
+    <string name="close_batch_country">Country:</string>
+    <string name="close_batch_transaction_count">Transaction Count:</string>
+    <string name="close_batch_action_id">Id:</string>
+    <string name="close_batch_action_type">Type:</string>
+    <string name="close_batch_time_created">Time Created:</string>
+    <string name="close_batch_result_code">Result Code:</string>
+    <string name="close_batch_app_id">App Id:</string>
+    <string name="close_batch_app_name">App Name:</string>
 </resources>

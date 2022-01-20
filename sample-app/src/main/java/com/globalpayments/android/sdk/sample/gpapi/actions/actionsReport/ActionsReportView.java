@@ -4,17 +4,13 @@ import static com.globalpayments.android.sdk.sample.common.views.Position.SECOND
 import static com.globalpayments.android.sdk.sample.common.views.Position.TOP;
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
 import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
-
 import androidx.annotation.Nullable;
-
 import com.global.api.entities.reporting.ActionSummary;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.views.ItemView;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;

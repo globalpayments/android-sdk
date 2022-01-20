@@ -58,18 +58,18 @@
         android:text="@string/disputes" />
 
     <Button
-        android:id="@+id/authenticationsButton"
-        style="@style/Button.Main"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/authentications" />
-
-    <Button
         android:id="@+id/actionsButton"
         style="@style/Button.Main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/actions_report" />
+
+    <Button
+        android:id="@+id/closeBatchButton"
+        style="@style/Button.Main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/close_batch" />
 </LinearLayout>

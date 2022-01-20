@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.global.api.entities.enums.Channel;
 import com.global.api.entities.enums.Environment;
 import com.global.api.entities.enums.IntervalToExpire;
 import com.globalpayments.android.sdk.sample.R;
@@ -55,6 +56,7 @@ public class GPAPIConfigurationFragment extends BaseFragment {
     private CustomSpinner intervalToExpireSpinner;
     private CustomSpinner environmentSpinner;
     private CustomSpinner selectCountrySpinner;
+    private CustomSpinner selectChannel;
 
     private String emptyRequiredField;
     private String invalidServiceUrl;
@@ -130,6 +132,9 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         environmentSpinner = findViewById(R.id.environmentSpinner);
         environmentSpinner.init(Environment.values());
 
+        selectChannel = findViewById(R.id.channelConfigSpinner);
+        selectChannel.init(Channel.values());
+
         selectCountrySpinner = findViewById(R.id.selectionCountrySpinner);
         List<String> listCountries = new ArrayList<>(CountryUtils.countryCodeMapByCountry.keySet());
         Collections.sort(listCountries);
@@ -168,6 +173,7 @@ public class GPAPIConfigurationFragment extends BaseFragment {
                 intervalToExpireSpinner.selectItem(gpapiConfiguration.getTokenIntervalToExpire());
                 environmentSpinner.selectItem(gpapiConfiguration.getEnvironment());
                 selectCountrySpinner.selectItem(gpapiConfiguration.getSelectedCountry());
+                selectChannel.selectItem(gpapiConfiguration.getChannel());
             }
         }
     }
@@ -183,10 +189,11 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         IntervalToExpire tokenIntervalToExpire = intervalToExpireSpinner.getSelectedOption();
         Environment environment = environmentSpinner.getSelectedOption();
         String selectedCountry = selectCountrySpinner.getSelectedOption();
+        Channel channel = selectChannel.getSelectedOption();
 
         if (areAllInputValuesValid(appId, appKey, serviceUrl, apiVersion, tokenSecondsToExpire)) {
             saveConfiguration(appId, appKey, serviceUrl, apiVersion, tokenSecondsToExpire,
-                    tokenIntervalToExpire, environment, selectedCountry);
+                    tokenIntervalToExpire, environment, selectedCountry, channel);
             initGPAPIConfiguration();
             finish();
         }
@@ -211,7 +218,8 @@ public class GPAPIConfigurationFragment extends BaseFragment {
                                    Integer tokenSecondsToExpire,
                                    IntervalToExpire tokenIntervalToExpire,
                                    Environment environment,
-                                   String selectedCountry) {
+                                   String selectedCountry,
+                                   Channel channel) {
 
         GPAPIConfiguration gpapiConfiguration = new GPAPIConfiguration();
         gpapiConfiguration.setAppId(appId);
@@ -222,6 +230,7 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         gpapiConfiguration.setTokenIntervalToExpire(tokenIntervalToExpire);
         gpapiConfiguration.setEnvironment(environment);
         gpapiConfiguration.setSelectedCountry(selectedCountry);
+        gpapiConfiguration.setChannel(channel);
 
         appPreferences.saveGPAPIConfiguration(gpapiConfiguration);
     }

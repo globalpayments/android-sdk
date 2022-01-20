@@ -1,6 +1,8 @@
 package com.globalpayments.android.sdk.sample.gpapi.disputes.report;
 
+import static com.global.api.gateways.GpApiConnector.DATE_SDF;
 import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
+import static com.globalpayments.android.sdk.sample.common.Constants.GP_API_CONFIG_NAME;
 import static com.globalpayments.android.sdk.utils.ContextUtils.getAppDocumentsDirectory;
 import static com.globalpayments.android.sdk.utils.ContextUtils.getOutputStreamForUri;
 
@@ -15,10 +17,13 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.global.api.builders.TransactionReportBuilder;
 import com.global.api.entities.enums.DisputeSortProperty;
+import com.global.api.entities.enums.SortDirection;
+import com.global.api.entities.enums.TransactionSortProperty;
 import com.global.api.entities.reporting.DataServiceCriteria;
 import com.global.api.entities.reporting.DisputeSummary;
 import com.global.api.entities.reporting.DisputeSummaryPaged;
 import com.global.api.entities.reporting.SearchCriteria;
+import com.global.api.entities.reporting.TransactionSummaryPaged;
 import com.global.api.services.ReportingService;
 import com.globalpayments.android.sdk.TaskExecutor;
 import com.globalpayments.android.sdk.sample.R;
@@ -32,7 +37,10 @@ import com.globalpayments.android.sdk.utils.FileUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class DisputesReportViewModel extends BaseAndroidViewModel {
@@ -240,11 +248,14 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
     private List<DisputeSummary> executeGetDisputesListRequest(DisputesReportParametersModel parametersModel) throws Exception {
         int page = parametersModel.getPage();
         int pageSize = parametersModel.getPageSize();
+
         TransactionReportBuilder<DisputeSummaryPaged> reportBuilder = parametersModel.isFromSettlements()
                 ? ReportingService.findSettlementDisputesPaged(page, pageSize)
                 : ReportingService.findDisputesPaged(page, pageSize);
         reportBuilder.orderBy(parametersModel.getOrderBy(), parametersModel.getOrder());
+        reportBuilder.orderBy(DisputeSortProperty.Id, parametersModel.getOrder());
         reportBuilder.setDisputeOrderBy(parametersModel.getOrderBy());
+        reportBuilder.where(DataServiceCriteria.StartDepositDate, parametersModel.getFromDepositTimeCreated());
         reportBuilder.where(SearchCriteria.AquirerReferenceNumber, parametersModel.getArn())
                 .and(SearchCriteria.CardBrand, parametersModel.getBrand())
                 .and(SearchCriteria.DisputeStatus, parametersModel.getStatus())
@@ -253,6 +264,7 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
                 .and(DataServiceCriteria.EndStageDate, parametersModel.getToStageTimeCreated())
                 .and(DataServiceCriteria.StartStageDate, parametersModel.getFromAdjustmentTimeCreated())
                 .and(DataServiceCriteria.EndStageDate, parametersModel.getToAdjustmentTimeCreated())
+                .and(DataServiceCriteria.EndDepositDate, parametersModel.getToDepositTimeCreated())
                 .and(DataServiceCriteria.MerchantId, parametersModel.getSystemMID())
                 .and(DataServiceCriteria.SystemHierarchy, parametersModel.getSystemHierarchy());
 

@@ -1,7 +1,5 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations;
 
-import static com.globalpayments.android.sdk.utils.Utils.safeParseBigDecimal;
-
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -18,16 +16,20 @@ import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.
 
 import java.math.BigDecimal;
 
+import static com.globalpayments.android.sdk.utils.Utils.safeParseBigDecimal;
+
 public class TransactionOperationDialog extends BaseDialogFragment {
     private CustomSpinner currenciesSpinner;
     private CustomSpinner transactionTypeSpinner;
+    private CustomSpinner cardModelsSpinner;
     private EditText etCardNumber;
     private EditText etExpiryMonth;
     private EditText etExpiryYear;
     private EditText etCvnCvv;
     private EditText etAmount;
     private EditText etIdempotencyKey;
-    private CheckBox cbRequestMultiUseToken;
+    private CheckBox cbUse3ds;
+    private boolean use3ds;
 
     public static TransactionOperationDialog newInstance(Fragment targetFragment) {
         TransactionOperationDialog transactionOperationDialog = new TransactionOperationDialog();
@@ -49,11 +51,11 @@ public class TransactionOperationDialog extends BaseDialogFragment {
         etCvnCvv = findViewById(R.id.etCvnCvv);
         etAmount = findViewById(R.id.etAmount);
         etIdempotencyKey = findViewById(R.id.etIdempotencyKey);
-        cbRequestMultiUseToken = findViewById(R.id.cbRequestMultiUseToken);
         currenciesSpinner = findViewById(R.id.currenciesSpinner);
         transactionTypeSpinner = findViewById(R.id.transactionTypeSpinner);
+        cbUse3ds = findViewById(R.id.cbUse3ds);
+        cbUse3ds.setOnCheckedChangeListener((buttonView, isChecked) -> use3ds = isChecked);
         initSpinners();
-
         Button btSubmit = findViewById(R.id.btSubmit);
         btSubmit.setOnClickListener(v -> submitTransactionOperationModel());
     }
@@ -61,8 +63,7 @@ public class TransactionOperationDialog extends BaseDialogFragment {
     private void initSpinners() {
         transactionTypeSpinner.init(TransactionOperationType.values());
         currenciesSpinner.init(getResources().getStringArray(R.array.currencies));
-
-        CustomSpinner cardModelsSpinner = findViewById(R.id.cardModelsSpinner);
+        cardModelsSpinner = findViewById(R.id.cardModelsSpinner);
         cardModelsSpinner.init(PaymentCardModel.values(), false, this::fillPaymentCardFields);
     }
 
@@ -73,31 +74,22 @@ public class TransactionOperationDialog extends BaseDialogFragment {
         etCvnCvv.setText(paymentCardModel.getCvnCvv());
     }
 
-    private TransactionOperationModel buildTransactionOperationModel() {
-        TransactionOperationModel transactionOperationModel = new TransactionOperationModel();
-
-        transactionOperationModel.setCardNumber(etCardNumber.getText().toString());
-        transactionOperationModel.setExpiryMonth(Integer.parseInt(etExpiryMonth.getText().toString()));
-        transactionOperationModel.setExpiryYear(Integer.parseInt(etExpiryYear.getText().toString()));
-        transactionOperationModel.setCvnCvv(etCvnCvv.getText().toString());
-
-        BigDecimal amount = safeParseBigDecimal(etAmount.getText().toString());
-        transactionOperationModel.setAmount(amount == null ? new BigDecimal(0) : amount);
-
-        transactionOperationModel.setCurrency(currenciesSpinner.getSelectedOption());
-        transactionOperationModel.setTransactionOperationType(transactionTypeSpinner.getSelectedOption());
-        transactionOperationModel.setIdempotencyKey(etIdempotencyKey.getText().toString());
-        transactionOperationModel.setRequestedMultiUseToken(cbRequestMultiUseToken.isChecked());
-
-        return transactionOperationModel;
-    }
-
     private void submitTransactionOperationModel() {
-        TransactionOperationModel transactionOperationModel = buildTransactionOperationModel();
-
+        BigDecimal amount = safeParseBigDecimal(etAmount.getText().toString());
         Fragment targetFragment = getTargetFragment();
-        if (targetFragment instanceof Callback) {
-            Callback callback = (Callback) targetFragment;
+        if (targetFragment instanceof TransactionOperationDialog.Callback) {
+            TransactionOperationDialog.Callback callback = (TransactionOperationDialog.Callback) targetFragment;
+            TransactionOperationModel transactionOperationModel = new TransactionOperationModel();
+            transactionOperationModel.setTypeCardOption(cardModelsSpinner.getSelectedOption().toString());
+            transactionOperationModel.setCardNumber(etCardNumber.getText().toString());
+            transactionOperationModel.setExpiryMonth(Integer.parseInt(etExpiryMonth.getText().toString()));
+            transactionOperationModel.setExpiryYear(Integer.parseInt(etExpiryYear.getText().toString()));
+            transactionOperationModel.setCvnCvv(etCvnCvv.getText().toString());
+            transactionOperationModel.setAmount(amount == null ? new BigDecimal(0) : amount);
+            transactionOperationModel.setCurrency(currenciesSpinner.getSelectedOption());
+            transactionOperationModel.setTransactionOperationType(transactionTypeSpinner.getSelectedOption());
+            transactionOperationModel.setIdempotencyKey(etIdempotencyKey.getText().toString());
+            transactionOperationModel.setUse3DS(use3ds);
             callback.onSubmitTransactionOperationModel(transactionOperationModel);
         }
         dismiss();
@@ -106,4 +98,5 @@ public class TransactionOperationDialog extends BaseDialogFragment {
     public interface Callback {
         void onSubmitTransactionOperationModel(TransactionOperationModel transactionOperationModel);
     }
+
 }

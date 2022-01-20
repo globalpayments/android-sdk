@@ -135,6 +135,22 @@
                 android:layout_marginBottom="@dimen/size_4dp"
                 android:paddingStart="@dimen/size_4dp"
                 android:paddingEnd="@dimen/size_4dp"
+                android:text="@string/select_card_present_configuration"
+                android:textColor="@color/colorHintInputHeader"
+                android:textSize="@dimen/text_size_18sp" />
+
+            <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
+                android:id="@+id/channelConfigSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/size_16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/size_4dp"
+                android:paddingStart="@dimen/size_4dp"
+                android:paddingEnd="@dimen/size_4dp"
                 android:text="@string/token_interval_to_expire_configuration"
                 android:textColor="@color/colorHintInputHeader"
                 android:textSize="@dimen/text_size_18sp" />

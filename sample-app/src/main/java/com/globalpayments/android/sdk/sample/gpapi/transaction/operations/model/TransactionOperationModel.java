@@ -3,6 +3,7 @@ package com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model
 import java.math.BigDecimal;
 
 public class TransactionOperationModel {
+    private String typeCardOption;
     private String cardNumber;
     private int expiryMonth;
     private int expiryYear;
@@ -11,7 +12,23 @@ public class TransactionOperationModel {
     private String currency;
     private TransactionOperationType transactionOperationType;
     private String idempotencyKey;
-    private boolean isRequestedMultiUseToken;
+    private boolean use3DS;
+
+    public String getTypeCardOption() {
+        return typeCardOption;
+    }
+
+    public void setTypeCardOption(String typeCardOption) {
+        this.typeCardOption = typeCardOption;
+    }
+
+    public boolean isUse3DS() {
+        return use3DS;
+    }
+
+    public void setUse3DS(boolean use3DS) {
+        this.use3DS = use3DS;
+    }
 
     public String getCardNumber() {
         return cardNumber;
@@ -77,11 +94,4 @@ public class TransactionOperationModel {
         this.idempotencyKey = idempotencyKey;
     }
 
-    public boolean isRequestedMultiUseToken() {
-        return isRequestedMultiUseToken;
-    }
-
-    public void setRequestedMultiUseToken(boolean requestedMultiUseToken) {
-        isRequestedMultiUseToken = requestedMultiUseToken;
-    }
 }

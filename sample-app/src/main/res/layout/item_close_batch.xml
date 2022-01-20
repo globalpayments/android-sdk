@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.globalpayments.android.sdk.sample.gpapi.actions.actionsReport.ActionsReportView
-            android:id="@+id/reportReportView"
+        <com.globalpayments.android.sdk.sample.gpapi.batch.closeBatch.CloseBatchReportView
+            android:id="@+id/closeBatchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true" />
@@ -23,7 +23,7 @@
             android:id="@+id/arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/reportReportView"
+            android:layout_below="@id/closeBatchView"
             android:layout_centerHorizontal="true"
             android:background="?selectableItemBackgroundBorderless"
             app:srcCompat="@drawable/ic_arrow_down_24" />

@@ -239,6 +239,42 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
+            android:text="@string/from_deposit_time_created" />
+
+        <TextView
+            android:id="@+id/tvFromDepositTimeCreated"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:hint="@string/empty"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            android:textIsSelectable="false" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/to_deposit_time_created" />
+
+        <TextView
+            android:id="@+id/tvToDepositTimeCreated"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:hint="@string/empty"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            android:textIsSelectable="false" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
             android:text="@string/system_mid" />
 
         <EditText

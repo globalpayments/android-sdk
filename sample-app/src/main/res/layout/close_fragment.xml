@@ -18,18 +18,11 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btGetActionList"
+            android:id="@+id/btGetCloseBatchId"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/report_get_action_list" />
-
-        <Button
-            android:id="@+id/btGetActionById"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/report_get_action_by_id" />
+            android:text="@string/report_get_close_batch_by_id" />
 
     </LinearLayout>
 
@@ -61,7 +54,7 @@
         android:layout_weight="1"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_dispute_report"
+        tools:listitem="@layout/item_close_batch"
         tools:visibility="gone" />
 
 </LinearLayout>

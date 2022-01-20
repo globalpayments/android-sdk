@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayoutExample"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
@@ -18,6 +19,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/create_transaction" />
+
+    <WebView
+        android:id="@+id/wvthreeDSChallenge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/errorTextView"
@@ -46,7 +53,7 @@
         android:layout_margin="@dimen/size_16dp"
         android:visibility="gone"
         app:cardCornerRadius="@dimen/size_8dp"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <com.globalpayments.android.sdk.sample.gpapi.transaction.operations.TransactionView
             android:id="@+id/transactionView"

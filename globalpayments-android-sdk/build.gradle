@@ -8,7 +8,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "1.1.3"
+        versionName "1.1.4"
     }
 
     buildTypes {
@@ -22,7 +22,7 @@ android {
 dependencies {
 
     // Production
-    api 'com.heartlandpaymentsystems:globalpayments-sdk:6.1.90'
+    api 'com.heartlandpaymentsystems:globalpayments-sdk:6.1.94'
 
     // Snapshot - mavenLocal (For testing only)
     // api 'com.heartlandpaymentsystems:globalpayments-sdk:6.1.90'
