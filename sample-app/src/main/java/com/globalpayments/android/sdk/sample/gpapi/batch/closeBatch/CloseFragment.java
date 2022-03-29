@@ -1,20 +1,23 @@
 package com.globalpayments.android.sdk.sample.gpapi.batch.closeBatch;
 
-import static com.globalpayments.android.sdk.sample.gpapi.batch.closeBatch.CloseDialog.TYPE.CLOSE_BATCH_BY_ID;
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideViews;
 import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
+
 import android.app.ProgressDialog;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.global.api.entities.BatchSummary;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar;
-import com.globalpayments.android.sdk.sample.gpapi.batch.closeBatch.model.CloseBatchParametersModel;
+
 import java.util.List;
 
 public class CloseFragment extends BaseFragment implements CloseDialog.Callback {
@@ -52,11 +55,11 @@ public class CloseFragment extends BaseFragment implements CloseDialog.Callback 
         recyclerView = findViewById(R.id.recyclerView);
 
         Button btGetCloseBatchById = findViewById(R.id.btGetCloseBatchId);
-        btGetCloseBatchById.setOnClickListener(v -> showActionsReportDialog(CLOSE_BATCH_BY_ID));
+        btGetCloseBatchById.setOnClickListener(v -> showActionsReportDialog());
     }
 
-    private void showActionsReportDialog(CloseDialog.TYPE type) {
-        CloseDialog closeDialog = CloseDialog.newInstance(this, type);
+    private void showActionsReportDialog() {
+        CloseDialog closeDialog = CloseDialog.newInstance(this);
         closeDialog.show(requireFragmentManager(), CloseDialog.class.getSimpleName());
     }
 
@@ -74,7 +77,12 @@ public class CloseFragment extends BaseFragment implements CloseDialog.Callback 
         closeViewModel.getError().observe(this, errorMessage -> {
             hideViews(recyclerView);
             showView(errorTextView);
-            errorTextView.setText(errorMessage);
+            if (errorMessage.contains("Empty") && errorMessage.contains("List")) {
+                errorTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBlack));
+                errorTextView.setText(R.string.empty_list);
+            } else {
+                errorTextView.setText(errorMessage);
+            }
         });
 
         closeViewModel.getCloseBatchLiveData().observe(this, actions -> {
@@ -92,8 +100,8 @@ public class CloseFragment extends BaseFragment implements CloseDialog.Callback 
     }
 
     @Override
-    public void onSubmitCloseBatchParametersModel(CloseBatchParametersModel closeBatchParametersModel) {
-        closeViewModel.getCloseBatchById(closeBatchParametersModel.getId());
+    public void onSubmitCloseBatchParametersModel(String batchId) {
+        closeViewModel.getCloseBatchById(batchId);
     }
 
     @Override

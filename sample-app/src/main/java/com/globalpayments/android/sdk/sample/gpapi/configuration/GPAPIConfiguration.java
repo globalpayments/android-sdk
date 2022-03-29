@@ -8,6 +8,8 @@ public class GPAPIConfiguration {
     private String appId;
     private String appKey;
     private String serviceUrl;
+    private String challengeNotificationUrl;
+    private String methodNotificationUrl;
     private String apiVersion;
     private Integer tokenSecondsToExpire;
     private Channel channel;
@@ -33,6 +35,22 @@ public class GPAPIConfiguration {
 
     public String getServiceUrl() {
         return serviceUrl;
+    }
+
+    public String getChallengeNotificationUrl() {
+        return challengeNotificationUrl;
+    }
+
+    public void setChallengeNotificationUrl(String challengeNotificationUrl) {
+        this.challengeNotificationUrl = challengeNotificationUrl;
+    }
+
+    public String getMethodNotificationUrl() {
+        return methodNotificationUrl;
+    }
+
+    public void setMethodNotificationUrl(String methodNotificationUrl) {
+        this.methodNotificationUrl = methodNotificationUrl;
     }
 
     public void setServiceUrl(String serviceUrl) {

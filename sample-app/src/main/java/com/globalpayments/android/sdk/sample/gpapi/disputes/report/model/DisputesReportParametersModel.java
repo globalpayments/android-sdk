@@ -18,10 +18,6 @@ public class DisputesReportParametersModel {
     private DisputeStage stage;
     private Date fromStageTimeCreated;
     private Date toStageTimeCreated;
-    private Date fromAdjustmentTimeCreated;
-    private Date toAdjustmentTimeCreated;
-    private Date fromDepositTimeCreated;
-    private Date toDepositTimeCreated;
     private String systemMID;
     private String systemHierarchy;
 
@@ -105,38 +101,6 @@ public class DisputesReportParametersModel {
 
     public void setToStageTimeCreated(Date toStageTimeCreated) {
         this.toStageTimeCreated = toStageTimeCreated;
-    }
-
-    public Date getFromAdjustmentTimeCreated() {
-        return fromAdjustmentTimeCreated;
-    }
-
-    public void setFromAdjustmentTimeCreated(Date fromAdjustmentTimeCreated) {
-        this.fromAdjustmentTimeCreated = fromAdjustmentTimeCreated;
-    }
-
-    public Date getToAdjustmentTimeCreated() {
-        return toAdjustmentTimeCreated;
-    }
-
-    public void setToAdjustmentTimeCreated(Date toAdjustmentTimeCreated) {
-        this.toAdjustmentTimeCreated = toAdjustmentTimeCreated;
-    }
-
-    public Date getFromDepositTimeCreated() {
-        return fromDepositTimeCreated;
-    }
-
-    public void setFromDepositTimeCreated(Date fromDepositTimeCreated) {
-        this.fromDepositTimeCreated = fromDepositTimeCreated;
-    }
-
-    public Date getToDepositTimeCreated() {
-        return toDepositTimeCreated;
-    }
-
-    public void setToDepositTimeCreated(Date toDepositTimeCreated) {
-        this.toDepositTimeCreated = toDepositTimeCreated;
     }
 
     public String getSystemMID() {

@@ -4,7 +4,7 @@
     <string name="gp_api">GP API</string>
     <string name="gp_api_configuration">GP API Configuration</string>
     <string name="result">Result:</string>
-    <string name="payment_methods">Payment Methods</string>
+    <string name="payment_methods">Stored Payment Methods</string>
     <string name="deposits">Deposits</string>
     <string name="disputes">Disputes</string>
     <string name="transaction_report">Transaction Report</string>
@@ -39,6 +39,7 @@
     <string name="default_page_size">5</string>
     <string name="transaction_id">Transaction ID:</string>
     <string name="empty">Empty</string>
+    <string name="empty_list">Empty list</string>
     <string name="account_name">Account Name:</string>
     <string name="card_brand">Card Brand:</string>
     <string name="brand_reference">Brand Reference:</string>
@@ -56,6 +57,7 @@
     <string name="submit">Submit</string>
     <string name="report_parameters">Report Parameters</string>
     <string name="payment_card">Payment card</string>
+    <string name="payment_id">Id:</string>
     <string name="payment_card_model">Payment card model</string>
     <string name="card_number">Card Number:</string>
     <string name="card_number_last_4">Card Number Last 4:</string>
@@ -65,7 +67,9 @@
     <string name="default_amount">15.99</string>
     <string name="transaction_data">Transaction data</string>
     <string name="transaction_type">Transaction type:</string>
+    <string name="select_multi_token_type">Tokenize card before transaction:</string>
     <string name="result_code">Result Code:</string>
+    <string name="liability_shift">Liability Shift:</string>
     <string name="token_id">Token ID:</string>
     <string name="card_expiry_month">Card Expiry Month:</string>
     <string name="card_expiry_year">Card Expiry Year:</string>
@@ -139,6 +143,8 @@
     <string name="app_id_configuration"><b>APP ID</b> (required)</string>
     <string name="app_key_configuration"><b>APP KEY</b> (required)</string>
     <string name="service_url_configuration"><b>SERVICE URL</b> (optional)</string>
+    <string name="challenge_url_configuration"><b>CHALLENGE NOTIFICATION URL</b></string>
+    <string name="method_url_configuration"><b>METHOD NOTIFICATION URL</b></string>
     <string name="api_version_configuration"><b>API VERSION</b> (optional)</string>
     <string name="token_seconds_to_expire_configuration"><b>TOKEN - SECONDS TO EXPIRE</b></string>
     <string name="select_country_configuration"><b>SELECT YOUR COUNTRY</b></string>
@@ -160,6 +166,8 @@
     <string name="token_last_4">Token Last 4:</string>
     <string name="brand">Brand:</string>
     <string name="from_time_created">From Time Created:</string>
+    <string name="from_time_last_updated">From Time Last Updated</string>
+    <string name="to_time_last_updated">To Time Last Updated</string>
     <string name="to_time_created">To Time Created:</string>
     <string name="name">Name:</string>
     <string name="other_parameters">Other parameters</string>

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -78,7 +79,12 @@ public class TransactionReportFragment extends BaseFragment implements Transacti
         transactionReportViewModel.getError().observe(this, errorMessage -> {
             hideView(recyclerView);
             showView(errorTextView);
-            errorTextView.setText(errorMessage);
+            if (errorMessage.contains("Empty") && errorMessage.contains("List")) {
+                errorTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBlack));
+                errorTextView.setText(R.string.empty_list);
+            } else {
+                errorTextView.setText(errorMessage);
+            }
         });
 
         transactionReportViewModel.getTransactionsLiveData().observe(this, transactionList -> {

@@ -10,18 +10,18 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/btTransactionsReport"
-        style="@style/Button.Main"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/transaction_report" />
-
-    <Button
         android:id="@+id/btTransactionOperations"
         style="@style/Button.Main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/transaction_operations" />
+
+    <Button
+        android:id="@+id/btTransactionsReport"
+        style="@style/Button.Main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/transaction_report" />
 </LinearLayout>

@@ -5,6 +5,7 @@ import com.global.api.entities.enums.DepositStatus;
 import com.global.api.entities.enums.PaymentEntryMode;
 import com.global.api.entities.enums.PaymentType;
 import com.global.api.entities.enums.SortDirection;
+import com.global.api.entities.enums.StoredPaymentMethodStatus;
 import com.global.api.entities.enums.TransactionSortProperty;
 import com.global.api.entities.enums.TransactionStatus;
 
@@ -31,6 +32,7 @@ public class TransactionReportParameters {
 
     // Non Settlements fields
     private String id;
+    private String reference;
     private PaymentType type;
     private Channel channel;
     private BigDecimal amount;
@@ -45,11 +47,14 @@ public class TransactionReportParameters {
 
     // Settlements fields
     private DepositStatus depositStatus;
+    private StoredPaymentMethodStatus transactionStatus;
     private String arn;
     private Date fromDepositTimeCreated;
     private Date toDepositTimeCreated;
     private Date fromBatchTimeCreated;
     private Date toBatchTimeCreated;
+    private Date fromTimeLastUpdated;
+    private Date toTimeLastUpdated;
     private String systemMID;
     private String systemHierarchy;
 
@@ -323,5 +328,37 @@ public class TransactionReportParameters {
 
     public void setSystemHierarchy(String systemHierarchy) {
         this.systemHierarchy = systemHierarchy;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    public StoredPaymentMethodStatus getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public void setTransactionStatus(StoredPaymentMethodStatus transactionStatus) {
+        this.transactionStatus = transactionStatus;
+    }
+
+    public Date getFromTimeLastUpdated() {
+        return fromTimeLastUpdated;
+    }
+
+    public void setFromTimeLastUpdated(Date fromTimeLastUpdated) {
+        this.fromTimeLastUpdated = fromTimeLastUpdated;
+    }
+
+    public Date getToTimeLastUpdated() {
+        return toTimeLastUpdated;
+    }
+
+    public void setToTimeLastUpdated(Date toTimeLastUpdated) {
+        this.toTimeLastUpdated = toTimeLastUpdated;
     }
 }

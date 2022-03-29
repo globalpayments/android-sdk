@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.globalpayments.android.sdk.sample.R;
@@ -69,7 +70,12 @@ public class PaymentMethodOperationsFragment extends BaseFragment implements Pay
         paymentMethodOperationsViewModel.getError().observe(this, errorMessage -> {
             hideView(cvPaymentMethodOperation);
             showView(errorTextView);
-            errorTextView.setText(errorMessage);
+            if (errorMessage.contains("Empty") && errorMessage.contains("List")) {
+                errorTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBlack));
+                errorTextView.setText(R.string.empty_list);
+            } else {
+                errorTextView.setText(errorMessage);
+            }
         });
 
         paymentMethodOperationsViewModel.getPaymentMethodOperationUIModelLiveData().observe(this, paymentMethodOperationUIModel -> {

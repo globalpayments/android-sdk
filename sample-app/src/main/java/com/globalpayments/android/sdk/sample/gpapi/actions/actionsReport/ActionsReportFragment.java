@@ -9,6 +9,8 @@ import android.app.ProgressDialog;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import com.global.api.entities.reporting.ActionSummary;
@@ -78,7 +80,12 @@ public class ActionsReportFragment extends BaseFragment implements ActionsDialog
         actionsReportViewModel.getError().observe(this, errorMessage -> {
             hideViews(recyclerView);
             showView(errorTextView);
-            errorTextView.setText(errorMessage);
+            if (errorMessage.contains("Empty") && errorMessage.contains("List")) {
+                errorTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBlack));
+                errorTextView.setText(R.string.empty_list);
+            } else {
+                errorTextView.setText(errorMessage);
+            }
         });
 
         actionsReportViewModel.getActionsLiveData().observe(this, actions -> {

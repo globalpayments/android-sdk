@@ -142,6 +142,9 @@ public class AccessTokenDialog extends BaseDialogFragment {
         Fragment targetFragment = getTargetFragment();
         if (targetFragment instanceof Callback) {
             Callback callback = (Callback) targetFragment;
+            if (etSecondsToExpire.getText().toString().isEmpty()) {
+                etSecondsToExpire.setText("0");
+            }
             callback.onSubmitAccessTokenInputModel(
                     etAppId.getText().toString(),
                     etAppKey.getText().toString(),

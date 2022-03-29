@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +35,7 @@ import com.globalpayments.android.sdk.sample.gpapi.disputes.report.model.Documen
 import com.globalpayments.android.sdk.utils.IntentUtils;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 public class DisputesReportFragment extends BaseFragment implements DisputesReportDialog.Callback {
@@ -120,7 +122,12 @@ public class DisputesReportFragment extends BaseFragment implements DisputesRepo
         disputesReportViewModel.getError().observe(this, errorMessage -> {
             hideViews(recyclerView, cvDocumentReport);
             showView(errorTextView);
-            errorTextView.setText(errorMessage);
+            if (errorMessage.contains("Empty") && errorMessage.contains("List")) {
+                errorTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBlack));
+                errorTextView.setText(R.string.empty_list);
+            } else {
+                errorTextView.setText(errorMessage);
+            }
         });
 
         disputesReportViewModel.getDisputesLiveData().observe(this, disputes -> {
@@ -241,8 +248,8 @@ public class DisputesReportFragment extends BaseFragment implements DisputesRepo
     }
 
     @Override
-    public void onSubmitDisputeByDepositId(String disputeId) {
-        disputesReportViewModel.getDisputeByDepositId(disputeId);
+    public void onSubmitDisputeByDepositId(String disputeId, Date currentDateAndTime) {
+        disputesReportViewModel.getDisputeByDepositId(disputeId, currentDateAndTime);
     }
 
     @Override

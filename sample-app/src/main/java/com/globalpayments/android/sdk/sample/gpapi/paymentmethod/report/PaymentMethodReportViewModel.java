@@ -6,26 +6,27 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.global.api.builders.TransactionReportBuilder;
-import com.global.api.entities.Transaction;
 import com.global.api.entities.exceptions.ApiException;
+import com.global.api.entities.reporting.DataServiceCriteria;
+import com.global.api.entities.reporting.SearchCriteria;
 import com.global.api.entities.reporting.StoredPaymentMethodSummary;
 import com.global.api.entities.reporting.StoredPaymentMethodSummaryPaged;
 import com.global.api.paymentMethods.CreditCardData;
 import com.global.api.services.ReportingService;
 import com.globalpayments.android.sdk.TaskExecutor;
 import com.globalpayments.android.sdk.sample.common.base.BaseViewModel;
+import com.globalpayments.android.sdk.sample.gpapi.transaction.report.model.TransactionReportParameters;
+import com.globalpayments.android.sdk.sample.gpapi.verifications.model.VerificationsModel;
 
 import java.util.Collections;
 import java.util.List;
 
 public class PaymentMethodReportViewModel extends BaseViewModel {
 
-    private final MutableLiveData<List<Transaction>> paymentMethodsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<StoredPaymentMethodSummary>> paymentMethodsLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<StoredPaymentMethodSummary>> paymentMethodsListLiveData = new MutableLiveData<>();
-    int page = 1;
-    int pageSize = 5;
 
-    public LiveData<List<Transaction>> getPaymentMethodsLiveData() {
+    public LiveData<List<StoredPaymentMethodSummary>> getPaymentMethodsLiveData() {
         return paymentMethodsLiveData;
     }
 
@@ -33,12 +34,12 @@ public class PaymentMethodReportViewModel extends BaseViewModel {
         return paymentMethodsListLiveData;
     }
 
-    public void getPaymentMethodList() {
+    public void getPaymentMethodList(TransactionReportParameters reportParameters) {
         showProgress();
         TaskExecutor.executeAsync(new TaskExecutor.Task<List<StoredPaymentMethodSummary>>() {
             @Override
             public List<StoredPaymentMethodSummary> executeAsync() throws Exception {
-                return executeGetPaymentMethodsRequest();
+                return executeGetPaymentMethodsRequest(reportParameters);
             }
 
             @Override
@@ -56,14 +57,14 @@ public class PaymentMethodReportViewModel extends BaseViewModel {
     public void getPaymentMethodById(String paymentMethodId) {
         showProgress();
 
-        TaskExecutor.executeAsync(new TaskExecutor.Task<Transaction>() {
+        TaskExecutor.executeAsync(new TaskExecutor.Task<StoredPaymentMethodSummary>() {
             @Override
-            public Transaction executeAsync() throws Exception {
+            public StoredPaymentMethodSummary executeAsync() throws Exception {
                 return executeGetPaymentMethodByIdRequest(paymentMethodId);
             }
 
             @Override
-            public void onSuccess(Transaction value) {
+            public void onSuccess(StoredPaymentMethodSummary value) {
                 showResultPaymentMethodById(Collections.singletonList(value));
             }
 
@@ -83,7 +84,7 @@ public class PaymentMethodReportViewModel extends BaseViewModel {
         }
     }
 
-    private void showResultPaymentMethodById(List<Transaction> paymentMethods) {
+    private void showResultPaymentMethodById(List<StoredPaymentMethodSummary> paymentMethods) {
         if (paymentMethods == null || paymentMethods.isEmpty()) {
             showError(new Exception("Empty Payment Method Report List"));
         } else {
@@ -92,20 +93,26 @@ public class PaymentMethodReportViewModel extends BaseViewModel {
         }
     }
 
-    private Transaction executeGetPaymentMethodByIdRequest(String paymentMethodId) throws ApiException {
-        CreditCardData tokenizedCard = new CreditCardData();
-        tokenizedCard.setToken(paymentMethodId);
-        return tokenizedCard
-                .verify()
+    private StoredPaymentMethodSummary executeGetPaymentMethodByIdRequest(String paymentMethodId) throws ApiException {
+        return ReportingService
+                .storedPaymentMethodDetail(paymentMethodId)
                 .execute(DEFAULT_GPAPI_CONFIG);
     }
 
-    private List<StoredPaymentMethodSummary> executeGetPaymentMethodsRequest() throws ApiException {
-        return getPaymentMethodsReportBuilder().execute(DEFAULT_GPAPI_CONFIG).getResults();
-    }
+    private List<StoredPaymentMethodSummary> executeGetPaymentMethodsRequest(TransactionReportParameters reportParameters) throws ApiException {
+        TransactionReportBuilder<StoredPaymentMethodSummaryPaged> reportBuilder =
+                ReportingService.findStoredPaymentMethodsPaged(reportParameters.getPage(), reportParameters.getPageSize());
+                    reportBuilder.setOrder(reportParameters.getOrder());
+                    reportBuilder.setTransactionOrderBy(reportParameters.getOrderBy());
+                    reportBuilder.withStoredPaymentMethodId(reportParameters.getId());
+                    reportBuilder.where(SearchCriteria.ReferenceNumber, reportParameters.getReference());
+                    reportBuilder.where(SearchCriteria.StoredPaymentMethodStatus, reportParameters.getTransactionStatus());
+                    reportBuilder.where(SearchCriteria.StartDate, reportParameters.getFromTimeCreated())
+                            .and(SearchCriteria.EndDate, reportParameters.getToTimeCreated());
+                    reportBuilder.where(DataServiceCriteria.StartLastUpdatedDate, reportParameters.getFromTimeLastUpdated())
+                            .and(DataServiceCriteria.EndLastUpdatedDate, reportParameters.getToTimeLastUpdated());
 
-    private TransactionReportBuilder<StoredPaymentMethodSummaryPaged> getPaymentMethodsReportBuilder() {
-        return ReportingService.findStoredPaymentMethodsPaged(page, pageSize);
+        return reportBuilder.execute(DEFAULT_GPAPI_CONFIG).getResults();
     }
 
 }

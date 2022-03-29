@@ -12,8 +12,8 @@ import com.globalpayments.android.sdk.sample.common.ActionLiveData;
 import static com.globalpayments.android.sdk.utils.Utils.getExceptionDescription;
 
 public abstract class BaseAndroidViewModel extends AndroidViewModel {
-    private MutableLiveData<Boolean> progressStatus = new MutableLiveData<>();
-    private ActionLiveData<String> error = new ActionLiveData<>();
+    private final MutableLiveData<Boolean> progressStatus = new MutableLiveData<>();
+    private final ActionLiveData<String> error = new ActionLiveData<>();
 
     public BaseAndroidViewModel(@NonNull Application application) {
         super(application);

@@ -13,16 +13,16 @@ public class DateUtils {
     public static final String ISO_DATE_FORMAT_2 = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
 
-    public static String getNowDateFormatted() {
-        return getNowDateFormatted(ISO_DATE_FORMAT);
+    public static String getNowDateFormatted(Date date) {
+        return getNowDateFormatted(ISO_DATE_FORMAT, date);
     }
 
-    public static String getNowDateFormatted(String dateFormat) {
-        return new SimpleDateFormat(dateFormat, Locale.getDefault()).format(new Date());
+    public static String getNowDateFormatted(String dateFormat, Date date) {
+        return new SimpleDateFormat(dateFormat, Locale.getDefault()).format(date);
     }
 
     public static String getDateISOFormatted(Date date) {
-        return getDateFormatted(date, ISO_DATE_FORMAT);
+        return getDateFormatted(date, ISO_DATE_FORMAT_2);
     }
 
     public static String getDateFormatted(Date date, String format) {

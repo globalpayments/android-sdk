@@ -4,9 +4,6 @@ import static com.globalpayments.android.sdk.sample.common.views.Position.BELOW_
 import static com.globalpayments.android.sdk.sample.common.views.Position.BOTTOM;
 import static com.globalpayments.android.sdk.sample.common.views.Position.SECOND;
 import static com.globalpayments.android.sdk.sample.common.views.Position.TOP;
-import static com.globalpayments.android.sdk.utils.DateUtils.ISO_DATE_FORMAT_2;
-import static com.globalpayments.android.sdk.utils.DateUtils.getDateFormatted;
-import static com.globalpayments.android.sdk.utils.DateUtils.getDateISOFormatted;
 import static com.globalpayments.android.sdk.utils.Utils.isNotNullOrBlank;
 import static com.globalpayments.android.sdk.utils.Utils.safeParseBigDecimal;
 import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewVisibility;
@@ -22,6 +19,10 @@ import androidx.annotation.Nullable;
 import com.global.api.entities.reporting.DisputeSummary;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.views.ItemView;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.ISODateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -150,7 +151,8 @@ public class DisputeReportView extends LinearLayout {
 
     public void bind(DisputeSummary disputeSummary) {
         idItemView.setValue(disputeSummary.getCaseId());
-        timeCreatedItemView.setValueOrHide(getDateISOFormatted(disputeSummary.getCaseIdTime()));
+        DateTime transactionDate = disputeSummary.getCaseIdTime().withZoneRetainFields(DateTimeZone.UTC);
+        timeCreatedItemView.setValueOrHide(ISODateTimeFormat.dateTime().print(transactionDate));
         depositReference.setValue(disputeSummary.getDepositReference());
         statusItemView.setValue(disputeSummary.getCaseStatus());
         stageItemView.setValue(disputeSummary.getCaseStage());
@@ -176,9 +178,10 @@ public class DisputeReportView extends LinearLayout {
         cardBrandItemView.setValue(disputeSummary.getTransactionCardType());
         cardAuthCodeItemView.setValueOrHide(disputeSummary.getTransactionAuthCode());
 
-        timeToRespondByItemView.setValue(getDateISOFormatted(disputeSummary.getRespondByDate()));
+        DateTime transactionDate2 = disputeSummary.getRespondByDate().withZoneRetainFields(DateTimeZone.UTC);
+        timeToRespondByItemView.setValue(ISODateTimeFormat.dateTime().print(transactionDate2));
 
-        Date transactionTime = disputeSummary.getTransactionTime();
+        DateTime transactionTime = disputeSummary.getCaseIdTime().withZoneRetainFields(DateTimeZone.UTC);
         String transactionType = disputeSummary.getTransactionType();
         BigDecimal transactionAmount = disputeSummary.getTransactionAmount();
         String transactionCurrency = disputeSummary.getTransactionCurrency();
@@ -191,7 +194,7 @@ public class DisputeReportView extends LinearLayout {
                 || isNotNullOrBlank(transactionReferenceNumber);
 
         handleViewVisibility(transactionItemView, showTransactionGroup);
-        transactionTimeCreatedItemView.setValueOrHide(getDateFormatted(transactionTime, ISO_DATE_FORMAT_2));
+        transactionTimeCreatedItemView.setValueOrHide(ISODateTimeFormat.dateTime().print(transactionTime));
         transactionTypeItemView.setValueOrHide(transactionType);
         transactionAmountItemView.setValueOrHide(safeParseBigDecimal(transactionAmount));
         transactionCurrencyItemView.setValueOrHide(transactionCurrency);

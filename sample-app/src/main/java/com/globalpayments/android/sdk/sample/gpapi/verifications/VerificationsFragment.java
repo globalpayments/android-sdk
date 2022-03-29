@@ -5,6 +5,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.globalpayments.android.sdk.sample.R;
@@ -69,7 +70,12 @@ public class VerificationsFragment extends BaseFragment implements Verifications
         verificationsViewModel.getError().observe(this, errorMessage -> {
             hideView(cvVerification);
             showView(errorTextView);
-            errorTextView.setText(errorMessage);
+            if (errorMessage.contains("Empty") && errorMessage.contains("List")) {
+                errorTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBlack));
+                errorTextView.setText(R.string.empty_list);
+            } else {
+                errorTextView.setText(errorMessage);
+            }
         });
 
         verificationsViewModel.getTransactionLiveData().observe(this, transaction -> {

@@ -251,7 +251,7 @@ public class TransactionReportDialog extends BaseDialogFragment {
     }
 
     private void initSpinners() {
-        orderBySpinner.init(new TransactionSortProperty[]{TransactionSortProperty.Id, TransactionSortProperty.TimeCreated, TransactionSortProperty.Type});
+        orderBySpinner.init(TransactionSortProperty.values());
         orderBySpinner.selectItem(TransactionSortProperty.TimeCreated);
 
         orderSpinner.init(SortDirection.values());

@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.global.api.builders.TransactionReportBuilder;
 import com.global.api.entities.reporting.ActionSummary;
 import com.global.api.entities.reporting.ActionSummaryPaged;
 import com.global.api.entities.reporting.SearchCriteria;
@@ -88,23 +87,30 @@ public class ActionsReportViewModel extends BaseAndroidViewModel {
             ActionsReportParametersModel parametersModel) throws Exception {
         int page = parametersModel.getPage();
         int pageSize = parametersModel.getPageSize();
-        ActionSummaryPaged result =
+        ActionSummaryPaged reportBuilder =
                 ReportingService.findActionsPaged(page, pageSize)
+                        .orderBy(parametersModel.getOrderBy(), parametersModel.getOrder())
                         .where(SearchCriteria.ActionType, parametersModel.getType())
+                        .and(SearchCriteria.ActionId, parametersModel.getId())
                         .and(SearchCriteria.Resource, parametersModel.getResource())
                         .and(SearchCriteria.ResourceStatus, parametersModel.getResourceStatus())
-                        .and(SearchCriteria.AccountName, parametersModel.getAccountName())
-                        .and(SearchCriteria.MerchantName, parametersModel.getMerchantName())
-                        .and(SearchCriteria.Version, parametersModel.getVersion())
+                        .and(SearchCriteria.ResourceId, parametersModel.getResourceId())
                         .and(SearchCriteria.StartDate, parametersModel.getFromTimeCreated())
                         .and(SearchCriteria.EndDate, parametersModel.getToTimeCreated())
+                        .and(SearchCriteria.AccountName, parametersModel.getAccountName())
+                        .and(SearchCriteria.MerchantName, parametersModel.getMerchantName())
+                        .and(SearchCriteria.AppName, parametersModel.getAppName())
+                        .and(SearchCriteria.Version, parametersModel.getVersion())
+                        .and(SearchCriteria.ResponseCode, parametersModel.getResponseCode())
+                        .and(SearchCriteria.HttpResponseCode, parametersModel.getResponseHttpCode())
                         .execute(DEFAULT_GPAPI_CONFIG);
 
-        return result.getResults();
+        return reportBuilder.getResults();
     }
 
-    private ActionSummary executeGetActionByIdRequest(String actionId) throws Exception {
-        return ReportingService.actionDetail(actionId)
-        .execute(DEFAULT_GPAPI_CONFIG);
+    private ActionSummary executeGetActionByIdRequest(
+            String actionId) throws Exception {
+            return ReportingService.actionDetail(actionId)
+                        .execute(DEFAULT_GPAPI_CONFIG);
     }
 }

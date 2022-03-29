@@ -4,6 +4,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -78,7 +79,12 @@ public class DepositsFragment extends BaseFragment implements DepositsDialog.Cal
         depositsViewModel.getError().observe(this, errorMessage -> {
             hideView(recyclerView);
             showView(errorTextView);
-            errorTextView.setText(errorMessage);
+            if (errorMessage.contains("Empty") && errorMessage.contains("List")) {
+                errorTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorBlack));
+                errorTextView.setText(R.string.empty_list);
+            } else {
+                errorTextView.setText(errorMessage);
+            }
         });
 
         depositsViewModel.getDepositSummaryListLiveData().observe(this, depositSummaryList -> {

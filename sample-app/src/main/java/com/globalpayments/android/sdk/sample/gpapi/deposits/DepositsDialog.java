@@ -141,6 +141,7 @@ public class DepositsDialog extends BaseDialogFragment {
     private void initSpinners() {
         orderBySpinner.init(DepositSortProperty.values());
         orderSpinner.init(SortDirection.values());
+        orderSpinner.selectItem(SortDirection.Descending);
         statusSpinner.init(DepositStatus.values(), true);
     }
 

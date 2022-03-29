@@ -14,6 +14,10 @@ import com.global.api.entities.reporting.StoredPaymentMethodSummary;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.views.ItemView;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.ISODateTimeFormat;
+
 public class PaymentMethodViewList extends LinearLayout {
     private ItemView idItemView;
     private ItemView timeCreatedItemView;
@@ -57,7 +61,8 @@ public class PaymentMethodViewList extends LinearLayout {
 
     public void bind(StoredPaymentMethodSummary storedPaymentMethodSummary) {
         idItemView.setValue(storedPaymentMethodSummary.getId());
-        timeCreatedItemView.setValue(storedPaymentMethodSummary.getTimeCreated().toString());
+        DateTime transactionDate = storedPaymentMethodSummary.getTimeCreated().withZoneRetainFields(DateTimeZone.UTC);
+        timeCreatedItemView.setValue(ISODateTimeFormat.dateTime().print(transactionDate));
         statusItemView.setValue(storedPaymentMethodSummary.getStatus());
         referenceItemView.setValue(storedPaymentMethodSummary.getReference());
         nameItemView.setValue(storedPaymentMethodSummary.getName());

@@ -58,8 +58,8 @@ public class GPAPIConfigurationUtils {
         gpApiConfig.setAppKey(gpapiConfiguration.getAppKey());
         gpApiConfig.setChannel(gpapiConfiguration.getChannel().getValue());
 
-        gpApiConfig.setChallengeNotificationUrl("https://ensi808o85za.x.pipedream.net/");
-        gpApiConfig.setMethodNotificationUrl("https://ensi808o85za.x.pipedream.net/");
+        gpApiConfig.setChallengeNotificationUrl(gpapiConfiguration.getChallengeNotificationUrl());
+        gpApiConfig.setMethodNotificationUrl(gpapiConfiguration.getMethodNotificationUrl());
         gpApiConfig.setMerchantContactUrl("https://enp4qhvjseljg.x.pipedream.net/");
 
         String serviceUrl = gpapiConfiguration.getServiceUrl();

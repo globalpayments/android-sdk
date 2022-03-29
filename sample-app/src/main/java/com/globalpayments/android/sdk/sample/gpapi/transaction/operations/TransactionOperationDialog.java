@@ -13,6 +13,7 @@ import com.globalpayments.android.sdk.sample.common.base.BaseDialogFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomSpinner;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.TransactionOperationModel;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.TransactionOperationType;
+import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode;
 
 import java.math.BigDecimal;
 
@@ -22,14 +23,14 @@ public class TransactionOperationDialog extends BaseDialogFragment {
     private CustomSpinner currenciesSpinner;
     private CustomSpinner transactionTypeSpinner;
     private CustomSpinner cardModelsSpinner;
+    private CustomSpinner multiTokenSpinner;
+    private CheckBox cbRequestMultiUseToken;
     private EditText etCardNumber;
     private EditText etExpiryMonth;
     private EditText etExpiryYear;
     private EditText etCvnCvv;
     private EditText etAmount;
     private EditText etIdempotencyKey;
-    private CheckBox cbUse3ds;
-    private boolean use3ds;
 
     public static TransactionOperationDialog newInstance(Fragment targetFragment) {
         TransactionOperationDialog transactionOperationDialog = new TransactionOperationDialog();
@@ -53,8 +54,8 @@ public class TransactionOperationDialog extends BaseDialogFragment {
         etIdempotencyKey = findViewById(R.id.etIdempotencyKey);
         currenciesSpinner = findViewById(R.id.currenciesSpinner);
         transactionTypeSpinner = findViewById(R.id.transactionTypeSpinner);
-        cbUse3ds = findViewById(R.id.cbUse3ds);
-        cbUse3ds.setOnCheckedChangeListener((buttonView, isChecked) -> use3ds = isChecked);
+        multiTokenSpinner = findViewById(R.id.multiTokenSpinner);
+        cbRequestMultiUseToken = findViewById(R.id.cbRequestMultiUseToken);
         initSpinners();
         Button btSubmit = findViewById(R.id.btSubmit);
         btSubmit.setOnClickListener(v -> submitTransactionOperationModel());
@@ -63,6 +64,7 @@ public class TransactionOperationDialog extends BaseDialogFragment {
     private void initSpinners() {
         transactionTypeSpinner.init(TransactionOperationType.values());
         currenciesSpinner.init(getResources().getStringArray(R.array.currencies));
+        multiTokenSpinner.init(PaymentMethodUsageMode.values());
         cardModelsSpinner = findViewById(R.id.cardModelsSpinner);
         cardModelsSpinner.init(PaymentCardModel.values(), false, this::fillPaymentCardFields);
     }
@@ -89,7 +91,8 @@ public class TransactionOperationDialog extends BaseDialogFragment {
             transactionOperationModel.setCurrency(currenciesSpinner.getSelectedOption());
             transactionOperationModel.setTransactionOperationType(transactionTypeSpinner.getSelectedOption());
             transactionOperationModel.setIdempotencyKey(etIdempotencyKey.getText().toString());
-            transactionOperationModel.setUse3DS(use3ds);
+            transactionOperationModel.setRequestMultiUseToken(cbRequestMultiUseToken.isChecked());
+            transactionOperationModel.setPaymentMethodUsageMode(multiTokenSpinner.getSelectedOption());
             callback.onSubmitTransactionOperationModel(transactionOperationModel);
         }
         dismiss();

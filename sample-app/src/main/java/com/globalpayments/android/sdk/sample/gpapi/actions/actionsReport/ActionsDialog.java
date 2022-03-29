@@ -5,7 +5,6 @@ import static com.globalpayments.android.sdk.utils.DateUtils.YYYY_MM_DD;
 import static com.globalpayments.android.sdk.utils.Utils.isNotNull;
 import static com.globalpayments.android.sdk.utils.Utils.safeParseInt;
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideAllViewsExcluding;
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideViews;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -19,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.global.api.entities.enums.ActionSortProperty;
 import com.global.api.entities.enums.DisputeSortProperty;
 import com.global.api.entities.enums.SortDirection;
 import com.globalpayments.android.sdk.sample.R;
@@ -38,7 +38,9 @@ public class ActionsDialog extends BaseDialogFragment {
 
     private GridLayout glContainer;
     private TextView tvHeader;
+    private TextView tvActionsListPage;
     private EditText etActionsListPage;
+    private TextView tvActionsListPageSize;
     private EditText etActionsListPageSize;
     private CustomSpinner etActionsListOrder;
     private CustomSpinner etActionsListOrderBy;
@@ -47,11 +49,15 @@ public class ActionsDialog extends BaseDialogFragment {
     private EditText etActionsListType;
     private EditText etActionsListResource;
     private EditText etActionsListResourceStatus;
+    private EditText etActionsListResourceId;
     private TextView etActionsListFromTimeCreated;
     private TextView etActionsListToTimeCreated;
     private EditText etActionsListMerchantName;
     private EditText etActionsListAccountName;
+    private EditText etActionsListAppName;
     private EditText etActionsListVersion;
+    private EditText etActionsListResponseCode;
+    private EditText etActionsListHtppResponseCode;
     private Button btSubmit;
 
     private TYPE type = TYPE.ACTIONS_REPORT_LIST;
@@ -91,7 +97,9 @@ public class ActionsDialog extends BaseDialogFragment {
     protected void initViews() {
         glContainer = findViewById(R.id.glContainer);
         tvHeader = findViewById(R.id.tvHeader);
+        tvActionsListPage = findViewById(R.id.tvActionsListPage);
         etActionsListPage = findViewById(R.id.etActionsListPage);
+        tvActionsListPageSize = findViewById(R.id.tvActionsListPageSize);
         etActionsListPageSize = findViewById(R.id.etActionsListPageSize);
         etActionsListOrder = findViewById(R.id.etActionsListOrder);
         etActionsListOrderBy = findViewById(R.id.etActionsListOrderBy);
@@ -100,16 +108,19 @@ public class ActionsDialog extends BaseDialogFragment {
         etActionsListType = findViewById(R.id.etActionsListType);
         etActionsListResource = findViewById(R.id.etActionsListResource);
         etActionsListResourceStatus = findViewById(R.id.etActionsListResourceStatus);
+        etActionsListResourceId = findViewById(R.id.etActionsListResourceId);
         etActionsListFromTimeCreated = findViewById(R.id.etActionsListFromTimeCreated);
         etActionsListToTimeCreated = findViewById(R.id.etActionsListToTimeCreated);
         etActionsListMerchantName = findViewById(R.id.etActionsListMerchantName);
         etActionsListAccountName = findViewById(R.id.etActionsListAccountName);
+        etActionsListAppName = findViewById(R.id.etActionsListAppName);
         etActionsListVersion = findViewById(R.id.etActionsListAppVersion);
+        etActionsListResponseCode = findViewById(R.id.etActionsListResponseCode);
+        etActionsListHtppResponseCode = findViewById(R.id.etActionsListHtppResponseCode);
         btSubmit = findViewById(R.id.btSubmit);
 
         switch (type) {
             case ACTIONS_REPORT_LIST:
-                handleListViewsVisibility();
                 initSpinners();
                 initDatePickers();
                 break;
@@ -119,10 +130,6 @@ public class ActionsDialog extends BaseDialogFragment {
         }
 
         btSubmit.setOnClickListener(v -> submit());
-    }
-
-    private void handleListViewsVisibility() {
-        hideViews(etActionsListVersion);
     }
 
     private void handleDisputeByIdViewsVisibility() {
@@ -152,17 +159,12 @@ public class ActionsDialog extends BaseDialogFragment {
 
     private void initDatePickers() {
         etActionsListFromTimeCreated.setOnClickListener(this::startDatePicker);
-        Date now = new Date();
-        etActionsListFromTimeCreated.setText(dateFormat.format(now));
-        etActionsListFromTimeCreated.setTag(now);
         etActionsListToTimeCreated.setOnClickListener(this::startDatePicker);
-        etActionsListToTimeCreated.setText(dateFormat.format(now));
-        etActionsListToTimeCreated.setTag(now);
     }
 
     private void initSpinners() {
-        etActionsListOrderBy.init(DisputeSortProperty.values());
-        etActionsListOrderBy.selectItem(DisputeSortProperty.FromStageTimeCreated);
+        etActionsListOrderBy.init(ActionSortProperty.values());
+        etActionsListOrderBy.selectItem(ActionSortProperty.TimeCreated);
         etActionsListOrder.init(SortDirection.values());
         etActionsListOrder.selectItem(SortDirection.Descending);
     }
@@ -180,15 +182,21 @@ public class ActionsDialog extends BaseDialogFragment {
             actionsReportParametersModel.setPageSize(pageSize);
         }
 
+        actionsReportParametersModel.setOrderBy(etActionsListOrderBy.getSelectedOption());
+        actionsReportParametersModel.setOrder(etActionsListOrder.getSelectedOption());
+        actionsReportParametersModel.setId(etActionsListId.getText().toString());
         actionsReportParametersModel.setType(etActionsListType.getText().toString());
         actionsReportParametersModel.setResource(etActionsListResource.getText().toString());
         actionsReportParametersModel.setResourceStatus(etActionsListResourceStatus.getText().toString());
-        actionsReportParametersModel.setAccountName(etActionsListAccountName.getText().toString());
-        actionsReportParametersModel.setMerchantName(etActionsListMerchantName.getText().toString());
-        actionsReportParametersModel.setVersion(etActionsListVersion.getText().toString());
+        actionsReportParametersModel.setResourceId(etActionsListResourceId.getText().toString());
         actionsReportParametersModel.setFromTimeCreated(getDate(etActionsListFromTimeCreated));
         actionsReportParametersModel.setToTimeCreated(getDate(etActionsListToTimeCreated));
-
+        actionsReportParametersModel.setAccountName(etActionsListAccountName.getText().toString());
+        actionsReportParametersModel.setMerchantName(etActionsListMerchantName.getText().toString());
+        actionsReportParametersModel.setAppName(etActionsListAppName.getText().toString());
+        actionsReportParametersModel.setVersion(etActionsListVersion.getText().toString());
+        actionsReportParametersModel.setResponseCode(etActionsListResponseCode.getText().toString());
+        actionsReportParametersModel.setResponseHttpCode(etActionsListHtppResponseCode.getText().toString());
 
         return actionsReportParametersModel;
     }
@@ -208,10 +216,10 @@ public class ActionsDialog extends BaseDialogFragment {
 
         if (targetFragment instanceof Callback) {
             Callback callback = (Callback) targetFragment;
+            ActionsReportParametersModel actionsReportParametersModel = buildActionsRootParametersBuildModel();
 
             switch (type) {
                 case ACTIONS_REPORT_LIST:
-                    ActionsReportParametersModel actionsReportParametersModel = buildActionsRootParametersBuildModel();
                     callback.onSubmitActionsReportListParametersModel(actionsReportParametersModel);
                     break;
                 case ACTIONS_REPORT_BY_ID:

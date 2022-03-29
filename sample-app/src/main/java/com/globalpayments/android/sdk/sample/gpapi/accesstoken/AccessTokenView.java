@@ -53,7 +53,7 @@ public class AccessTokenView extends LinearLayout {
     }
 
     public void bind(AccessTokenInfo accessTokenInfo) {
-        tokenItemView.setValue(accessTokenInfo.getToken());
+        tokenItemView.setValue(accessTokenInfo.getAccessToken());
         dataAccountNameItemView.setValue(accessTokenInfo.getDataAccountName());
         disputeManagementAccountNameItemView.setValue(accessTokenInfo.getDisputeManagementAccountName());
         tokenizationAccountNameItemView.setValue(accessTokenInfo.getTokenizationAccountName());

@@ -7,14 +7,19 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.global.api.builders.TransactionReportBuilder;
 import com.global.api.entities.TransactionSummary;
+import com.global.api.entities.enums.TransactionSortProperty;
 import com.global.api.entities.exceptions.ApiException;
+import com.global.api.entities.reporting.DataServiceCriteria;
+import com.global.api.entities.reporting.SearchCriteria;
 import com.global.api.entities.reporting.TransactionSummaryPaged;
 import com.global.api.services.ReportingService;
+import com.global.api.utils.DateUtils;
 import com.globalpayments.android.sdk.TaskExecutor;
 import com.globalpayments.android.sdk.sample.common.base.BaseViewModel;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.report.model.TransactionReportParameters;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class TransactionReportViewModel extends BaseViewModel {
@@ -82,14 +87,44 @@ public class TransactionReportViewModel extends BaseViewModel {
 
     private List<TransactionSummary> executeGetTransactionListRequest(
             TransactionReportParameters reportParameters) throws ApiException {
-        return getTransactionReportBuilder(reportParameters).execute(DEFAULT_GPAPI_CONFIG).getResults();
-    }
+        Date startDate = DateUtils.addDays(new Date(), -90);
 
-    private TransactionReportBuilder<TransactionSummaryPaged> getTransactionReportBuilder(
-            TransactionReportParameters reportParameters) {
-        return reportParameters.isFromSettlements()
+        TransactionReportBuilder<TransactionSummaryPaged> reportBuilder = reportParameters.isFromSettlements()
                 ? ReportingService.findSettlementTransactionsPaged(reportParameters.getPage(), reportParameters.getPageSize())
                 : ReportingService.findTransactionsPaged(reportParameters.getPage(), reportParameters.getPageSize());
+                    reportBuilder.orderBy(reportParameters.getOrderBy(), reportParameters.getOrder());
+                    reportBuilder.withTransactionId(reportParameters.getId());
+                    reportBuilder.where(SearchCriteria.PaymentType, reportParameters.getType());
+                    reportBuilder.where(SearchCriteria.Channel, reportParameters.getChannel());
+                    reportBuilder.where(DataServiceCriteria.Amount, reportParameters.getAmount());
+                    reportBuilder.where(DataServiceCriteria.Currency, reportParameters.getCurrency());
+                    reportBuilder.where(SearchCriteria.CardNumberFirstSix, reportParameters.getNumberFirst6())
+                            .and(SearchCriteria.CardNumberLastFour, reportParameters.getNumberLast4());
+                    reportBuilder.where(SearchCriteria.TokenFirstSix, reportParameters.getTokenFirst6())
+                            .and(SearchCriteria.TokenLastFour, reportParameters.getTokenLast4());
+                    reportBuilder.where(SearchCriteria.AccountName, reportParameters.getAccountName());
+                    reportBuilder.where(SearchCriteria.CardBrand, reportParameters.getBrand());
+                    reportBuilder.where(SearchCriteria.BrandReference, reportParameters.getBrandReference());
+                    reportBuilder.where(SearchCriteria.AuthCode, reportParameters.getAuthCode());
+                    reportBuilder.where(SearchCriteria.ReferenceNumber, reportParameters.getDepositReference());
+                    reportBuilder.where(SearchCriteria.TransactionStatus, reportParameters.getStatus());
+                    reportBuilder.where(SearchCriteria.StartDate, reportParameters.getFromTimeCreated())
+                            .and(SearchCriteria.EndDate, reportParameters.getToTimeCreated());
+                    reportBuilder.where(DataServiceCriteria.Country, reportParameters.getCountry());
+                    reportBuilder.where(SearchCriteria.BatchId, reportParameters.getBatchId());
+                    reportBuilder.where(SearchCriteria.PaymentEntryMode, reportParameters.getEntryMode());
+                    reportBuilder.where(SearchCriteria.Name, reportParameters.getName());
+                    reportBuilder.where(SearchCriteria.DepositStatus, reportParameters.getDepositStatus());
+                    reportBuilder.where(SearchCriteria.AquirerReferenceNumber, reportParameters.getArn());
+                    reportBuilder.withDepositReference(reportParameters.getId());
+                    reportBuilder.where(DataServiceCriteria.StartDepositDate, reportParameters.getFromDepositTimeCreated())
+                            .and(DataServiceCriteria.EndDepositDate, reportParameters.getToDepositTimeCreated());
+                    reportBuilder.where(DataServiceCriteria.StartBatchDate, reportParameters.getFromBatchTimeCreated())
+                            .and(DataServiceCriteria.EndBatchDate, reportParameters.getToBatchTimeCreated());
+                    reportBuilder.where(DataServiceCriteria.MerchantId, reportParameters.getSystemMID())
+                            .and(DataServiceCriteria.SystemHierarchy, reportParameters.getSystemHierarchy());
+
+        return reportBuilder.execute(DEFAULT_GPAPI_CONFIG).getResults();
     }
 
 }

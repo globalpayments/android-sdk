@@ -1,5 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi.actions.actionsReport.model;
 
+import com.global.api.entities.enums.ActionSortProperty;
+import com.global.api.entities.enums.DisputeSortProperty;
 import com.global.api.entities.enums.SortDirection;
 
 import java.util.Date;
@@ -8,7 +10,8 @@ public class ActionsReportParametersModel {
     private int page = 1;
     private int pageSize = 5;
     private SortDirection order;
-    private SortDirection orderBy;
+    private ActionSortProperty orderBy;
+    private String id;
     private String type;
     private String resource;
     private String resourceStatus;
@@ -19,6 +22,8 @@ public class ActionsReportParametersModel {
     private String accountName;
     private String appName;
     private String version;
+    private String responseCode;
+    private String responseHttpCode;
 
     public int getPage() {
         return page;
@@ -44,12 +49,20 @@ public class ActionsReportParametersModel {
         this.order = order;
     }
 
-    public SortDirection getOrderBy() {
+    public ActionSortProperty getOrderBy() {
         return orderBy;
     }
 
-    public void setOrderBy(SortDirection orderBy) {
+    public void setOrderBy(ActionSortProperty orderBy) {
         this.orderBy = orderBy;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getType() {
@@ -130,5 +143,21 @@ public class ActionsReportParametersModel {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public String getResponseCode() {
+        return responseCode;
+    }
+
+    public void setResponseCode(String responseCode) {
+        this.responseCode = responseCode;
+    }
+
+    public String getResponseHttpCode() {
+        return responseHttpCode;
+    }
+
+    public void setResponseHttpCode(String responseHttpCode) {
+        this.responseHttpCode = responseHttpCode;
     }
 }

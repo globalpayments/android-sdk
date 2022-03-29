@@ -1,8 +1,6 @@
 package com.globalpayments.android.sdk.sample.gpapi.disputes.report;
 
-import static com.global.api.gateways.GpApiConnector.DATE_SDF;
 import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
-import static com.globalpayments.android.sdk.sample.common.Constants.GP_API_CONFIG_NAME;
 import static com.globalpayments.android.sdk.utils.ContextUtils.getAppDocumentsDirectory;
 import static com.globalpayments.android.sdk.utils.ContextUtils.getOutputStreamForUri;
 
@@ -16,14 +14,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.global.api.builders.TransactionReportBuilder;
-import com.global.api.entities.enums.DisputeSortProperty;
-import com.global.api.entities.enums.SortDirection;
-import com.global.api.entities.enums.TransactionSortProperty;
 import com.global.api.entities.reporting.DataServiceCriteria;
 import com.global.api.entities.reporting.DisputeSummary;
 import com.global.api.entities.reporting.DisputeSummaryPaged;
 import com.global.api.entities.reporting.SearchCriteria;
-import com.global.api.entities.reporting.TransactionSummaryPaged;
 import com.global.api.services.ReportingService;
 import com.globalpayments.android.sdk.TaskExecutor;
 import com.globalpayments.android.sdk.sample.R;
@@ -37,8 +31,6 @@ import com.globalpayments.android.sdk.utils.FileUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -90,13 +82,13 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
         });
     }
 
-    public void getDisputeByDepositId(String depositId) {
+    public void getDisputeByDepositId(String depositId, Date currentDateAndTime) {
         showProgress();
 
         TaskExecutor.executeAsync(new TaskExecutor.Task<List<DisputeSummary>>() {
             @Override
             public List<DisputeSummary> executeAsync() throws Exception {
-                return executeGetDisputeByDepositRequest(depositId);
+                return executeGetDisputeByDepositRequest(depositId, currentDateAndTime);
             }
 
             @Override
@@ -252,30 +244,28 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
         TransactionReportBuilder<DisputeSummaryPaged> reportBuilder = parametersModel.isFromSettlements()
                 ? ReportingService.findSettlementDisputesPaged(page, pageSize)
                 : ReportingService.findDisputesPaged(page, pageSize);
-        reportBuilder.orderBy(parametersModel.getOrderBy(), parametersModel.getOrder());
-        reportBuilder.orderBy(DisputeSortProperty.Id, parametersModel.getOrder());
-        reportBuilder.setDisputeOrderBy(parametersModel.getOrderBy());
-        reportBuilder.where(DataServiceCriteria.StartDepositDate, parametersModel.getFromDepositTimeCreated());
-        reportBuilder.where(SearchCriteria.AquirerReferenceNumber, parametersModel.getArn())
-                .and(SearchCriteria.CardBrand, parametersModel.getBrand())
-                .and(SearchCriteria.DisputeStatus, parametersModel.getStatus())
-                .and(SearchCriteria.DisputeStage, parametersModel.getStage())
-                .and(DataServiceCriteria.StartStageDate, parametersModel.getFromStageTimeCreated())
-                .and(DataServiceCriteria.EndStageDate, parametersModel.getToStageTimeCreated())
-                .and(DataServiceCriteria.StartStageDate, parametersModel.getFromAdjustmentTimeCreated())
-                .and(DataServiceCriteria.EndStageDate, parametersModel.getToAdjustmentTimeCreated())
-                .and(DataServiceCriteria.EndDepositDate, parametersModel.getToDepositTimeCreated())
-                .and(DataServiceCriteria.MerchantId, parametersModel.getSystemMID())
-                .and(DataServiceCriteria.SystemHierarchy, parametersModel.getSystemHierarchy());
+                    reportBuilder.orderBy(parametersModel.getOrderBy(), parametersModel.getOrder());
+                    reportBuilder.setDisputeOrderBy(parametersModel.getOrderBy());
+                    reportBuilder.where(SearchCriteria.AquirerReferenceNumber, parametersModel.getArn())
+                        .and(SearchCriteria.CardBrand, parametersModel.getBrand())
+                        .and(SearchCriteria.DisputeStatus, parametersModel.getStatus())
+                        .and(SearchCriteria.DisputeStage, parametersModel.getStage())
+                        .and(DataServiceCriteria.StartStageDate, parametersModel.getFromStageTimeCreated())
+                        .and(DataServiceCriteria.EndStageDate, parametersModel.getToStageTimeCreated())
+                        .and(DataServiceCriteria.MerchantId, parametersModel.getSystemMID())
+                        .and(DataServiceCriteria.SystemHierarchy, parametersModel.getSystemHierarchy());
 
         return reportBuilder.execute(DEFAULT_GPAPI_CONFIG).getResults();
     }
 
-    private List<DisputeSummary> executeGetDisputeByDepositRequest(String depositId) throws Exception {
-        TransactionReportBuilder<DisputeSummaryPaged> reportBuilder =
-                ReportingService.findSettlementDisputesPaged(PAGE_BY_DEPOSIT_ID, PAGE_SIZE_BY_DEPOSIT_ID);
-        reportBuilder.where(SearchCriteria.DepositId, depositId);
-        return reportBuilder.execute(DEFAULT_GPAPI_CONFIG).getResults();
+    private List<DisputeSummary> executeGetDisputeByDepositRequest(String depositId, Date currentDateAndTime) throws Exception {
+        DisputeSummaryPaged result =
+                ReportingService
+                        .findSettlementDisputesPaged(PAGE_BY_DEPOSIT_ID, PAGE_SIZE_BY_DEPOSIT_ID)
+                        .where(DataServiceCriteria.DepositReference, depositId)
+                        .execute(DEFAULT_GPAPI_CONFIG);
+
+        return result.getResults();
     }
 
 }

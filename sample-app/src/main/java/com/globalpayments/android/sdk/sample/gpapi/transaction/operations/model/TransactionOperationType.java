@@ -5,5 +5,6 @@ public enum TransactionOperationType {
     SALE,
     CAPTURE,
     REFUND,
-    REVERSE;
+    REVERSE,
+    REAUTHORIZATION
 }

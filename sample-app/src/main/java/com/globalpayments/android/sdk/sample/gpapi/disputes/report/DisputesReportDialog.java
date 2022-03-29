@@ -31,6 +31,7 @@ import com.globalpayments.android.sdk.sample.gpapi.disputes.report.model.Dispute
 import com.globalpayments.android.sdk.sample.gpapi.disputes.report.model.DocumentReportModel;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -52,10 +53,6 @@ public class DisputesReportDialog extends BaseDialogFragment {
     private CustomSpinner stageSpinner;
     private TextView tvFromStageTimeCreated;
     private TextView tvToStageTimeCreated;
-    private TextView tvFromAdjustmentTimeCreated;
-    private TextView tvToAdjustmentTimeCreated;
-    private TextView tvFromDepositTimeCreated;
-    private TextView tvToDepositTimeCreated;
     private EditText etSystemMID;
     private EditText etSystemHierarchy;
     private TextView tvLabelDisputeId;
@@ -67,6 +64,8 @@ public class DisputesReportDialog extends BaseDialogFragment {
     private Button btSubmit;
 
     private TYPE type = TYPE.DISPUTE_LIST;
+
+    Date currentDateandTime = null;
 
     public static DisputesReportDialog newInstance(Fragment targetFragment, TYPE type) {
         DisputesReportDialog disputesReportDialog = new DisputesReportDialog();
@@ -113,10 +112,6 @@ public class DisputesReportDialog extends BaseDialogFragment {
         stageSpinner = findViewById(R.id.stageSpinner);
         tvFromStageTimeCreated = findViewById(R.id.tvFromStageTimeCreated);
         tvToStageTimeCreated = findViewById(R.id.tvToStageTimeCreated);
-        tvFromAdjustmentTimeCreated = findViewById(R.id.tvFromAdjustmentTimeCreated);
-        tvToAdjustmentTimeCreated = findViewById(R.id.tvToAdjustmentTimeCreated);
-        tvFromDepositTimeCreated = findViewById(R.id.tvFromDepositTimeCreated);
-        tvToDepositTimeCreated = findViewById(R.id.tvToDepositTimeCreated);
         etSystemMID = findViewById(R.id.etSystemMID);
         etSystemHierarchy = findViewById(R.id.etSystemHierarchy);
         tvLabelDisputeId = findViewById(R.id.tvLabelDisputeId);
@@ -126,6 +121,14 @@ public class DisputesReportDialog extends BaseDialogFragment {
         tvLabelFromSettlements = findViewById(R.id.tvLabelFromSettlements);
         cbFromSettlements = findViewById(R.id.cbFromSettlements);
         btSubmit = findViewById(R.id.btSubmit);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String returnDate = sdf.format(new Date());
+        try {
+            currentDateandTime = sdf.parse(returnDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         switch (type) {
             case DISPUTE_LIST:
@@ -201,20 +204,14 @@ public class DisputesReportDialog extends BaseDialogFragment {
 
     private void initDatePickers() {
         tvFromStageTimeCreated.setOnClickListener(this::startDatePicker);
-        Date now = new Date();
-        tvFromStageTimeCreated.setText(dateFormat.format(now));
-        tvFromStageTimeCreated.setTag(now);
         tvToStageTimeCreated.setOnClickListener(this::startDatePicker);
-        tvFromAdjustmentTimeCreated.setOnClickListener(this::startDatePicker);
-        tvToAdjustmentTimeCreated.setOnClickListener(this::startDatePicker);
-        tvFromDepositTimeCreated.setOnClickListener(this::startDatePicker);
-        tvToDepositTimeCreated.setOnClickListener(this::startDatePicker);
     }
 
     private void initSpinners() {
         orderBySpinner.init(DisputeSortProperty.values());
         orderBySpinner.selectItem(DisputeSortProperty.FromStageTimeCreated);
         orderSpinner.init(SortDirection.values());
+        orderSpinner.selectItem(SortDirection.Descending);
         brandSpinner.init(getResources().getStringArray(R.array.brands_disputes), true);
         statusSpinner.init(DisputeStatus.values(), true);
         stageSpinner.init(DisputeStage.values(), true);
@@ -241,10 +238,6 @@ public class DisputesReportDialog extends BaseDialogFragment {
         disputesReportParametersModel.setStage(stageSpinner.getSelectedOption());
         disputesReportParametersModel.setFromStageTimeCreated(getDate(tvFromStageTimeCreated));
         disputesReportParametersModel.setToStageTimeCreated(getDate(tvToStageTimeCreated));
-        disputesReportParametersModel.setFromAdjustmentTimeCreated(getDate(tvFromAdjustmentTimeCreated));
-        disputesReportParametersModel.setToAdjustmentTimeCreated(getDate(tvToAdjustmentTimeCreated));
-        disputesReportParametersModel.setFromDepositTimeCreated(getDate(tvFromDepositTimeCreated));
-        disputesReportParametersModel.setToDepositTimeCreated(getDate(tvToDepositTimeCreated));
         disputesReportParametersModel.setSystemMID(etSystemMID.getText().toString());
         disputesReportParametersModel.setSystemHierarchy(etSystemHierarchy.getText().toString());
         disputesReportParametersModel.setFromSettlements(cbFromSettlements.isChecked());
@@ -284,7 +277,7 @@ public class DisputesReportDialog extends BaseDialogFragment {
                     callback.onSubmitDisputeId(etDisputeId.getText().toString(), cbFromSettlements.isChecked());
                     break;
                 case DISPUTE_BY_DEPOSIT_ID:
-                    callback.onSubmitDisputeByDepositId(etDisputeId.getText().toString());
+                    callback.onSubmitDisputeByDepositId(etDisputeId.getText().toString(), currentDateandTime);
                     break;
                 case DOCUMENT_BY_ID:
                     DocumentReportModel documentReportModel = buildDocumentReportModel();
@@ -308,7 +301,7 @@ public class DisputesReportDialog extends BaseDialogFragment {
 
         void onSubmitDisputeId(String disputeId, boolean fromSettlements);
 
-        void onSubmitDisputeByDepositId(String disputeId);
+        void onSubmitDisputeByDepositId(String disputeId, Date currentDateAndTime);
 
         void onSubmitDocumentReportModel(DocumentReportModel documentReportModel);
     }

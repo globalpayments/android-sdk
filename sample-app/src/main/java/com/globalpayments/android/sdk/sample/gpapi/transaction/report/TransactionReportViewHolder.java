@@ -8,6 +8,7 @@ import static com.globalpayments.android.sdk.sample.common.views.Position.TOP;
 import static com.globalpayments.android.sdk.utils.DateUtils.YYYY_MM_DD;
 import static com.globalpayments.android.sdk.utils.DateUtils.getDateFormatted;
 import static com.globalpayments.android.sdk.utils.Utils.getAmount;
+import static com.globalpayments.android.sdk.utils.Utils.safeParseBigDecimal;
 import static com.globalpayments.android.sdk.utils.ViewUtils.handleViewVisibility;
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
 import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
@@ -123,7 +124,7 @@ public class TransactionReportViewHolder extends BaseViewHolder<TransactionSumma
         statusItemView.setValue(transactionSummary.getTransactionStatus());
         typeItemView.setValue(transactionSummary.getTransactionType());
         channelItemView.setValueOrHide(transactionSummary.getChannel());
-        amountItemView.setValue(getAmount(transactionSummary.getAmount()));
+        amountItemView.setValue(safeParseBigDecimal(transactionSummary.getAmount()));
         currencyItemView.setValue(transactionSummary.getCurrency());
         referenceItemView.setValue(transactionSummary.getReferenceNumber());
         clientTransIdItemView.setValue(transactionSummary.getClientTransactionId());

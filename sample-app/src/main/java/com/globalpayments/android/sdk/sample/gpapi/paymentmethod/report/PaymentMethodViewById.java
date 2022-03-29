@@ -10,18 +10,20 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
-import com.global.api.entities.Transaction;
+import com.global.api.entities.reporting.StoredPaymentMethodSummary;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.views.ItemView;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.ISODateTimeFormat;
 
 public class PaymentMethodViewById extends LinearLayout {
     private ItemView idItemView;
     private ItemView timeCreatedItemView;
     private ItemView statusItemView;
     private ItemView referenceItemView;
-    private ItemView resultCodeItemView;
     private ItemView cardTypeItemView;
-    private ItemView cardNumberItemView;
     private ItemView cardNumberLast4ItemView;
     private ItemView cardExpiryMonthItemView;
     private ItemView cardExpiryYearItemView;
@@ -49,24 +51,21 @@ public class PaymentMethodViewById extends LinearLayout {
         timeCreatedItemView = ItemView.create(context, R.string.time_created, this, SECOND);
         statusItemView = ItemView.create(context, R.string.status, this);
         referenceItemView = ItemView.create(context, R.string.reference, this);
-        resultCodeItemView = ItemView.create(context, R.string.result_code, this);
         cardTypeItemView = ItemView.create(context, R.string.card_type, this);
-        cardNumberItemView = ItemView.create(context, R.string.card_number, this);
         cardNumberLast4ItemView = ItemView.create(context, R.string.card_number_last_4, this);
         cardExpiryMonthItemView = ItemView.create(context, R.string.card_expiry_month, this);
         cardExpiryYearItemView = ItemView.create(context, R.string.card_expiry_year, this, BOTTOM);
     }
 
-    public void bind(Transaction transaction) {
-        idItemView.setValue(transaction.getTransactionId());
-        timeCreatedItemView.setValue(transaction.getTimestamp());
-        statusItemView.setValue(transaction.getResponseMessage());
-        referenceItemView.setValue(transaction.getReferenceNumber());
-        resultCodeItemView.setValue(transaction.getResponseCode());
+    public void bind(StoredPaymentMethodSummary transaction) {
+        idItemView.setValue(transaction.getId());
+        DateTime transactionDate = transaction.getTimeCreated().withZoneRetainFields(DateTimeZone.UTC);
+        timeCreatedItemView.setValue(ISODateTimeFormat.dateTime().print(transactionDate));
+        statusItemView.setValue(transaction.getStatus());
+        referenceItemView.setValue(transaction.getReference());
         cardTypeItemView.setValue(transaction.getCardType());
-        cardNumberItemView.setValueOrHide(transaction.getCardNumber());
         cardNumberLast4ItemView.setValue(transaction.getCardLast4());
         cardExpiryMonthItemView.setValue(String.valueOf(transaction.getCardExpMonth()));
-        cardExpiryYearItemView.setValue(String.valueOf(2000 + transaction.getCardExpYear()));
+        cardExpiryYearItemView.setValue(String.valueOf(2000 + Integer.parseInt(transaction.getCardExpYear())));
     }
 }

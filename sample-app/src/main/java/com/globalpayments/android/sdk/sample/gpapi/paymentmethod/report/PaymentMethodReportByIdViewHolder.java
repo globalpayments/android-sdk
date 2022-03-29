@@ -4,11 +4,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.global.api.entities.Transaction;
+import com.global.api.entities.reporting.StoredPaymentMethodSummary;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseViewHolder;
 
-public class PaymentMethodReportByIdViewHolder extends BaseViewHolder<Transaction> {
+public class PaymentMethodReportByIdViewHolder extends BaseViewHolder<StoredPaymentMethodSummary> {
     private PaymentMethodViewById paymentMethodViewById;
 
     public PaymentMethodReportByIdViewHolder(@NonNull View itemView) {
@@ -21,7 +21,7 @@ public class PaymentMethodReportByIdViewHolder extends BaseViewHolder<Transactio
     }
 
     @Override
-    public void bind(Transaction transaction) {
+    public void bind(StoredPaymentMethodSummary transaction) {
         paymentMethodViewById.bind(transaction);
     }
 }

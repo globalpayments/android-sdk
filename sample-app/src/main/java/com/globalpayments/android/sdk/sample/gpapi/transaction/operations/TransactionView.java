@@ -3,7 +3,7 @@ package com.globalpayments.android.sdk.sample.gpapi.transaction.operations;
 import static com.globalpayments.android.sdk.sample.common.views.Position.BOTTOM;
 import static com.globalpayments.android.sdk.sample.common.views.Position.SECOND;
 import static com.globalpayments.android.sdk.sample.common.views.Position.TOP;
-import static com.globalpayments.android.sdk.utils.Utils.getAmount;
+import static com.globalpayments.android.sdk.utils.Utils.safeParseBigDecimal;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
+import com.global.api.entities.ThreeDSecure;
 import com.global.api.entities.Transaction;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.views.ItemView;
@@ -23,6 +24,7 @@ public class TransactionView extends LinearLayout {
     private ItemView referenceItemView;
     private ItemView batchIdItemView;
     private ItemView resultCodeItemView;
+    private ItemView liabilityShifItemView;
 
     private ItemView paymentMethodItemView;
     private ItemView tokenItemView;
@@ -57,6 +59,7 @@ public class TransactionView extends LinearLayout {
         referenceItemView = ItemView.create(context, R.string.reference, this);
         batchIdItemView = ItemView.create(context, R.string.batch_id, this);
         resultCodeItemView = ItemView.create(context, R.string.result_code, this);
+        liabilityShifItemView = ItemView.create(context, R.string.liability_shift, this);
 
         paymentMethodItemView = ItemView.create(context, R.string.header_payment_method, this);
         paymentMethodItemView.setAsGroupHeader();
@@ -71,7 +74,7 @@ public class TransactionView extends LinearLayout {
         idItemView.setValue(transaction.getTransactionId());
         timeCreatedItemView.setValue(transaction.getTimestamp());
         statusItemView.setValue(transaction.getResponseMessage());
-        amountItemView.setValue(getAmount(transaction.getBalanceAmount()));
+        amountItemView.setValue(safeParseBigDecimal(transaction.getBalanceAmount()));
         referenceItemView.setValue(transaction.getReferenceNumber());
         batchIdItemView.setValue(transaction.getBatchSummary().getBatchReference());
         resultCodeItemView.setValue(transaction.getResponseCode());
@@ -81,5 +84,15 @@ public class TransactionView extends LinearLayout {
         cardTypeItemView.setValue(transaction.getCardType());
         maskedCardNumberItemView.setValue(transaction.getCardLast4());
         cvvResultItemView.setValue(transaction.getCvnResponseMessage());
+    }
+
+    public void bind(ThreeDSecure threeDSecure) {
+        idItemView.setValue(threeDSecure.getServerTransactionId());
+        statusItemView.setValue(threeDSecure.getStatus());
+        referenceItemView.setValue(threeDSecure.getStatusReason());
+        liabilityShifItemView.setValue(threeDSecure.getLiabilityShift());
+
+        resultItemView.setValue(threeDSecure.getCardHolderResponseInfo());
+        cvvResultItemView.setValue(threeDSecure.getCavv());
     }
 }

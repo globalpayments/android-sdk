@@ -8,12 +8,6 @@ public class Constants {
 
     // challenge success
     public static final String CHALLENGE_SUCCESS = "success";
-    public static final String PARES = "PaRes";
-
-    // message version
-    public final static String CHALLENGE_3DS1_VERSION = "1.0.0";
-    public final static String CHALLENGE_3DS2_VERSION = "2.1.0";
-    public final static String CHALLENGE_3DS2_FRICTIONLESS_VERSION = "2.1.0";
 
     public final static String VISA_3DS2_FRICTIONLESS = "VISA_3DS2_FRICTIONLESS";
     public final static String CHALLENGE_REQUIRED = "CHALLENGE_REQUIRED";

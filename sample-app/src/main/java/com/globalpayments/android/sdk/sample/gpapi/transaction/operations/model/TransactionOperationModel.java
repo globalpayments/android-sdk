@@ -1,5 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model;
 
+import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode;
+
 import java.math.BigDecimal;
 
 public class TransactionOperationModel {
@@ -11,8 +13,9 @@ public class TransactionOperationModel {
     private BigDecimal amount;
     private String currency;
     private TransactionOperationType transactionOperationType;
+    private PaymentMethodUsageMode paymentMethodUsageMode;
+    private Boolean requestMultiUseToken;
     private String idempotencyKey;
-    private boolean use3DS;
 
     public String getTypeCardOption() {
         return typeCardOption;
@@ -20,14 +23,6 @@ public class TransactionOperationModel {
 
     public void setTypeCardOption(String typeCardOption) {
         this.typeCardOption = typeCardOption;
-    }
-
-    public boolean isUse3DS() {
-        return use3DS;
-    }
-
-    public void setUse3DS(boolean use3DS) {
-        this.use3DS = use3DS;
     }
 
     public String getCardNumber() {
@@ -84,6 +79,22 @@ public class TransactionOperationModel {
 
     public void setTransactionOperationType(TransactionOperationType transactionOperationType) {
         this.transactionOperationType = transactionOperationType;
+    }
+
+    public PaymentMethodUsageMode getPaymentMethodUsageMode() {
+        return paymentMethodUsageMode;
+    }
+
+    public void setPaymentMethodUsageMode(PaymentMethodUsageMode paymentMethodUsageMode) {
+        this.paymentMethodUsageMode = paymentMethodUsageMode;
+    }
+
+    public Boolean getRequestMultiUseToken() {
+        return requestMultiUseToken;
+    }
+
+    public void setRequestMultiUseToken(Boolean requestMultiUseToken) {
+        this.requestMultiUseToken = requestMultiUseToken;
     }
 
     public String getIdempotencyKey() {

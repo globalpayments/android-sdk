@@ -13,7 +13,6 @@ import com.globalpayments.android.sdk.sample.common.views.ItemView;
 import static com.globalpayments.android.sdk.sample.common.views.Position.BOTTOM;
 import static com.globalpayments.android.sdk.sample.common.views.Position.SECOND;
 import static com.globalpayments.android.sdk.sample.common.views.Position.TOP;
-import static com.globalpayments.android.sdk.utils.Utils.getAmount;
 
 public class DisputeOperationView extends LinearLayout {
     private ItemView idItemView;
@@ -49,7 +48,7 @@ public class DisputeOperationView extends LinearLayout {
     public void bind(Transaction transaction) {
         idItemView.setValue(transaction.getTransactionId());
         statusItemView.setValue(transaction.getResponseMessage());
-        amountItemView.setValue(getAmount(transaction.getBalanceAmount()));
+        amountItemView.setValue(transaction.getBalanceAmount().toString());
         resultCodeItemView.setValue(transaction.getResponseCode());
     }
 }

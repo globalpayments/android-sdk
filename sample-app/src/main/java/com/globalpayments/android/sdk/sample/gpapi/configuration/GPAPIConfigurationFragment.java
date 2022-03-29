@@ -47,6 +47,12 @@ public class GPAPIConfigurationFragment extends BaseFragment {
     private TextInputLayout serviceUrlTextInputLayout;
     private TextInputEditText etServiceUrl;
 
+    private TextInputLayout challengeUrlTextInputLayout;
+    private TextInputEditText etChallengeNotificationUrl;
+
+    private TextInputLayout methodUrlTextInputLayout;
+    private TextInputEditText etMethodNotificationUrl;
+
     private TextInputLayout apiVersionTextInputLayout;
     private TextInputEditText etApiVersion;
 
@@ -120,6 +126,12 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         serviceUrlTextInputLayout = findViewById(R.id.serviceUrlTextInputLayout);
         etServiceUrl = findViewById(R.id.etServiceUrl);
 
+        challengeUrlTextInputLayout = findViewById(R.id.challengeTextInputLayout);
+        etChallengeNotificationUrl = findViewById(R.id.etChallengeNotificationUrl);
+
+        methodUrlTextInputLayout = findViewById(R.id.methodUrlTextInputLayout);
+        etMethodNotificationUrl = findViewById(R.id.etMethodNotificationUrl);
+
         apiVersionTextInputLayout = findViewById(R.id.apiVersionTextInputLayout);
         etApiVersion = findViewById(R.id.etApiVersion);
 
@@ -168,6 +180,8 @@ public class GPAPIConfigurationFragment extends BaseFragment {
                 etAppId.setText(gpapiConfiguration.getAppId());
                 etAppKey.setText(gpapiConfiguration.getAppKey());
                 etServiceUrl.setText(gpapiConfiguration.getServiceUrl());
+                etChallengeNotificationUrl.setText(gpapiConfiguration.getChallengeNotificationUrl());
+                etMethodNotificationUrl.setText(gpapiConfiguration.getMethodNotificationUrl());
                 etApiVersion.setText(gpapiConfiguration.getApiVersion());
                 etTokenSecondsToExpire.setText(String.valueOf(gpapiConfiguration.getTokenSecondsToExpire()));
                 intervalToExpireSpinner.selectItem(gpapiConfiguration.getTokenIntervalToExpire());
@@ -184,6 +198,8 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         String appId = getEditTextValue(etAppId);
         String appKey = getEditTextValue(etAppKey);
         String serviceUrl = getEditTextValue(etServiceUrl);
+        String challengeNotificationUrl = getEditTextValue(etChallengeNotificationUrl);
+        String methodNotificationUrl = getEditTextValue(etMethodNotificationUrl);
         String apiVersion = getEditTextValue(etApiVersion);
         Integer tokenSecondsToExpire = safeParseInt(getEditTextValue(etTokenSecondsToExpire));
         IntervalToExpire tokenIntervalToExpire = intervalToExpireSpinner.getSelectedOption();
@@ -192,7 +208,8 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         Channel channel = selectChannel.getSelectedOption();
 
         if (areAllInputValuesValid(appId, appKey, serviceUrl, apiVersion, tokenSecondsToExpire)) {
-            saveConfiguration(appId, appKey, serviceUrl, apiVersion, tokenSecondsToExpire,
+            saveConfiguration(appId, appKey, serviceUrl, challengeNotificationUrl, methodNotificationUrl,
+                    apiVersion, tokenSecondsToExpire,
                     tokenIntervalToExpire, environment, selectedCountry, channel);
             initGPAPIConfiguration();
             finish();
@@ -214,6 +231,8 @@ public class GPAPIConfigurationFragment extends BaseFragment {
     private void saveConfiguration(String appId,
                                    String appKey,
                                    String serviceUrl,
+                                   String challengeNotificationUrl,
+                                   String methodNotificationUrl,
                                    String apiVersion,
                                    Integer tokenSecondsToExpire,
                                    IntervalToExpire tokenIntervalToExpire,
@@ -225,6 +244,8 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         gpapiConfiguration.setAppId(appId);
         gpapiConfiguration.setAppKey(appKey);
         gpapiConfiguration.setServiceUrl(serviceUrl);
+        gpapiConfiguration.setChallengeNotificationUrl(challengeNotificationUrl);
+        gpapiConfiguration.setMethodNotificationUrl(methodNotificationUrl);
         gpapiConfiguration.setApiVersion(apiVersion);
         gpapiConfiguration.setTokenSecondsToExpire(tokenSecondsToExpire);
         gpapiConfiguration.setTokenIntervalToExpire(tokenIntervalToExpire);
