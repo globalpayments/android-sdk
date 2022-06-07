@@ -1,8 +1,10 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations;
 
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -13,6 +15,7 @@ import com.globalpayments.android.sdk.sample.common.base.BaseDialogFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomSpinner;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.TransactionOperationModel;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.TransactionOperationType;
+import com.globalpayments.android.sdk.sample.utils.FingerprintMethodUsageMode;
 import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode;
 
 import java.math.BigDecimal;
@@ -25,12 +28,16 @@ public class TransactionOperationDialog extends BaseDialogFragment {
     private CustomSpinner cardModelsSpinner;
     private CustomSpinner multiTokenSpinner;
     private CheckBox cbRequestMultiUseToken;
+    private CheckBox cbFromFingerPrint;
     private EditText etCardNumber;
     private EditText etExpiryMonth;
     private EditText etExpiryYear;
     private EditText etCvnCvv;
     private EditText etAmount;
     private EditText etIdempotencyKey;
+    private TextView tvFingerPrintId;
+    private CustomSpinner multiFingerPrintUsageMode;
+    private boolean use3ds;
 
     public static TransactionOperationDialog newInstance(Fragment targetFragment) {
         TransactionOperationDialog transactionOperationDialog = new TransactionOperationDialog();
@@ -56,9 +63,23 @@ public class TransactionOperationDialog extends BaseDialogFragment {
         transactionTypeSpinner = findViewById(R.id.transactionTypeSpinner);
         multiTokenSpinner = findViewById(R.id.multiTokenSpinner);
         cbRequestMultiUseToken = findViewById(R.id.cbRequestMultiUseToken);
+        cbFromFingerPrint = findViewById(R.id.cbFromFingerPrint);
+        tvFingerPrintId = findViewById(R.id.tvFingerPrintId);
+        multiFingerPrintUsageMode = findViewById(R.id.multiFingerPrintUsageMode);
+        CheckBox cbUse3ds = findViewById(R.id.cbUse3ds);
+        cbUse3ds.setOnCheckedChangeListener((buttonView, isChecked) -> use3ds = isChecked);
         initSpinners();
         Button btSubmit = findViewById(R.id.btSubmit);
         btSubmit.setOnClickListener(v -> submitTransactionOperationModel());
+        cbFromFingerPrint.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (isChecked) {
+                tvFingerPrintId.setVisibility(View.VISIBLE);
+                multiFingerPrintUsageMode.setVisibility(View.VISIBLE);
+            } else {
+                tvFingerPrintId.setVisibility(View.GONE);
+                multiFingerPrintUsageMode.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void initSpinners() {
@@ -67,6 +88,7 @@ public class TransactionOperationDialog extends BaseDialogFragment {
         multiTokenSpinner.init(PaymentMethodUsageMode.values());
         cardModelsSpinner = findViewById(R.id.cardModelsSpinner);
         cardModelsSpinner.init(PaymentCardModel.values(), false, this::fillPaymentCardFields);
+        multiFingerPrintUsageMode.init(FingerprintMethodUsageMode.values());
     }
 
     private void fillPaymentCardFields(PaymentCardModel paymentCardModel) {
@@ -82,6 +104,9 @@ public class TransactionOperationDialog extends BaseDialogFragment {
         if (targetFragment instanceof TransactionOperationDialog.Callback) {
             TransactionOperationDialog.Callback callback = (TransactionOperationDialog.Callback) targetFragment;
             TransactionOperationModel transactionOperationModel = new TransactionOperationModel();
+            boolean fingerPrint = cbFromFingerPrint.isChecked();
+            transactionOperationModel.setFingerPrintSelection(fingerPrint);
+            transactionOperationModel.setFingerprintMethodUsageMode(multiFingerPrintUsageMode.getSelectedOption());
             transactionOperationModel.setTypeCardOption(cardModelsSpinner.getSelectedOption().toString());
             transactionOperationModel.setCardNumber(etCardNumber.getText().toString());
             transactionOperationModel.setExpiryMonth(Integer.parseInt(etExpiryMonth.getText().toString()));
@@ -93,6 +118,7 @@ public class TransactionOperationDialog extends BaseDialogFragment {
             transactionOperationModel.setIdempotencyKey(etIdempotencyKey.getText().toString());
             transactionOperationModel.setRequestMultiUseToken(cbRequestMultiUseToken.isChecked());
             transactionOperationModel.setPaymentMethodUsageMode(multiTokenSpinner.getSelectedOption());
+            transactionOperationModel.setUse3DS(use3ds);
             callback.onSubmitTransactionOperationModel(transactionOperationModel);
         }
         dismiss();

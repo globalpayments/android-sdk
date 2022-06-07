@@ -184,6 +184,38 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
+            android:layout_marginBottom="@dimen/size_8dp"
+            android:text="@string/get_fingerprint_enable" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbFromFingerPrint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:layout_marginBottom="@dimen/size_8dp"
+            android:checked="false" />
+
+        <TextView
+            android:id="@+id/tvFingerPrintId"
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:visibility="gone"
+            android:text="@string/finger_print_usage_mode" />
+
+        <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
+            android:id="@+id/multiFingerPrintUsageMode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.5"
+            android:visibility="gone"/>
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
             android:text="@string/select_multi_token_type" />
 
         <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
@@ -211,6 +243,20 @@
             android:hint="@string/optional"
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/use_3ds" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cbUse3ds"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.3"
+            android:checked="false" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btSubmit"

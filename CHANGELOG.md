@@ -6,6 +6,15 @@
 
 ## Latest Version
 
+## v1.1.6 (05/23/2022)
+
+### Enhancements:
+
+* Implement-Fingerprint
+* Put-back-legacy-code-3DS-challenges
+
+## v1.1.5 (03/17/2022)
+
 ### Enhancements:
 
 * Implement-GP-API-Reauthorization

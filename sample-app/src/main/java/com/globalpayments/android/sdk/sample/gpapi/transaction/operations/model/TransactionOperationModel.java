@@ -1,5 +1,6 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model;
 
+import com.globalpayments.android.sdk.sample.utils.FingerprintMethodUsageMode;
 import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode;
 
 import java.math.BigDecimal;
@@ -15,7 +16,10 @@ public class TransactionOperationModel {
     private TransactionOperationType transactionOperationType;
     private PaymentMethodUsageMode paymentMethodUsageMode;
     private Boolean requestMultiUseToken;
+    private FingerprintMethodUsageMode fingerprintMethodUsageMode;
     private String idempotencyKey;
+    private boolean use3DS;
+    private Boolean fingerPrintSelection;
 
     public String getTypeCardOption() {
         return typeCardOption;
@@ -97,6 +101,14 @@ public class TransactionOperationModel {
         this.requestMultiUseToken = requestMultiUseToken;
     }
 
+    public FingerprintMethodUsageMode getFingerprintMethodUsageMode() {
+        return fingerprintMethodUsageMode;
+    }
+
+    public void setFingerprintMethodUsageMode(FingerprintMethodUsageMode fingerprintMethodUsageMode) {
+        this.fingerprintMethodUsageMode = fingerprintMethodUsageMode;
+    }
+
     public String getIdempotencyKey() {
         return idempotencyKey;
     }
@@ -105,4 +117,19 @@ public class TransactionOperationModel {
         this.idempotencyKey = idempotencyKey;
     }
 
+    public boolean isUse3DS() {
+        return use3DS;
+    }
+
+    public void setUse3DS(boolean use3DS) {
+        this.use3DS = use3DS;
+    }
+
+    public Boolean getFingerPrintSelection() {
+        return fingerPrintSelection;
+    }
+
+    public void setFingerPrintSelection(Boolean fingerPrintSelection) {
+        this.fingerPrintSelection = fingerPrintSelection;
+    }
 }

@@ -7,19 +7,16 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.global.api.builders.TransactionReportBuilder;
 import com.global.api.entities.TransactionSummary;
-import com.global.api.entities.enums.TransactionSortProperty;
 import com.global.api.entities.exceptions.ApiException;
 import com.global.api.entities.reporting.DataServiceCriteria;
 import com.global.api.entities.reporting.SearchCriteria;
 import com.global.api.entities.reporting.TransactionSummaryPaged;
 import com.global.api.services.ReportingService;
-import com.global.api.utils.DateUtils;
 import com.globalpayments.android.sdk.TaskExecutor;
 import com.globalpayments.android.sdk.sample.common.base.BaseViewModel;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.report.model.TransactionReportParameters;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class TransactionReportViewModel extends BaseViewModel {
@@ -87,8 +84,6 @@ public class TransactionReportViewModel extends BaseViewModel {
 
     private List<TransactionSummary> executeGetTransactionListRequest(
             TransactionReportParameters reportParameters) throws ApiException {
-        Date startDate = DateUtils.addDays(new Date(), -90);
-
         TransactionReportBuilder<TransactionSummaryPaged> reportBuilder = reportParameters.isFromSettlements()
                 ? ReportingService.findSettlementTransactionsPaged(reportParameters.getPage(), reportParameters.getPageSize())
                 : ReportingService.findTransactionsPaged(reportParameters.getPage(), reportParameters.getPageSize());

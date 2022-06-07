@@ -109,7 +109,8 @@
             android:background="@null"
             android:inputType="text"
             android:paddingStart="@dimen/size_8dp"
-            android:paddingEnd="@dimen/size_8dp" />
+            android:paddingEnd="@dimen/size_8dp"
+            android:hint="@string/empty" />
 
         <TextView
             style="@style/Dialog.Label"
@@ -128,7 +129,7 @@
             android:inputType="text"
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
-            tools:text="@string/default_page_size" />
+            android:hint="@string/empty" />
 
         <TextView
             style="@style/Dialog.Label"
@@ -147,7 +148,7 @@
             android:inputType="text"
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
-            tools:text="@string/default_page_size" />
+            android:hint="@string/empty" />
 
         <TextView
             style="@style/Dialog.Label"
@@ -166,7 +167,7 @@
             android:inputType="text"
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
-            tools:text="@string/default_page_size" />
+            android:hint="@string/empty" />
 
         <TextView
             style="@style/Dialog.Label"
@@ -185,7 +186,7 @@
             android:inputType="text"
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
-            tools:text="@string/default_page_size" />
+            android:hint="@string/empty" />
 
         <TextView
             style="@style/Dialog.Label"
@@ -238,7 +239,7 @@
             android:inputType="text"
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
-            tools:text="@string/default_page_size" />
+            android:hint="@string/empty" />
 
         <TextView
             style="@style/Dialog.Label"
@@ -257,7 +258,7 @@
             android:inputType="text"
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
-            tools:text="@string/default_page_size" />
+            android:hint="@string/empty" />
 
         <TextView
             style="@style/Dialog.Label"
@@ -276,7 +277,7 @@
             android:inputType="text"
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
-            tools:text="@string/default_page_size" />
+            android:hint="@string/empty" />
 
         <TextView
             style="@style/Dialog.Label"
@@ -295,7 +296,7 @@
             android:inputType="text"
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
-            tools:text="@string/default_page_size" />
+            android:hint="@string/empty" />
 
         <TextView
             style="@style/Dialog.Label"
@@ -314,7 +315,7 @@
             android:inputType="text"
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
-            tools:text="@string/default_page_size" />
+            android:hint="@string/empty" />
 
         <TextView
             style="@style/Dialog.Label"
@@ -333,7 +334,7 @@
             android:inputType="text"
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
-            tools:text="@string/default_page_size" />
+            android:hint="@string/empty" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btSubmit"

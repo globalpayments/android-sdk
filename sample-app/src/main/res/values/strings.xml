@@ -68,6 +68,8 @@
     <string name="transaction_data">Transaction data</string>
     <string name="transaction_type">Transaction type:</string>
     <string name="select_multi_token_type">Tokenize card before transaction:</string>
+    <string name="token_usage_mode">Token usage mode</string>
+    <string name="finger_print_usage_mode">Finger Print usage mode</string>
     <string name="result_code">Result Code:</string>
     <string name="liability_shift">Liability Shift:</string>
     <string name="token_id">Token ID:</string>
@@ -196,6 +198,7 @@
     <string name="header_fees">Fees</string>
     <string name="header_disputes">Disputes</string>
     <string name="get_from_settlements">Get from settlements ?</string>
+    <string name="get_fingerprint_enable">Finger print enable ?</string>
     <string name="header_transaction">Transaction</string>
     <string name="header_card">Card</string>
     <string name="number">Number:</string>
