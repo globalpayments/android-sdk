@@ -7,9 +7,10 @@ import com.globalpayments.android.sdk.sample.utils.FingerprintMethodUsageMode;
 public class PaymentMethodOperationModel {
     private Boolean fingerPrintSelection;
     private FingerprintMethodUsageMode fingerprintMethodUsageMode;
+    private String cardHolderName;
     private String cardNumber;
-    private int expiryMonth;
-    private int expiryYear;
+    private String expiryMonth;
+    private String expiryYear;
     private String cvnCvv;
     private String paymentMethodId;
     private PaymentMethodOperationType paymentMethodOperationType;
@@ -32,6 +33,14 @@ public class PaymentMethodOperationModel {
         this.fingerprintMethodUsageMode = fingerprintMethodUsageMode;
     }
 
+    public String getCardHolderName() {
+        return cardHolderName;
+    }
+
+    public void setCardHolderName(String cardHolderName) {
+        this.cardHolderName = cardHolderName;
+    }
+
     public String getCardNumber() {
         return cardNumber;
     }
@@ -40,19 +49,19 @@ public class PaymentMethodOperationModel {
         this.cardNumber = cardNumber;
     }
 
-    public int getExpiryMonth() {
+    public String getExpiryMonth() {
         return expiryMonth;
     }
 
-    public void setExpiryMonth(int expiryMonth) {
+    public void setExpiryMonth(String expiryMonth) {
         this.expiryMonth = expiryMonth;
     }
 
-    public int getExpiryYear() {
+    public String getExpiryYear() {
         return expiryYear;
     }
 
-    public void setExpiryYear(int expiryYear) {
+    public void setExpiryYear(String expiryYear) {
         this.expiryYear = expiryYear;
     }
 

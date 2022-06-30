@@ -45,6 +45,8 @@ public class PaymentMethodOperationDialog extends BaseDialogFragment {
     private EditText etExpiryYear;
     private EditText etCvnCvv;
     private TextView tvFingerPrint;
+    private TextView tvLabelCardHolderName;
+    private EditText etCardHolderName;
     private CustomSpinner multiFingerPrintUsageMode;
 
     public static PaymentMethodOperationDialog newInstance(Fragment targetFragment) {
@@ -80,6 +82,8 @@ public class PaymentMethodOperationDialog extends BaseDialogFragment {
         tvFingerPrintId = findViewById(R.id.tvFingerPrintId);
         currenciesSpinner = findViewById(R.id.currenciesSpinner);
         tvFingerPrint = findViewById(R.id.tvFingerPrint);
+        tvLabelCardHolderName = findViewById(R.id.tvLabelCardHolderName);
+        etCardHolderName = findViewById(R.id.etCardHolderName);
         multiFingerPrintUsageMode = findViewById(R.id.multiFingerPrintUsageMode);
 
         initSpinners();
@@ -100,7 +104,6 @@ public class PaymentMethodOperationDialog extends BaseDialogFragment {
 
     private void initSpinners() {
         paymentMethodOperationSpinner.init(PaymentMethodOperationType.values(), false, this::handleOperationViewsVisibility);
-        cardModelsSpinner.init(PaymentCardModel.values(), false, this::fillPaymentCardFields);
         multiTokenSpinner.init(PaymentMethodUsageMode.values());
         currenciesSpinner.init(getResources().getStringArray(R.array.currencies));
         multiFingerPrintUsageMode.init(FingerprintMethodUsageMode.values());
@@ -112,20 +115,55 @@ public class PaymentMethodOperationDialog extends BaseDialogFragment {
                 handlePaymentMethodIdViewsVisibility(false);
                 handlePaymentMethodFingerPrintViewsVisibility(true);
                 handlePaymentCardViewsVisibility(true);
+                handlePaymentMethodMultiUsageViewsVisibility(true);
+                handlePaymentMethodEditCardVisibility(false);
+                cardModelsSpinner.init(
+                        PaymentCardModel.values(),
+                        false,
+                        this::fillPaymentCardFields
+                );
                 break;
 
             case EDIT:
                 handlePaymentMethodIdViewsVisibility(true);
                 handlePaymentMethodFingerPrintViewsVisibility(false);
                 handlePaymentCardViewsVisibility(true);
+                handlePaymentMethodMultiUsageViewsVisibility(true);
+                handlePaymentMethodEditCardVisibility(true);
+                fillPaymentCardFieldsEmpty();
                 break;
 
             case DELETE:
                 handlePaymentMethodIdViewsVisibility(true);
                 handlePaymentMethodFingerPrintViewsVisibility(false);
                 handlePaymentCardViewsVisibility(false);
+                handlePaymentMethodMultiUsageViewsVisibility(false);
+                handlePaymentMethodEditCardVisibility(false);
                 break;
         }
+    }
+
+    private void fillPaymentCardFields(PaymentCardModel paymentCardModel) {
+        etCardNumber.setText(paymentCardModel.getCardNumber());
+        etExpiryMonth.setText(paymentCardModel.getExpiryMonth());
+        etExpiryYear.setText(paymentCardModel.getExpiryYear());
+        etCvnCvv.setText(paymentCardModel.getCvnCvv());
+    }
+
+    private void fillPaymentCardFieldsEmpty() {
+        etCardNumber.setText("");
+        etExpiryMonth.setText("");
+        etExpiryYear.setText("");
+        etCvnCvv.setText("");
+        tvLabelCvnCvv.setVisibility(View.GONE);
+        etCvnCvv.setVisibility(View.GONE);
+    }
+
+    private void handlePaymentMethodEditCardVisibility(boolean show) {
+        handleViewsVisibility(show,
+                tvLabelCardHolderName,
+                etCardHolderName
+        );
     }
 
     private void handlePaymentMethodIdViewsVisibility(boolean show) {
@@ -135,11 +173,17 @@ public class PaymentMethodOperationDialog extends BaseDialogFragment {
         );
     }
 
+    private void handlePaymentMethodMultiUsageViewsVisibility(boolean show) {
+        handleViewsVisibility(show,
+                tvTokenizeId,
+                multiTokenSpinner
+        );
+    }
+
     private void handlePaymentMethodFingerPrintViewsVisibility(boolean show) {
         handleViewsVisibility(show,
                 tvTokenizeId,
                 tvFingerPrintId,
-                multiTokenSpinner,
                 cbFromFingerPrint
         );
     }
@@ -159,22 +203,17 @@ public class PaymentMethodOperationDialog extends BaseDialogFragment {
         );
     }
 
-    private void fillPaymentCardFields(PaymentCardModel paymentCardModel) {
-        etCardNumber.setText(paymentCardModel.getCardNumber());
-        etExpiryMonth.setText(paymentCardModel.getExpiryMonth());
-        etExpiryYear.setText(paymentCardModel.getExpiryYear());
-        etCvnCvv.setText(paymentCardModel.getCvnCvv());
-    }
-
     private PaymentMethodOperationModel buildPaymentMethodOperationModel() {
         PaymentMethodOperationModel paymentMethodOperationModel = new PaymentMethodOperationModel();
+
         boolean fingerPrint = cbFromFingerPrint.isChecked();
         paymentMethodOperationModel.setFingerPrintSelection(fingerPrint);
         paymentMethodOperationModel.setFingerprintMethodUsageMode(multiFingerPrintUsageMode.getSelectedOption());
         paymentMethodOperationModel.setPaymentMethodUsageMode(multiTokenSpinner.getSelectedOption());
+        paymentMethodOperationModel.setCardHolderName(etCardHolderName.getText().toString());
         paymentMethodOperationModel.setCardNumber(etCardNumber.getText().toString());
-        paymentMethodOperationModel.setExpiryMonth(Integer.parseInt(etExpiryMonth.getText().toString()));
-        paymentMethodOperationModel.setExpiryYear(Integer.parseInt(etExpiryYear.getText().toString()));
+        paymentMethodOperationModel.setExpiryMonth(etExpiryMonth.getText().toString());
+        paymentMethodOperationModel.setExpiryYear(etExpiryYear.getText().toString());
         paymentMethodOperationModel.setCvnCvv(etCvnCvv.getText().toString());
         paymentMethodOperationModel.setCurrency(currenciesSpinner.getSelectedOption());
         paymentMethodOperationModel.setPaymentMethodId(etPaymentMethodId.getText().toString());

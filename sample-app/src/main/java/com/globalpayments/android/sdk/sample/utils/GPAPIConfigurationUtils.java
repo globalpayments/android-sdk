@@ -6,9 +6,11 @@ import com.global.api.ServicesContainer;
 import com.global.api.entities.exceptions.ConfigurationException;
 import com.global.api.gateways.GpApiConnector;
 import com.global.api.serviceConfigs.GpApiConfig;
+import com.globalpayments.android.sdk.sample.BuildConfig;
 import com.globalpayments.android.sdk.sample.gpapi.configuration.GPAPIConfiguration;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
 import static com.globalpayments.android.sdk.utils.Utils.isNotNull;
@@ -28,7 +30,10 @@ public class GPAPIConfigurationUtils {
         boolean isSuccessful;
         try {
             ServicesContainer.configureService(gpApiConfig, configName);
-            setApiVersion(gpapiConfiguration.getApiVersion(), configName);
+            setApiVersion(
+                    gpapiConfiguration.getApiVersion(),
+                    configName
+            );
             isSuccessful = true;
         } catch (ConfigurationException e) {
             Log.d(TAG, "ServicesContainer.configureService failed");
@@ -38,7 +43,10 @@ public class GPAPIConfigurationUtils {
         return isSuccessful;
     }
 
-    private static void setApiVersion(String apiVersion, String configName) {
+    private static void setApiVersion(
+            String apiVersion,
+            String configName
+    ) {
         if (isNotNullOrBlank(apiVersion)) {
             try {
                 GpApiConnector gpApiConnector = (GpApiConnector) ServicesContainer.getInstance().getGateway(configName);
@@ -53,10 +61,13 @@ public class GPAPIConfigurationUtils {
 
     public static GpApiConfig buildDefaultGpApiConfig(GPAPIConfiguration gpapiConfiguration) {
         GpApiConfig gpApiConfig = new GpApiConfig();
+        HashMap<String, String> androidHeader = new HashMap<>();
+        androidHeader.put("x-gp-sdk", "Android;version="+ BuildConfig.VERSION_NAME);
 
         gpApiConfig.setAppId(gpapiConfiguration.getAppId());
         gpApiConfig.setAppKey(gpapiConfiguration.getAppKey());
         gpApiConfig.setChannel(gpapiConfiguration.getChannel().getValue());
+        gpApiConfig.setDynamicHeaders(androidHeader);
 
         gpApiConfig.setChallengeNotificationUrl(gpapiConfiguration.getChallengeNotificationUrl());
         gpApiConfig.setMethodNotificationUrl(gpapiConfiguration.getMethodNotificationUrl());

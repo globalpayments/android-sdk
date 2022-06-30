@@ -47,10 +47,8 @@ public class GPAPIConfigurationFragment extends BaseFragment {
     private TextInputLayout serviceUrlTextInputLayout;
     private TextInputEditText etServiceUrl;
 
-    private TextInputLayout challengeUrlTextInputLayout;
     private TextInputEditText etChallengeNotificationUrl;
 
-    private TextInputLayout methodUrlTextInputLayout;
     private TextInputEditText etMethodNotificationUrl;
 
     private TextInputLayout apiVersionTextInputLayout;
@@ -126,10 +124,8 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         serviceUrlTextInputLayout = findViewById(R.id.serviceUrlTextInputLayout);
         etServiceUrl = findViewById(R.id.etServiceUrl);
 
-        challengeUrlTextInputLayout = findViewById(R.id.challengeTextInputLayout);
         etChallengeNotificationUrl = findViewById(R.id.etChallengeNotificationUrl);
 
-        methodUrlTextInputLayout = findViewById(R.id.methodUrlTextInputLayout);
         etMethodNotificationUrl = findViewById(R.id.etMethodNotificationUrl);
 
         apiVersionTextInputLayout = findViewById(R.id.apiVersionTextInputLayout);

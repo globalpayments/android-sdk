@@ -1,5 +1,8 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations;
 
+import static com.global.api.entities.enums.ManualEntryMethod.Mail;
+import static com.global.api.entities.enums.ManualEntryMethod.Moto;
+import static com.global.api.entities.enums.ManualEntryMethod.Phone;
 import static com.globalpayments.android.sdk.sample.common.Constants.CHALLENGE_REQUIRED;
 import static com.globalpayments.android.sdk.sample.common.Constants.VISA_3DS1_ENROLLED;
 import static com.globalpayments.android.sdk.sample.common.Constants.VISA_3DS1_NOT_ENROLLED;
@@ -22,6 +25,7 @@ import com.global.api.entities.ThreeDSecure;
 import com.global.api.entities.Transaction;
 import com.global.api.entities.enums.AuthenticationSource;
 import com.global.api.entities.enums.ChallengeWindowSize;
+import com.global.api.entities.enums.Channel;
 import com.global.api.entities.enums.ColorDepth;
 import com.global.api.entities.enums.MethodUrlCompletion;
 import com.global.api.entities.enums.Secure3dVersion;
@@ -35,6 +39,7 @@ import com.globalpayments.android.sdk.sample.common.base.BaseAndroidViewModel;
 import com.globalpayments.android.sdk.sample.gpapi.configuration.GPAPIConfiguration;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.TransactionOperationModel;
 import com.globalpayments.android.sdk.sample.utils.AppPreferences;
+import com.globalpayments.android.sdk.sample.utils.ManualEntryMethodUsageMode;
 import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode;
 
 import org.joda.time.DateTime;
@@ -91,9 +96,11 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
         return urlToWebView;
     }
 
+    private GPAPIConfiguration gpapiConfiguration;
+
     @Override
     protected void init() {
-        GPAPIConfiguration gpapiConfiguration = new AppPreferences(getApplication()).getGPAPIConfiguration();
+        gpapiConfiguration = new AppPreferences(getApplication()).getGPAPIConfiguration();
         GpApiConfig gpApiConfig = buildDefaultGpApiConfig(gpapiConfiguration);
 
         card = new CreditCardData();
@@ -347,19 +354,13 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
     }
 
     private Transaction executeTransaction() throws ApiException {
-        card.setNumber(transactionOperationModel.getCardNumber());
-        card.setExpMonth(transactionOperationModel.getExpiryMonth());
-        card.setExpYear(transactionOperationModel.getExpiryYear());
-        card.setCvn(transactionOperationModel.getCvnCvv());
-
         boolean isRequestedMultiUseToken = transactionOperationModel.getRequestMultiUseToken();
 
         Transaction transaction;
 
-        card = finishTransactionOperation(
+        CreditCardData cardData = finishTransactionOperation(
                 transactionOperationModel,
-                transactionOperationModel.getPaymentMethodUsageMode(),
-                card
+                transactionOperationModel.getPaymentMethodUsageMode()
         );
 
         Customer customer =
@@ -370,41 +371,79 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
         transaction = sendFingerPrint(
                 transactionOperationModel,
                 isRequestedMultiUseToken,
-                customer
+                customer,
+                cardData
         );
 
         return transaction;
     }
 
+    private CreditCardData manualEntryMethodOption(
+            ManualEntryMethodUsageMode manualEntryMethodUsageMode
+    ) {
+        if (gpapiConfiguration.getChannel() == Channel.CardNotPresent) {
+            switch (manualEntryMethodUsageMode) {
+                case None:
+                    card.setNumber(transactionOperationModel.getCardNumber());
+                    card.setExpMonth(transactionOperationModel.getExpiryMonth());
+                    card.setExpYear(transactionOperationModel.getExpiryYear());
+                    card.setCvn(transactionOperationModel.getCvnCvv());
+                    break;
+                case Moto:
+                    card.setNumber(transactionOperationModel.getCardNumber());
+                    card.setExpMonth(transactionOperationModel.getExpiryMonth());
+                    card.setExpYear(transactionOperationModel.getExpiryYear());
+                    card.setCvn(transactionOperationModel.getCvnCvv());
+                    card.setEntryMethod(Moto);
+                    break;
+                case Mail:
+                    card.setNumber(transactionOperationModel.getCardNumber());
+                    card.setExpMonth(transactionOperationModel.getExpiryMonth());
+                    card.setExpYear(transactionOperationModel.getExpiryYear());
+                    card.setCvn(transactionOperationModel.getCvnCvv());
+                    card.setEntryMethod(Mail);
+                    break;
+                case Phone:
+                    card.setNumber(transactionOperationModel.getCardNumber());
+                    card.setExpMonth(transactionOperationModel.getExpiryMonth());
+                    card.setExpYear(transactionOperationModel.getExpiryYear());
+                    card.setCvn(transactionOperationModel.getCvnCvv());
+                    card.setEntryMethod(Phone);
+                    break;
+            }
+        }
+        return card;
+    }
+
     private CreditCardData finishTransactionOperation(
             TransactionOperationModel transactionOperationModel,
-            PaymentMethodUsageMode paymentMethodUsageMode,
-            CreditCardData creditCardData
+            PaymentMethodUsageMode paymentMethodUsageMode
     ) throws ApiException {
         String token;
         CreditCardData tokenizedCard = new CreditCardData();
 
         switch (paymentMethodUsageMode) {
             case No:
-                tokenizedCard.setNumber(transactionOperationModel.getCardNumber());
-                tokenizedCard.setExpMonth(transactionOperationModel.getExpiryMonth());
-                tokenizedCard.setExpYear(transactionOperationModel.getExpiryYear());
-                tokenizedCard.setCvn(transactionOperationModel.getCvnCvv());
-
+                tokenizedCard =
+                        manualEntryMethodOption(transactionOperationModel.getManualEntryMethodUsageMode());
                 break;
             case Single_use_token:
-                token = creditCardData.tokenize(true, TRANSACTION_OPERATIONS_GPAPI_CONFIG,
+                token = card.tokenize(true, TRANSACTION_OPERATIONS_GPAPI_CONFIG,
                         com.global.api.entities.enums.PaymentMethodUsageMode.SINGLE);
 
                 tokenizedCard = new CreditCardData();
                 tokenizedCard.setToken(token);
+                tokenizedCard =
+                        manualEntryMethodOption(transactionOperationModel.getManualEntryMethodUsageMode());
                 break;
             case Multiple_use_token:
-                token = creditCardData.tokenize(true, TRANSACTION_OPERATIONS_GPAPI_CONFIG,
+                token = card.tokenize(true, TRANSACTION_OPERATIONS_GPAPI_CONFIG,
                         com.global.api.entities.enums.PaymentMethodUsageMode.MULTIPLE);
 
                 tokenizedCard = new CreditCardData();
                 tokenizedCard.setToken(token);
+                tokenizedCard =
+                        manualEntryMethodOption(transactionOperationModel.getManualEntryMethodUsageMode());
                 break;
         }
         return tokenizedCard;
@@ -413,7 +452,8 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
     private Transaction sendFingerPrint(
             TransactionOperationModel transactionOperationModel,
             Boolean isRequestedMultiUseToken,
-            Customer customer
+            Customer customer,
+            CreditCardData creditCardData
     ) throws ApiException {
         Transaction transaction = null;
         if (transactionOperationModel.getFingerPrintSelection()) {
@@ -421,8 +461,9 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
             switch (transactionOperationModel.getTransactionOperationType()) {
 
                 case AUTHORIZATION:
-                    transaction = card.authorize(transactionOperationModel.getAmount())
+                    transaction = creditCardData.authorize(transactionOperationModel.getAmount())
                             .withCurrency(transactionOperationModel.getCurrency())
+                            .withPaymentLinkId(transactionOperationModel.getPaymentLinkId())
                             .withCustomerData(customer)
                             .withRequestMultiUseToken(isRequestedMultiUseToken)
                             .withIdempotencyKey(transactionOperationModel.getIdempotencyKey())
@@ -430,8 +471,9 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
                     break;
 
                 case SALE:
-                    transaction = card.charge(transactionOperationModel.getAmount())
+                    transaction = creditCardData.charge(transactionOperationModel.getAmount())
                             .withCurrency(transactionOperationModel.getCurrency())
+                            .withPaymentLinkId(transactionOperationModel.getPaymentLinkId())
                             .withCustomerData(customer)
                             .withRequestMultiUseToken(isRequestedMultiUseToken)
                             .withIdempotencyKey(transactionOperationModel.getIdempotencyKey())
@@ -439,8 +481,9 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
                     break;
 
                 case CAPTURE:
-                    Transaction authorizationTransaction = card.authorize(transactionOperationModel.getAmount())
+                    Transaction authorizationTransaction = creditCardData.authorize(transactionOperationModel.getAmount())
                             .withCurrency(transactionOperationModel.getCurrency())
+                            .withPaymentLinkId(transactionOperationModel.getPaymentLinkId())
                             .withCustomerData(customer)
                             .withRequestMultiUseToken(isRequestedMultiUseToken)
                             .execute(TRANSACTION_OPERATIONS_GPAPI_CONFIG);
@@ -451,8 +494,9 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
                     break;
 
                 case REFUND:
-                    Transaction saleTransaction = card.charge(transactionOperationModel.getAmount())
+                    Transaction saleTransaction = creditCardData.charge(transactionOperationModel.getAmount())
                             .withCurrency(transactionOperationModel.getCurrency())
+                            .withPaymentLinkId(transactionOperationModel.getPaymentLinkId())
                             .withCustomerData(customer)
                             .withRequestMultiUseToken(isRequestedMultiUseToken)
                             .execute(TRANSACTION_OPERATIONS_GPAPI_CONFIG);
@@ -464,8 +508,9 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
                     break;
 
                 case REVERSE:
-                    Transaction saleTransaction2 = card.charge(transactionOperationModel.getAmount())
+                    Transaction saleTransaction2 = creditCardData.charge(transactionOperationModel.getAmount())
                             .withCurrency(transactionOperationModel.getCurrency())
+                            .withPaymentLinkId(transactionOperationModel.getPaymentLinkId())
                             .withCustomerData(customer)
                             .withRequestMultiUseToken(isRequestedMultiUseToken)
                             .execute(TRANSACTION_OPERATIONS_GPAPI_CONFIG);
@@ -476,9 +521,10 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
                     break;
                 case REAUTHORIZATION:
                     Transaction chargeTransaction =
-                            card
+                            creditCardData
                                     .charge(transactionOperationModel.getAmount())
                                     .withCurrency(transactionOperationModel.getCurrency())
+                                    .withPaymentLinkId(transactionOperationModel.getPaymentLinkId())
                                     .withCustomerData(customer)
                                     .withRequestMultiUseToken(isRequestedMultiUseToken)
                                     .execute(TRANSACTION_OPERATIONS_GPAPI_CONFIG);
@@ -497,24 +543,27 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
             switch (transactionOperationModel.getTransactionOperationType()) {
 
                 case AUTHORIZATION:
-                    transaction = card.authorize(transactionOperationModel.getAmount())
+                    transaction = creditCardData.authorize(transactionOperationModel.getAmount())
                             .withCurrency(transactionOperationModel.getCurrency())
+                            .withPaymentLinkId(transactionOperationModel.getPaymentLinkId())
                             .withRequestMultiUseToken(isRequestedMultiUseToken)
                             .withIdempotencyKey(transactionOperationModel.getIdempotencyKey())
                             .execute(TRANSACTION_OPERATIONS_GPAPI_CONFIG);
                     break;
 
                 case SALE:
-                    transaction = card.charge(transactionOperationModel.getAmount())
+                    transaction = creditCardData.charge(transactionOperationModel.getAmount())
                             .withCurrency(transactionOperationModel.getCurrency())
+                            .withPaymentLinkId(transactionOperationModel.getPaymentLinkId())
                             .withRequestMultiUseToken(isRequestedMultiUseToken)
                             .withIdempotencyKey(transactionOperationModel.getIdempotencyKey())
                             .execute(TRANSACTION_OPERATIONS_GPAPI_CONFIG);
                     break;
 
                 case CAPTURE:
-                    Transaction authorizationTransaction = card.authorize(transactionOperationModel.getAmount())
+                    Transaction authorizationTransaction = creditCardData.authorize(transactionOperationModel.getAmount())
                             .withCurrency(transactionOperationModel.getCurrency())
+                            .withPaymentLinkId(transactionOperationModel.getPaymentLinkId())
                             .withRequestMultiUseToken(isRequestedMultiUseToken)
                             .execute(TRANSACTION_OPERATIONS_GPAPI_CONFIG);
 
@@ -524,8 +573,9 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
                     break;
 
                 case REFUND:
-                    Transaction saleTransaction = card.charge(transactionOperationModel.getAmount())
+                    Transaction saleTransaction = creditCardData.charge(transactionOperationModel.getAmount())
                             .withCurrency(transactionOperationModel.getCurrency())
+                            .withPaymentLinkId(transactionOperationModel.getPaymentLinkId())
                             .withRequestMultiUseToken(isRequestedMultiUseToken)
                             .execute(TRANSACTION_OPERATIONS_GPAPI_CONFIG);
 
@@ -536,8 +586,9 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
                     break;
 
                 case REVERSE:
-                    Transaction saleTransaction2 = card.charge(transactionOperationModel.getAmount())
+                    Transaction saleTransaction2 = creditCardData.charge(transactionOperationModel.getAmount())
                             .withCurrency(transactionOperationModel.getCurrency())
+                            .withPaymentLinkId(transactionOperationModel.getPaymentLinkId())
                             .withRequestMultiUseToken(isRequestedMultiUseToken)
                             .execute(TRANSACTION_OPERATIONS_GPAPI_CONFIG);
 
@@ -547,9 +598,10 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
                     break;
                 case REAUTHORIZATION:
                     Transaction chargeTransaction =
-                            card
+                            creditCardData
                                     .charge(transactionOperationModel.getAmount())
                                     .withCurrency(transactionOperationModel.getCurrency())
+                                    .withPaymentLinkId(transactionOperationModel.getPaymentLinkId())
                                     .withRequestMultiUseToken(isRequestedMultiUseToken)
                                     .execute(TRANSACTION_OPERATIONS_GPAPI_CONFIG);
 

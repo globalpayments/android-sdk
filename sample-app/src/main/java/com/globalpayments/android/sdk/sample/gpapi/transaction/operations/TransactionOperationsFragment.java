@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.global.api.entities.ThreeDSecure;
+import com.global.api.entities.enums.Channel;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar;
@@ -76,6 +77,7 @@ public class TransactionOperationsFragment extends BaseFragment implements Trans
 
         AppPreferences appPreferences = new AppPreferences(requireContext());
         gpapiConfiguration = appPreferences.getGPAPIConfiguration();
+
         WebView.setWebContentsDebuggingEnabled(true);
     }
 

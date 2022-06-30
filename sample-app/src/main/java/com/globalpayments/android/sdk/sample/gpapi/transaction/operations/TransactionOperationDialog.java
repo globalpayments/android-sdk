@@ -9,13 +9,18 @@ import android.widget.TextView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import com.global.api.entities.enums.Channel;
+import com.global.api.entities.enums.ManualEntryMethod;
 import com.globalpayments.android.sdk.model.PaymentCardModel;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseDialogFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomSpinner;
+import com.globalpayments.android.sdk.sample.gpapi.configuration.GPAPIConfiguration;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.TransactionOperationModel;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.TransactionOperationType;
+import com.globalpayments.android.sdk.sample.utils.AppPreferences;
 import com.globalpayments.android.sdk.sample.utils.FingerprintMethodUsageMode;
+import com.globalpayments.android.sdk.sample.utils.ManualEntryMethodUsageMode;
 import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode;
 
 import java.math.BigDecimal;
@@ -27,6 +32,7 @@ public class TransactionOperationDialog extends BaseDialogFragment {
     private CustomSpinner transactionTypeSpinner;
     private CustomSpinner cardModelsSpinner;
     private CustomSpinner multiTokenSpinner;
+    private CustomSpinner manualEntryModeSpinner;
     private CheckBox cbRequestMultiUseToken;
     private CheckBox cbFromFingerPrint;
     private EditText etCardNumber;
@@ -36,8 +42,12 @@ public class TransactionOperationDialog extends BaseDialogFragment {
     private EditText etAmount;
     private EditText etIdempotencyKey;
     private TextView tvFingerPrintId;
+    private TextView etPaymentLinkId;
+    private TextView tvManualEntryMode;
     private CustomSpinner multiFingerPrintUsageMode;
     private boolean use3ds;
+
+    GPAPIConfiguration gpapiConfiguration;
 
     public static TransactionOperationDialog newInstance(Fragment targetFragment) {
         TransactionOperationDialog transactionOperationDialog = new TransactionOperationDialog();
@@ -66,6 +76,9 @@ public class TransactionOperationDialog extends BaseDialogFragment {
         cbFromFingerPrint = findViewById(R.id.cbFromFingerPrint);
         tvFingerPrintId = findViewById(R.id.tvFingerPrintId);
         multiFingerPrintUsageMode = findViewById(R.id.multiFingerPrintUsageMode);
+        etPaymentLinkId = findViewById(R.id.etPaymentLinkId);
+        tvManualEntryMode = findViewById(R.id.tvManualEntryMode);
+        manualEntryModeSpinner = findViewById(R.id.manualEntryModeSpinner);
         CheckBox cbUse3ds = findViewById(R.id.cbUse3ds);
         cbUse3ds.setOnCheckedChangeListener((buttonView, isChecked) -> use3ds = isChecked);
         initSpinners();
@@ -80,6 +93,18 @@ public class TransactionOperationDialog extends BaseDialogFragment {
                 multiFingerPrintUsageMode.setVisibility(View.GONE);
             }
         });
+
+        AppPreferences appPreferences = new AppPreferences(requireContext());
+        gpapiConfiguration = appPreferences.getGPAPIConfiguration();
+
+        if (gpapiConfiguration.getChannel() == Channel.CardNotPresent) {
+            tvManualEntryMode.setVisibility(View.VISIBLE);
+            manualEntryModeSpinner.setVisibility(View.VISIBLE);
+            manualEntryModeSpinner.init(ManualEntryMethodUsageMode.values());
+        } else {
+            tvManualEntryMode.setVisibility(View.GONE);
+            manualEntryModeSpinner.setVisibility(View.GONE);
+        }
     }
 
     private void initSpinners() {
@@ -119,6 +144,8 @@ public class TransactionOperationDialog extends BaseDialogFragment {
             transactionOperationModel.setRequestMultiUseToken(cbRequestMultiUseToken.isChecked());
             transactionOperationModel.setPaymentMethodUsageMode(multiTokenSpinner.getSelectedOption());
             transactionOperationModel.setUse3DS(use3ds);
+            transactionOperationModel.setPaymentLinkId(etPaymentLinkId.getText().toString());
+            transactionOperationModel.setManualEntryMethodUsageMode(manualEntryModeSpinner.getSelectedOption());
             callback.onSubmitTransactionOperationModel(transactionOperationModel);
         }
         dismiss();

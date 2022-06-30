@@ -107,6 +107,22 @@
             tools:text="852" />
 
         <TextView
+            android:id="@+id/tvManualEntryMode"
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/manual_entry_mode"
+            android:visibility="gone"/>
+
+        <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
+            android:id="@+id/manualEntryModeSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.5"
+            android:visibility="gone"/>
+
+        <TextView
             style="@style/Dialog.Label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -257,6 +273,25 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1.3"
             android:checked="false" />
+
+        <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/payment_LNK_id" />
+
+        <EditText
+            android:id="@+id/etPaymentLinkId"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.5"
+            android:background="@null"
+            android:inputType="text"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            tools:hint="@string/empty" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btSubmit"

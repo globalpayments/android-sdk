@@ -15,6 +15,7 @@ import com.globalpayments.android.sdk.sample.gpapi.paymentmethod.operations.mode
 public class PaymentMethodOperationView extends LinearLayout {
     private ItemView idItemView;
     private ItemView resultItemView;
+    private ItemView tokenItemView;
     private ItemView cardTypeItemView;
     private ItemView cardNumberItemView;
     private ItemView cardExpiryMonthItemView;
@@ -41,6 +42,7 @@ public class PaymentMethodOperationView extends LinearLayout {
         setOrientation(LinearLayout.VERTICAL);
         resultItemView = ItemView.create(context, R.string.result, this);
         idItemView = ItemView.create(context, R.string.payment_method_id, this);
+        tokenItemView = ItemView.create(context, R.string.token, this);
         cardTypeItemView = ItemView.create(context, R.string.card_type, this);
         cardNumberItemView = ItemView.create(context, R.string.card_number, this);
         cardExpiryMonthItemView = ItemView.create(context, R.string.card_expiry_month, this);
@@ -50,6 +52,7 @@ public class PaymentMethodOperationView extends LinearLayout {
     public void bind(PaymentMethodOperationUIModel paymentMethodOperationUIModel) {
         resultItemView.setValueOrHide(paymentMethodOperationUIModel.getResult());
         idItemView.setValueOrHide(paymentMethodOperationUIModel.getPaymentMethodId());
+        tokenItemView.setValueOrHide(paymentMethodOperationUIModel.getTokenUpdate());
         cardTypeItemView.setValueOrHide(paymentMethodOperationUIModel.getCardType());
         cardNumberItemView.setValueOrHide(paymentMethodOperationUIModel.getCardNumber());
         cardExpiryMonthItemView.setValueOrHide(paymentMethodOperationUIModel.getExpiryMonth());

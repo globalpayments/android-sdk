@@ -1,6 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model;
 
 import com.globalpayments.android.sdk.sample.utils.FingerprintMethodUsageMode;
+import com.globalpayments.android.sdk.sample.utils.ManualEntryMethodUsageMode;
 import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode;
 
 import java.math.BigDecimal;
@@ -20,6 +21,8 @@ public class TransactionOperationModel {
     private String idempotencyKey;
     private boolean use3DS;
     private Boolean fingerPrintSelection;
+    private String paymentLinkId;
+    private ManualEntryMethodUsageMode manualEntryMethodUsageMode;
 
     public String getTypeCardOption() {
         return typeCardOption;
@@ -131,5 +134,21 @@ public class TransactionOperationModel {
 
     public void setFingerPrintSelection(Boolean fingerPrintSelection) {
         this.fingerPrintSelection = fingerPrintSelection;
+    }
+
+    public String getPaymentLinkId() {
+        return paymentLinkId;
+    }
+
+    public void setPaymentLinkId(String paymentLinkId) {
+        this.paymentLinkId = paymentLinkId;
+    }
+
+    public ManualEntryMethodUsageMode getManualEntryMethodUsageMode() {
+        return manualEntryMethodUsageMode;
+    }
+
+    public void setManualEntryMethodUsageMode(ManualEntryMethodUsageMode manualEntryMethodUsageMode) {
+        this.manualEntryMethodUsageMode = manualEntryMethodUsageMode;
     }
 }

@@ -130,6 +130,31 @@
             android:visibility="gone"/>
 
         <TextView
+            android:id="@+id/tvLabelCardHolderName"
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/card_holder_name"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <EditText
+            android:id="@+id/etCardHolderName"
+            style="@style/Dialog.Value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.5"
+            android:background="@null"
+            android:inputType="text"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp"
+            android:visibility="gone"
+            tools:hint="@string/empty"
+            android:hint="@string/empty"
+            tools:visibility="visible" />
+
+        <TextView
             android:id="@+id/tvLabelCardNumber"
             style="@style/Dialog.Label"
             android:layout_width="0dp"
@@ -150,7 +175,8 @@
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
             android:visibility="gone"
-            tools:text="4263970000005262"
+            tools:hint="@string/empty"
+            android:hint="@string/empty"
             tools:visibility="visible" />
 
         <TextView
@@ -174,7 +200,8 @@
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
             android:visibility="gone"
-            tools:text="5"
+            tools:hint="@string/empty"
+            android:hint="@string/empty"
             tools:visibility="visible" />
 
         <TextView
@@ -198,7 +225,8 @@
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
             android:visibility="gone"
-            tools:text="2023"
+            tools:hint="@string/empty"
+            android:hint="@string/empty"
             tools:visibility="visible" />
 
         <TextView
@@ -222,7 +250,8 @@
             android:paddingStart="@dimen/size_8dp"
             android:paddingEnd="@dimen/size_8dp"
             android:visibility="gone"
-            tools:text="852"
+            tools:hint="@string/empty"
+            android:hint="@string/empty"
             tools:visibility="visible" />
 
         <TextView

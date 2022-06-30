@@ -171,7 +171,7 @@
                 android:layout_marginBottom="@dimen/size_4dp"
                 android:paddingStart="@dimen/size_4dp"
                 android:paddingEnd="@dimen/size_4dp"
-                android:text="@string/select_card_present_configuration"
+                android:text="@string/config_channel"
                 android:textColor="@color/colorHintInputHeader"
                 android:textSize="@dimen/text_size_18sp" />
 

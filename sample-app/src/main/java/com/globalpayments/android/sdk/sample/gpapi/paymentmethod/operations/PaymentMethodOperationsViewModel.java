@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.global.api.entities.Customer;
+import com.global.api.entities.Transaction;
 import com.global.api.entities.enums.PaymentMethodUsageMode;
 import com.global.api.entities.exceptions.ApiException;
 import com.global.api.paymentMethods.CreditCardData;
@@ -59,7 +60,7 @@ public class PaymentMethodOperationsViewModel extends BaseViewModel {
                 break;
 
             case EDIT:
-                paymentMethodOperationUIModel.setResult(edit(paymentMethodOperationModel));
+                paymentMethodOperationUIModel.setTokenUpdate(edit(paymentMethodOperationModel));
                 break;
 
             case DELETE:
@@ -74,8 +75,8 @@ public class PaymentMethodOperationsViewModel extends BaseViewModel {
                           PaymentMethodOperationModel paymentMethodOperationModel) throws ApiException {
         CreditCardData card = new CreditCardData();
         card.setNumber(paymentMethodOperationModel.getCardNumber());
-        card.setExpMonth(paymentMethodOperationModel.getExpiryMonth());
-        card.setExpYear(paymentMethodOperationModel.getExpiryYear());
+        card.setExpMonth(Integer.parseInt(paymentMethodOperationModel.getExpiryMonth()));
+        card.setExpYear(Integer.parseInt(paymentMethodOperationModel.getExpiryYear()));
         card.setCvn(paymentMethodOperationModel.getCvnCvv());
 
         Customer customer =
@@ -93,14 +94,142 @@ public class PaymentMethodOperationsViewModel extends BaseViewModel {
         }
     }
 
-    private boolean edit(PaymentMethodOperationModel paymentMethodOperationModel) throws ApiException {
+    private String edit(PaymentMethodOperationModel paymentMethodOperationModel) throws ApiException {
         CreditCardData card = new CreditCardData();
-        card.setNumber(paymentMethodOperationModel.getCardNumber());
-        card.setExpMonth(paymentMethodOperationModel.getExpiryMonth());
-        card.setExpYear(paymentMethodOperationModel.getExpiryYear());
-        card.setCvn(paymentMethodOperationModel.getCvnCvv());
-        card.setToken(paymentMethodOperationModel.getPaymentMethodId());
-        return card.updateTokenExpiry(DEFAULT_GPAPI_CONFIG);
+
+        Transaction responseUpdateToken = null;
+
+        switch (paymentMethodOperationModel.getPaymentMethodUsageMode()) {
+            case SINGLE:
+                if (paymentMethodOperationModel.getCardHolderName().equals("") ||
+                        paymentMethodOperationModel.getCardNumber().equals("") ||
+                        paymentMethodOperationModel.getExpiryYear().equals("") ||
+                        paymentMethodOperationModel.getExpiryMonth().equals("")
+                ) {
+                    CreditCardData tokenizedCard = new CreditCardData();
+                    tokenizedCard.setToken(paymentMethodOperationModel.getPaymentMethodId());
+                    tokenizedCard.setCardHolderName(paymentMethodOperationModel.getCardHolderName());
+
+                    responseUpdateToken =
+                            tokenizedCard
+                                    .updateToken()
+                                    .withPaymentMethodUsageMode(PaymentMethodUsageMode.SINGLE)
+                                    .execute(DEFAULT_GPAPI_CONFIG);
+                } else {
+                    card.setToken(paymentMethodOperationModel.getPaymentMethodId());
+                    card.setCardHolderName(paymentMethodOperationModel.getCardHolderName());
+                    card.setExpYear(Integer.parseInt(paymentMethodOperationModel.getExpiryYear()));
+                    card.setExpMonth(Integer.parseInt(paymentMethodOperationModel.getExpiryMonth()));
+                    card.setNumber(paymentMethodOperationModel.getCardNumber());
+
+                    responseUpdateToken = card
+                            .updateToken()
+                            .withPaymentMethodUsageMode(PaymentMethodUsageMode.SINGLE)
+                            .execute(DEFAULT_GPAPI_CONFIG);
+                }
+                break;
+            case MULTIPLE:
+                if (paymentMethodOperationModel.getCardHolderName().equals("") &&
+                        paymentMethodOperationModel.getCardNumber().equals("") &&
+                        paymentMethodOperationModel.getExpiryYear().equals("") &&
+                        paymentMethodOperationModel.getExpiryMonth().equals("")
+                ) {
+                    CreditCardData tokenizedCard = new CreditCardData();
+                    tokenizedCard.setToken(paymentMethodOperationModel.getPaymentMethodId());
+
+                    responseUpdateToken =
+                            tokenizedCard
+                                    .updateToken()
+                                    .withPaymentMethodUsageMode(PaymentMethodUsageMode.MULTIPLE)
+                                    .execute(DEFAULT_GPAPI_CONFIG);
+                } else if (paymentMethodOperationModel.getCardHolderName() != null &&
+                            paymentMethodOperationModel.getCardNumber().equals("") &&
+                            paymentMethodOperationModel.getExpiryYear().equals("") &&
+                            paymentMethodOperationModel.getExpiryMonth().equals("")) {
+                    CreditCardData tokenizedCard = new CreditCardData();
+                    tokenizedCard.setToken(paymentMethodOperationModel.getPaymentMethodId());
+                    tokenizedCard.setCardHolderName(paymentMethodOperationModel.getCardHolderName());
+
+                    responseUpdateToken =
+                            tokenizedCard
+                                    .updateToken()
+                                    .withPaymentMethodUsageMode(PaymentMethodUsageMode.MULTIPLE)
+                                    .execute(DEFAULT_GPAPI_CONFIG);
+                } else if (paymentMethodOperationModel.getCardNumber() != null &&
+                            paymentMethodOperationModel.getCardHolderName().equals("") &&
+                            paymentMethodOperationModel.getExpiryYear().equals("") &&
+                            paymentMethodOperationModel.getExpiryMonth().equals("")) {
+                    CreditCardData tokenizedCard = new CreditCardData();
+                    tokenizedCard.setToken(paymentMethodOperationModel.getPaymentMethodId());
+                    tokenizedCard.setNumber(paymentMethodOperationModel.getCardNumber());
+
+                    responseUpdateToken =
+                            tokenizedCard
+                                    .updateToken()
+                                    .withPaymentMethodUsageMode(PaymentMethodUsageMode.MULTIPLE)
+                                    .execute(DEFAULT_GPAPI_CONFIG);
+                } else if (paymentMethodOperationModel.getCardHolderName() != null &&
+                        paymentMethodOperationModel.getCardNumber() != null &&
+                        paymentMethodOperationModel.getExpiryYear().equals("") &&
+                        paymentMethodOperationModel.getExpiryMonth().equals("")) {
+                    CreditCardData tokenizedCard = new CreditCardData();
+                    tokenizedCard.setToken(paymentMethodOperationModel.getPaymentMethodId());
+                    tokenizedCard.setCardHolderName(paymentMethodOperationModel.getCardHolderName());
+                    tokenizedCard.setNumber(paymentMethodOperationModel.getCardNumber());
+
+                    responseUpdateToken =
+                            tokenizedCard
+                                    .updateToken()
+                                    .withPaymentMethodUsageMode(PaymentMethodUsageMode.MULTIPLE)
+                                    .execute(DEFAULT_GPAPI_CONFIG);
+                } else if (paymentMethodOperationModel.getCardHolderName() != null &&
+                        paymentMethodOperationModel.getCardNumber() != null &&
+                        paymentMethodOperationModel.getExpiryYear() != null &&
+                        paymentMethodOperationModel.getExpiryMonth() != null) {
+                    CreditCardData tokenizedCard = new CreditCardData();
+                    tokenizedCard.setToken(paymentMethodOperationModel.getPaymentMethodId());
+                    tokenizedCard.setCardHolderName(paymentMethodOperationModel.getCardHolderName());
+                    tokenizedCard.setNumber(paymentMethodOperationModel.getCardNumber());
+                    tokenizedCard.setExpYear(Integer.parseInt(paymentMethodOperationModel.getExpiryYear()));
+                    tokenizedCard.setExpMonth(Integer.parseInt(paymentMethodOperationModel.getExpiryMonth()));
+
+                    responseUpdateToken =
+                            tokenizedCard
+                                    .updateToken()
+                                    .withPaymentMethodUsageMode(PaymentMethodUsageMode.MULTIPLE)
+                                    .execute(DEFAULT_GPAPI_CONFIG);
+                } else if (paymentMethodOperationModel.getExpiryYear() != null &&
+                        paymentMethodOperationModel.getExpiryMonth() != null &&
+                        paymentMethodOperationModel.getCardHolderName().equals("") &&
+                        paymentMethodOperationModel.getCardNumber().equals("")) {
+                    CreditCardData tokenizedCard = new CreditCardData();
+                    tokenizedCard.setToken(paymentMethodOperationModel.getPaymentMethodId());
+                    tokenizedCard.setCardHolderName(paymentMethodOperationModel.getCardHolderName());
+                    tokenizedCard.setNumber(paymentMethodOperationModel.getCardNumber());
+                    tokenizedCard.setExpYear(Integer.parseInt(paymentMethodOperationModel.getExpiryYear()));
+                    tokenizedCard.setExpMonth(Integer.parseInt(paymentMethodOperationModel.getExpiryMonth()));
+
+                    responseUpdateToken =
+                            tokenizedCard
+                                    .updateToken()
+                                    .withPaymentMethodUsageMode(PaymentMethodUsageMode.MULTIPLE)
+                                    .execute(DEFAULT_GPAPI_CONFIG);
+                } else {
+                    card.setToken(paymentMethodOperationModel.getPaymentMethodId());
+                    card.setCardHolderName(paymentMethodOperationModel.getCardHolderName());
+                    card.setNumber(paymentMethodOperationModel.getCardNumber());
+                    card.setExpYear(Integer.parseInt(paymentMethodOperationModel.getExpiryYear()));
+                    card.setExpMonth(Integer.parseInt(paymentMethodOperationModel.getExpiryMonth()));
+
+                    responseUpdateToken = card
+                            .updateToken()
+                            .withPaymentMethodUsageMode(PaymentMethodUsageMode.MULTIPLE)
+                            .execute(DEFAULT_GPAPI_CONFIG);
+                }
+                break;
+        }
+
+        return responseUpdateToken.getToken();
     }
 
     private boolean delete(PaymentMethodOperationModel paymentMethodOperationModel) throws ApiException {

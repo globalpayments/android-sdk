@@ -18,8 +18,10 @@
     <string name="status">Status:</string>
     <string name="type">Type:</string>
     <string name="channel">Channel:</string>
+    <string name="config_channel">CHANNEL</string>
     <string name="amount">Amount:</string>
     <string name="currency">Currency:</string>
+    <string name="manual_entry_mode">Manual Entry Mode:</string>
     <string name="reference">Reference:</string>
     <string name="client_transaction_id">Client Transaction ID:</string>
     <string name="batch_id">Batch ID:</string>
@@ -64,6 +66,7 @@
     <string name="expiry_month">Expiry month:</string>
     <string name="expiry_year">Expiry year:</string>
     <string name="cvn_cvv">CVN/CVV:</string>
+    <string name="payment_LNK_id">Payment Link Id:</string>
     <string name="default_amount">15.99</string>
     <string name="transaction_data">Transaction data</string>
     <string name="transaction_type">Transaction type:</string>
@@ -149,6 +152,9 @@
     <string name="method_url_configuration"><b>METHOD NOTIFICATION URL</b></string>
     <string name="api_version_configuration"><b>API VERSION</b> (optional)</string>
     <string name="token_seconds_to_expire_configuration"><b>TOKEN - SECONDS TO EXPIRE</b></string>
+    <string name="x_gp_sdk_version">X-GP-SDK VERSION</string>
+    <string name="x_gp_library_version">X-GP-LIBRARY VERSION</string>
+    <string name="version_default">1.0.0</string>
     <string name="select_country_configuration"><b>SELECT YOUR COUNTRY</b></string>
     <string name="token_interval_to_expire_configuration"><b>TOKEN - INTERVAL TO EXPIRE</b></string>
     <string name="select_card_present_configuration">CARD PRESENT CONFIGURATION</string>

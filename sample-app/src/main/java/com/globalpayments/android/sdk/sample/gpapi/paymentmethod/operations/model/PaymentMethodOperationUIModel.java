@@ -10,6 +10,7 @@ public class PaymentMethodOperationUIModel {
     private String cardType;
     private String paymentMethodId;
     private String result;
+    private String tokenUpdate;
 
     public String getCardNumber() {
         return cardNumber;
@@ -57,5 +58,13 @@ public class PaymentMethodOperationUIModel {
 
     public void setResult(boolean isSuccessful) {
         this.result = isSuccessful ? SUCCESS : FAILURE;
+    }
+
+    public String getTokenUpdate() {
+        return tokenUpdate;
+    }
+
+    public void setTokenUpdate(String tokenUpdate) {
+        this.tokenUpdate = tokenUpdate;
     }
 }
