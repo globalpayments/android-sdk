@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CardFormView">
+
+        <attr name="formBackground" format="reference" />
+        <attr name="inputBackground" format="reference" />
+
+        <attr name="labelTextSize" format="dimension" />
+        <attr name="labelTextColor" format="color" />
+
+        <attr name="inputTextSize" format="dimension" />
+        <attr name="inputTextColor" format="color" />
+        <attr name="inputHintColor" format="color" />
+
+        <attr name="submitButtonText" format="string" />
+        <attr name="submitButtonTextColor" format="color" />
+        <attr name="submitButtonTextSize" format="dimension" />
+        <attr name="submitButtonBackground" format="reference" />
+
+    </declare-styleable>
+</resources>

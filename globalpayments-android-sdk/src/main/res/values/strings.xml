@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="payment_details">Payment Details</string>
+    <string name="card_number_label">Card Number</string>
+    <string name="hint_card_mask">4321111111111111</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="hint_date">MM / YYYY</string>
+    <string name="hint_security_mask">***</string>
+    <string name="card_holder_name_label">Cardholder Name</string>
+    <string name="hint_card_holder">Jane Smith</string>
+    <string name="security_code">Security Code</string>
+    <string name="submit">Submit</string>
+    <string name="incorrect_card_number">The Card Number is not invalid. Please re-enter it.</string>
+    <string name="incorrect_card_expiry">Invalid date</string>
+    <string name="incorrect_card_cvv">Inalvid security code</string>
+    <string name="incorrect_card_holder">Empty field</string>
+</resources>

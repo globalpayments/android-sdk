@@ -1,5 +1,9 @@
 package com.globalpayments.android.sdk.sample.utils;
 
+import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
+import static com.globalpayments.android.sdk.utils.Utils.isNotNull;
+import static com.globalpayments.android.sdk.utils.Utils.isNotNullOrBlank;
+
 import android.util.Log;
 
 import com.global.api.ServicesContainer;
@@ -10,11 +14,6 @@ import com.globalpayments.android.sdk.sample.BuildConfig;
 import com.globalpayments.android.sdk.sample.gpapi.configuration.GPAPIConfiguration;
 
 import java.util.HashMap;
-import java.util.Objects;
-
-import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
-import static com.globalpayments.android.sdk.utils.Utils.isNotNull;
-import static com.globalpayments.android.sdk.utils.Utils.isNotNullOrBlank;
 
 public class GPAPIConfigurationUtils {
     private final static String TAG = GPAPIConfigurationUtils.class.getSimpleName();
@@ -62,15 +61,15 @@ public class GPAPIConfigurationUtils {
     public static GpApiConfig buildDefaultGpApiConfig(GPAPIConfiguration gpapiConfiguration) {
         GpApiConfig gpApiConfig = new GpApiConfig();
         HashMap<String, String> androidHeader = new HashMap<>();
-        androidHeader.put("x-gp-sdk", "Android;version="+ BuildConfig.VERSION_NAME);
+        androidHeader.put("x-gp-sdk", "Android;version=" + BuildConfig.VERSION_NAME);
 
         gpApiConfig.setAppId(gpapiConfiguration.getAppId());
         gpApiConfig.setAppKey(gpapiConfiguration.getAppKey());
         gpApiConfig.setChannel(gpapiConfiguration.getChannel().getValue());
         gpApiConfig.setDynamicHeaders(androidHeader);
 
-        gpApiConfig.setChallengeNotificationUrl(gpapiConfiguration.getChallengeNotificationUrl());
-        gpApiConfig.setMethodNotificationUrl(gpapiConfiguration.getMethodNotificationUrl());
+        gpApiConfig.setChallengeNotificationUrl("https://enp4qhvjseljg.x.pipedream.net/");
+        gpApiConfig.setMethodNotificationUrl("https://enp4qhvjseljg.x.pipedream.net/");
         gpApiConfig.setMerchantContactUrl("https://enp4qhvjseljg.x.pipedream.net/");
 
         String serviceUrl = gpapiConfiguration.getServiceUrl();

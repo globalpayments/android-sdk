@@ -40,7 +40,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/payment_methods"
-        android:textSize="@dimen/text_size_28sp"/>
+        android:textSize="@dimen/text_size_28sp" />
 
     <Button
         android:id="@+id/depositsButton"
@@ -73,4 +73,12 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/close_batch" />
+
+    <Button
+        android:id="@+id/hosted_fields_button"
+        style="@style/Button.Main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/hosted_fields" />
 </LinearLayout>

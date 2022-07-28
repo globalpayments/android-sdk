@@ -11,6 +11,7 @@ import static org.apache.commons.codec.CharEncoding.UTF_8;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -24,7 +25,6 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.global.api.entities.ThreeDSecure;
-import com.global.api.entities.enums.Channel;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar;
@@ -214,6 +214,9 @@ public class TransactionOperationsFragment extends BaseFragment implements Trans
                     webView.getSettings().setJavaScriptEnabled(true);
                     postData = typeMessage.getMessageType() + "=" + urls.get(1);
                     webView.postUrl(urls.get(0), EncodingUtils.getBytes(postData, UTF_8));
+                    if (webView.getParent() != null) {
+                        ((ViewGroup) webView.getParent()).removeView(webView);
+                    }
                     linearLayoutExample.addView(webView);
 
                     webView.setFindListener((activeMatchOrdinal, numberOfMatches, isDoneCounting) -> {

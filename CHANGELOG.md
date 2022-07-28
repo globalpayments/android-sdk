@@ -6,6 +6,22 @@
 
 ## Latest Version
 
+## v1.1.8 (07/27/2022)
+
+### Enhancements:
+
+* Add Kotlin Netcetera
+* 3ds Challenge Crash
+
+## v1.1.7 (07/27/2022)
+
+### Enhancements:
+
+* Add LNK_ID in create transaction request
+* GP-API SDK Headers
+* Update "entry_mode" functionality for GP-API
+* GP-API Update payment token
+
 ## v1.1.6 (05/23/2022)
 
 ### Enhancements:

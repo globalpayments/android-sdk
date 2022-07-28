@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_card_form">#F2F2F2</color>
+    <color name="background_stroke_card_form">#CECECE</color>
+    <color name="background_input_stroke">#D6D6D6</color>
+    <color name="background_input_background">#FFFFFF</color>
+    <color name="background_submit_button">#00AEEF</color>
+    <color name="error_red">#E12619</color>
+</resources>
