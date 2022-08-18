@@ -265,14 +265,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
-            android:text="@string/use_3ds" />
+            android:layout_marginTop="@dimen/size_16dp"
+            android:text="@string/dynamic_descriptor" />
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/cbUse3ds"
+        <EditText
+            android:id="@+id/etDynamicDescriptor"
+            style="@style/Dialog.Value"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_columnWeight="1.3"
-            android:checked="false" />
+            android:layout_columnWeight="1.5"
+            android:layout_marginTop="@dimen/size_16dp"
+            android:background="@null"
+            android:hint="@string/optional"
+            android:paddingStart="@dimen/size_8dp"
+            android:paddingEnd="@dimen/size_8dp" />
 
         <TextView
             style="@style/Dialog.Label"

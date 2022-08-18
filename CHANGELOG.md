@@ -6,6 +6,12 @@
 
 ## Latest Version
 
+## v1.1.9 (08/17/2022)
+
+### Enhancements:
+
+* Digital Wallets
+
 ## v1.1.8 (07/27/2022)
 
 ### Enhancements:

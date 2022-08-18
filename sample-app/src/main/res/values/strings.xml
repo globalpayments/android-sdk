@@ -180,6 +180,7 @@
     <string name="name">Name:</string>
     <string name="other_parameters">Other parameters</string>
     <string name="idempotency_key">Idempotency key:</string>
+    <string name="dynamic_descriptor">Dynamic Descriptor</string>
     <string name="optional">(optional)</string>
     <string name="masked_account_number_last_4">Masked Account Number Last 4:</string>
     <string name="system_mid">System MID:</string>
@@ -322,4 +323,7 @@
     <string name="close_batch_app_id">App Id:</string>
     <string name="close_batch_app_name">App Name:</string>
     <string name="hosted_fields">Hosted Fields</string>
+    <string name="google_pay_status_unavailable">Unfortunately, Google Pay is not available on this phone.</string>
+    <string name="digital_wallet">Digital Wallet</string>
+    <string name="payments_show_name">Successfully received payment data for %s!</string>
 </resources>

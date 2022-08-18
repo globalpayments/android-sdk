@@ -81,4 +81,12 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:text="@string/hosted_fields" />
+
+    <Button
+        android:id="@+id/digitalWallet"
+        style="@style/Button.Main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/digital_wallet" />
 </LinearLayout>

@@ -19,9 +19,9 @@ public class TransactionOperationModel {
     private Boolean requestMultiUseToken;
     private FingerprintMethodUsageMode fingerprintMethodUsageMode;
     private String idempotencyKey;
-    private boolean use3DS;
     private Boolean fingerPrintSelection;
     private String paymentLinkId;
+    private String dynamicDescriptor;
     private ManualEntryMethodUsageMode manualEntryMethodUsageMode;
 
     public String getTypeCardOption() {
@@ -120,14 +120,6 @@ public class TransactionOperationModel {
         this.idempotencyKey = idempotencyKey;
     }
 
-    public boolean isUse3DS() {
-        return use3DS;
-    }
-
-    public void setUse3DS(boolean use3DS) {
-        this.use3DS = use3DS;
-    }
-
     public Boolean getFingerPrintSelection() {
         return fingerPrintSelection;
     }
@@ -142,6 +134,14 @@ public class TransactionOperationModel {
 
     public void setPaymentLinkId(String paymentLinkId) {
         this.paymentLinkId = paymentLinkId;
+    }
+
+    public String getDynamicDescriptor() {
+        return dynamicDescriptor;
+    }
+
+    public void setDynamicDescriptor(String dynamicDescriptor) {
+        this.dynamicDescriptor = dynamicDescriptor;
     }
 
     public ManualEntryMethodUsageMode getManualEntryMethodUsageMode() {

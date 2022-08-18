@@ -13,6 +13,7 @@ import com.globalpayments.android.sdk.sample.gpapi.actions.actionsReport.Actions
 import com.globalpayments.android.sdk.sample.gpapi.batch.closeBatch.CloseFragment;
 import com.globalpayments.android.sdk.sample.gpapi.configuration.GPAPIConfigurationFragment;
 import com.globalpayments.android.sdk.sample.gpapi.deposits.DepositsFragment;
+import com.globalpayments.android.sdk.sample.gpapi.digitalwallet.DigitalWalletFragment;
 import com.globalpayments.android.sdk.sample.gpapi.disputes.DisputesFragment;
 import com.globalpayments.android.sdk.sample.gpapi.netcetera.NetceteraFragment;
 import com.globalpayments.android.sdk.sample.gpapi.paymentmethod.PaymentMethodsFragment;
@@ -42,6 +43,7 @@ public class GPAPIMainFragment extends BaseFragment {
         setButtonClickListener(R.id.actionsButton, new ActionsReportFragment());
         setButtonClickListener(R.id.closeBatchButton, new CloseFragment());
         setButtonClickListener(R.id.hosted_fields_button, new NetceteraFragment());
+        setButtonClickListener(R.id.digitalWallet, new DigitalWalletFragment());
     }
 
     private void setButtonClickListener(@IdRes int buttonId, Fragment fragment) {

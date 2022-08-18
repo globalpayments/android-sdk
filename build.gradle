@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.7.0'
+    ext.kotlin_version = '1.6.21'
     repositories {
         google()
         jcenter()
@@ -16,6 +16,10 @@ allprojects {
         google()
         jcenter()
 //        mavenLocal()
+    }
+
+    tasks.withType(Javadoc){
+        excludes = ['**/*.kt'] // < ---- Exclude all kotlin files from javadoc file.
     }
 }
 

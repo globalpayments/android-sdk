@@ -1,5 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations;
 
+import static com.globalpayments.android.sdk.utils.Utils.safeParseBigDecimal;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -10,7 +12,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.global.api.entities.enums.Channel;
-import com.global.api.entities.enums.ManualEntryMethod;
 import com.globalpayments.android.sdk.model.PaymentCardModel;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseDialogFragment;
@@ -24,8 +25,6 @@ import com.globalpayments.android.sdk.sample.utils.ManualEntryMethodUsageMode;
 import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode;
 
 import java.math.BigDecimal;
-
-import static com.globalpayments.android.sdk.utils.Utils.safeParseBigDecimal;
 
 public class TransactionOperationDialog extends BaseDialogFragment {
     private CustomSpinner currenciesSpinner;
@@ -41,11 +40,11 @@ public class TransactionOperationDialog extends BaseDialogFragment {
     private EditText etCvnCvv;
     private EditText etAmount;
     private EditText etIdempotencyKey;
+    private EditText etDynamicDescriptor;
     private TextView tvFingerPrintId;
     private TextView etPaymentLinkId;
     private TextView tvManualEntryMode;
     private CustomSpinner multiFingerPrintUsageMode;
-    private boolean use3ds;
 
     GPAPIConfiguration gpapiConfiguration;
 
@@ -77,10 +76,9 @@ public class TransactionOperationDialog extends BaseDialogFragment {
         tvFingerPrintId = findViewById(R.id.tvFingerPrintId);
         multiFingerPrintUsageMode = findViewById(R.id.multiFingerPrintUsageMode);
         etPaymentLinkId = findViewById(R.id.etPaymentLinkId);
+        etDynamicDescriptor = findViewById(R.id.etDynamicDescriptor);
         tvManualEntryMode = findViewById(R.id.tvManualEntryMode);
         manualEntryModeSpinner = findViewById(R.id.manualEntryModeSpinner);
-        CheckBox cbUse3ds = findViewById(R.id.cbUse3ds);
-        cbUse3ds.setOnCheckedChangeListener((buttonView, isChecked) -> use3ds = isChecked);
         initSpinners();
         Button btSubmit = findViewById(R.id.btSubmit);
         btSubmit.setOnClickListener(v -> submitTransactionOperationModel());
@@ -143,8 +141,8 @@ public class TransactionOperationDialog extends BaseDialogFragment {
             transactionOperationModel.setIdempotencyKey(etIdempotencyKey.getText().toString());
             transactionOperationModel.setRequestMultiUseToken(cbRequestMultiUseToken.isChecked());
             transactionOperationModel.setPaymentMethodUsageMode(multiTokenSpinner.getSelectedOption());
-            transactionOperationModel.setUse3DS(use3ds);
             transactionOperationModel.setPaymentLinkId(etPaymentLinkId.getText().toString());
+            transactionOperationModel.setDynamicDescriptor(etDynamicDescriptor.getText().toString());
             transactionOperationModel.setManualEntryMethodUsageMode(manualEntryModeSpinner.getSelectedOption());
             callback.onSubmitTransactionOperationModel(transactionOperationModel);
         }
