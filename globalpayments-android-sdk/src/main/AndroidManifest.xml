@@ -1,3 +1,15 @@
-<manifest package="com.globalpayments.android.sdk">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.globalpayments.android.sdk">
+
     <application />
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+    </queries>
 </manifest>

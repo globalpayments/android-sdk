@@ -326,4 +326,11 @@
     <string name="google_pay_status_unavailable">Unfortunately, Google Pay is not available on this phone.</string>
     <string name="digital_wallet">Digital Wallet</string>
     <string name="payments_show_name">Successfully received payment data for %s!</string>
+    <string name="paypal">Paypal</string>
+    <string name="paypal_filter">Filter for paypal deep link</string>
+
+    <string name="paypal_deep_link_scheme">custom</string>
+    <string name="paypal_deep_link_host">paypal</string>
+    <string name="charge">Charge</string>
+    <string name="authorize">Authorize</string>
 </resources>

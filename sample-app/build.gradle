@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 1
-        versionName "1.1.9"
+        versionName "1.1.10"
     }
 
     compileOptions {
@@ -49,4 +49,6 @@ dependencies {
 
     //google pay
     implementation "com.google.android.gms:play-services-wallet:19.1.0"
+
+    implementation "androidx.browser:browser:1.4.0"
 }

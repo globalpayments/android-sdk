@@ -16,11 +16,22 @@
         <activity
             android:name=".gpapi.GPAPIActivity"
             android:exported="true"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter android:label="@string/paypal_filter">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="@string/paypal_deep_link_host"
+                    android:scheme="@string/paypal_deep_link_scheme" />
             </intent-filter>
         </activity>
 

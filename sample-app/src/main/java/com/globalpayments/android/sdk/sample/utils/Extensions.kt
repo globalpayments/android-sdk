@@ -1,4 +1,4 @@
-package com.globalpayments.android.sdk.utils
+package com.globalpayments.android.sdk.sample.utils
 
 import android.content.Context
 import android.widget.Toast

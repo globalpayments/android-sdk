@@ -1,5 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi;
 
+import static com.globalpayments.android.sdk.sample.utils.GPAPIConfigurationUtils.initializeDefaultGPAPIConfiguration;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,8 +12,6 @@ import com.globalpayments.android.sdk.sample.common.base.BaseActivity;
 import com.globalpayments.android.sdk.sample.gpapi.configuration.GPAPIConfiguration;
 import com.globalpayments.android.sdk.sample.gpapi.configuration.GPAPIConfigurationFragment;
 import com.globalpayments.android.sdk.sample.utils.AppPreferences;
-
-import static com.globalpayments.android.sdk.sample.utils.GPAPIConfigurationUtils.initializeDefaultGPAPIConfiguration;
 
 public class GPAPIActivity extends BaseActivity {
     private AppPreferences appPreferences;
