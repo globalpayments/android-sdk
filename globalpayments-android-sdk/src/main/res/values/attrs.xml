@@ -18,4 +18,14 @@
         <attr name="submitButtonBackground" format="reference" />
 
     </declare-styleable>
+
+    <declare-styleable name="DccRateView">
+        <attr name="titleSize" format="dimension" />
+        <attr name="titleColor" format="color" />
+        <attr name="priceSize" format="dimension" />
+        <attr name="priceColor" format="color" />
+        <attr name="textSize" format="dimension" />
+        <attr name="textColor" format="color" />
+        <attr name="switchColor" format="color" />
+    </declare-styleable>
 </resources>

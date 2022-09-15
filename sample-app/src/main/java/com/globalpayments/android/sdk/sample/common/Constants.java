@@ -5,6 +5,7 @@ public class Constants {
     // GP-API
     public static final String DEFAULT_GPAPI_CONFIG = "DEFAULT_GPAPI_CONFIG";
     public static final String GP_API_CONFIG_NAME = "GP_API_CONFIG";
+    public static final String DCC_RATE_GP_API_CONFIG_NAME = "DCC_RATE_GP_API_CONFIG";
 
     // Finger Print
     public static final String FP_ALWAYS = "ALWAYS";

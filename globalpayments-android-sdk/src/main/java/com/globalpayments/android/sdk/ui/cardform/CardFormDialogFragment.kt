@@ -9,13 +9,18 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.fragment.app.DialogFragment
+import com.global.api.entities.Transaction
 import com.global.api.paymentMethods.CreditCardData
 import com.globalpayments.android.sdk.R
+import com.globalpayments.android.sdk.utils.bindView
 
 
 class CardFormDialogFragment : DialogFragment(R.layout.fragment_card_form) {
 
-    var onSubmitClicked: ((CreditCardData) -> Unit)? = null
+    private val cardView: CardFormView by bindView(R.id.view_card_form)
+    var onSubmitClicked: (CreditCardData) -> Unit = {}
+    var onCheckDccRate: (CreditCardData) -> Unit = {}
+    var onDccRateSelected: (Boolean) -> Unit = {}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,9 +35,14 @@ class CardFormDialogFragment : DialogFragment(R.layout.fragment_card_form) {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<CardFormView>(R.id.view_card_form).apply {
             this.onSubmitClicked = {
-                this@CardFormDialogFragment.onSubmitClicked?.invoke(it)
+                this@CardFormDialogFragment.onSubmitClicked.invoke(it)
                 dismiss()
             }
+            this.onCheckDccRate = { card ->
+                this@CardFormDialogFragment.onCheckDccRate.invoke(card)
+            }
+            this.onDccRateSelected =
+                { isSelected -> this@CardFormDialogFragment.onDccRateSelected(isSelected) }
         }
     }
 
@@ -46,6 +56,8 @@ class CardFormDialogFragment : DialogFragment(R.layout.fragment_card_form) {
             attributes = params
         }
     }
+
+    fun onDccRateReceived(transaction: Transaction?) = cardView.onDccRateReceived(transaction)
 
     companion object {
 

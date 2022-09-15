@@ -1,5 +1,6 @@
 package com.globalpayments.android.sdk.sample.gpapi.netcetera
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.global.api.entities.MobileData
 import com.global.api.entities.StoredCredential
@@ -27,8 +28,32 @@ class NetceteraViewModel : BaseViewModel() {
     val startChallengeFlow = MutableLiveData<ThreeDSecure>()
     val paymentCompleted = MutableLiveData<Transaction>()
     val createNetceteraTransaction = MutableLiveData<ThreeDSecure>()
+    val dccRatesReceived = MutableLiveData<Transaction?>()
+
+    var shouldUseDccRate: Boolean = false
 
     var amount: BigDecimal? = null
+
+    fun getDCCRate(creditCardData: CreditCardData) {
+        shouldUseDccRate = false
+        dccRatesReceived.postValue(null)
+        TaskExecutor.executeAsync(
+            taskToExecute = {
+                creditCardData.getDccRate()
+                    .withAmount(amount)
+                    .withCurrency(Currency)
+                    .execute(Constants.DCC_RATE_GP_API_CONFIG_NAME);
+            },
+            onFinished = {
+                when (it) {
+                    is TaskResult.Error -> {
+                        Log.d("NetceteraViewModel", "Failed to retrieve dcc rates")
+                    }
+                    is TaskResult.Success -> dccRatesReceived.postValue(it.data)
+                }
+            }
+        )
+    }
 
     //1. Capture Cardholder Data
     fun tokenizeCard(creditCardData: CreditCardData) {
@@ -74,7 +99,7 @@ class NetceteraViewModel : BaseViewModel() {
     //5. If 3DS2 proceed
     private fun do3Auth(secureEcom: ThreeDSecure) {
         if (secureEcom.enrolledStatus != ENROLLED) {
-            doAuth(secureEcom.serverTransactionId)
+            chargeMoney()
             return
         }
         createNetceteraTransaction.postValue(secureEcom)
@@ -153,8 +178,16 @@ class NetceteraViewModel : BaseViewModel() {
     private fun chargeMoney() {
         TaskExecutor.executeAsync(
             taskToExecute = {
-                tokenizedCard.charge(amount)
+                tokenizedCard
+                    .charge(amount)
                     .withCurrency(Currency)
+                    .let {
+                        if (shouldUseDccRate) {
+                            it.withDccRateData(dccRatesReceived.value?.dccRateData)
+                        } else {
+                            it
+                        }
+                    }
                     .execute(Constants.DEFAULT_GPAPI_CONFIG)
             },
             onFinished = {

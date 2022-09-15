@@ -1,6 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: "kotlin-android"
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def appIdForDcc = properties.getProperty('APP_ID_FOR_DCC', "")
+def appKeyForDcc = properties.getProperty('APP_KEY_FOR_DCC', "")
+
 android {
     compileSdkVersion 32
 
@@ -9,12 +14,16 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 1
-        versionName "1.1.10"
+        versionName "1.1.11"
+
+        buildConfigField "String", "APP_ID_FOR_DCC", "\"$appIdForDcc\""
+        buildConfigField "String", "APP_KEY_FOR_DCC", "\"$appKeyForDcc\""
+
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
 

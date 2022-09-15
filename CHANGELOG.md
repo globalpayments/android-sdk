@@ -6,6 +6,19 @@
 
 ## Latest Version
 
+## v1.1.11 (09/13/2022)
+
+### Enhancements:
+
+* DCC
+
+## v1.1.10 (09/07/2022)
+
+### Enhancements:
+
+* Paypal functionality
+* Add refund and reverse
+
 ## v1.1.9 (08/17/2022)
 
 ### Enhancements:

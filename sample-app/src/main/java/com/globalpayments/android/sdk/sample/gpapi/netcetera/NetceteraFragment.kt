@@ -69,10 +69,16 @@ class NetceteraFragment : BaseFragment() {
 
     private fun openForm() {
         CardFormDialogFragment.newInstance(DEFAULT_GPAPI_CONFIG).apply {
-            onSubmitClicked = {
-                viewModel.tokenizeCard(it)
-            }
+            onSubmitClicked = viewModel::tokenizeCard
+            onCheckDccRate = viewModel::getDCCRate
+            onDccRateSelected = { viewModel.shouldUseDccRate = it }
             show(this@NetceteraFragment.childFragmentManager, "CARD_FORM_DIALOG")
+        }
+        viewModel.dccRatesReceived.observe(viewLifecycleOwner) { transaction ->
+            val fragment =
+                childFragmentManager.findFragmentByTag("CARD_FORM_DIALOG") as? CardFormDialogFragment
+                    ?: return@observe
+            fragment.onDccRateReceived(transaction)
         }
     }
 
@@ -95,9 +101,10 @@ class NetceteraFragment : BaseFragment() {
     //14. Frictionless or Challenge
     private fun startChallengeFlow(threeDSecure: ThreeDSecure) {
         if (threeDSecure.status != CHALLENGE_REQUIRED) {
+            //no need for challenge
             viewModel.doAuth(threeDSecure.serverTransactionId)
             return
-        } //no need for challenge
+        }
         val challengeParams = ChallengeParameters().apply {
             acsRefNumber = threeDSecure.acsReferenceNumber
             acsSignedContent = threeDSecure.payerAuthenticationRequest
@@ -152,12 +159,15 @@ class NetceteraFragment : BaseFragment() {
 
     private fun showTransactionCompletedDialog(transaction: com.global.api.entities.Transaction) {
         progressBar.dismiss()
+        val amountPayed = transaction.dccRateData?.let {
+            "${it.cardHolderAmount}${it.cardHolderCurrency}"
+        } ?: transaction.balanceAmount.toString()
         val model = PaymentSuccessModel(
             id = transaction.transactionId,
             resultCode = transaction.responseCode,
             timeCreated = transaction.timestamp,
             status = transaction.responseMessage,
-            amount = transaction.balanceAmount.toString(),
+            amount = amountPayed,
         )
         PaymentSuccessDialog.newInstance(model).show(childFragmentManager, "PaymentSuccessDialog")
     }

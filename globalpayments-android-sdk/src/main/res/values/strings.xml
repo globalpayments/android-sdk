@@ -14,4 +14,9 @@
     <string name="incorrect_card_expiry">Invalid date</string>
     <string name="incorrect_card_cvv">Inalvid security code</string>
     <string name="incorrect_card_holder">Empty field</string>
+    <string name="select_your_preferred_currency">Select your preferred currency</string>
+    <string name="exchange_rate_used">(Exchange rate used: %s = %s)</string>
+    <string name="exchange_rate_mark_up_commission">Exchange rate Mark-up: %s%%\nCommission for Currency Conversion: %s%%</string>
+    <string name="tooltip_dcc_checked">I accept that I have been offered a choice of currencies for payment.\nI accept the conversion rate and final amount and that the final selected transaction currency is the cardholder\'s chosen currency: %1s\n\nReference Rate Provided by: %2s</string>
+    <string name="tooltip_dcc_unchecked">Reference Rate Provided by: %s</string>
 </resources>

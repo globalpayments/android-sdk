@@ -9,12 +9,17 @@ import android.util.AttributeSet
 import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.View
 import android.widget.*
+import com.global.api.entities.Transaction
 import com.global.api.paymentMethods.CreditCardData
 import com.global.api.utils.CardUtils
 import com.globalpayments.android.sdk.R
+import com.globalpayments.android.sdk.model.DccRateModel
 import com.globalpayments.android.sdk.model.FormValid
 import com.globalpayments.android.sdk.utils.EndTextWatcher
+import com.globalpayments.android.sdk.utils.PercentageFormatter
+import java.math.BigDecimal
 import java.util.*
+import kotlin.properties.Delegates
 
 class CardFormView @JvmOverloads constructor(
     context: Context,
@@ -38,9 +43,21 @@ class CardFormView @JvmOverloads constructor(
     private val cardError: TextView
     private val cardLogo: ImageView
 
-    private var formValid = FormValid()
-    var onSubmitClicked: ((CreditCardData) -> Unit)? = null
+    private val dccRateView: DccRateView
+    private val pbLoading: ProgressBar
 
+    private val currentDateCalendar = Calendar.getInstance()
+
+    private val creditCardData = CreditCardData()
+    private var formValid: FormValid by Delegates.observable(FormValid()) { _, _, _ ->
+        checkFieldsValidity()
+        tryToGetDccRates()
+    }
+
+    private var lastKnownValidCardNumber: String = ""
+
+    var onCheckDccRate: (CreditCardData) -> Unit = {}
+    var onSubmitClicked: (CreditCardData) -> Unit = {}
 
     init {
         inflate(context, R.layout.view_card_form, this)
@@ -64,6 +81,9 @@ class CardFormView @JvmOverloads constructor(
 
         cardError = findViewById(R.id.card_number_error)
         cardLogo = findViewById(R.id.card_logo)
+
+        dccRateView = findViewById(R.id.dcc_rate_view)
+        pbLoading = findViewById(R.id.pb_loading)
 
         if (attrs != null) {
             initAttributes(attrs)
@@ -146,21 +166,18 @@ class CardFormView @JvmOverloads constructor(
             setTextColor(buttonTextColor)
             setTextSize(COMPLEX_UNIT_PX, buttonTextSize)
             text = buttonText
-            setOnClickListener { onSubmitClick() }
+            setOnClickListener { onSubmitClicked.invoke(creditCardData) }
         }
 
         typedArray.recycle()
     }
 
-    private fun onSubmitClick() {
-        val card = CreditCardData().apply {
-            number = cardNumberInput.text.toString()
-            expMonth = cardExpiryDateInput.text.split("/").first().toString().toInt()
-            expYear = cardExpiryDateInput.text.split("/")[1].toInt()
-            cvn = cardSecurityInput.text.toString()
+    var onDccRateSelected: (Boolean) -> Unit
+        set(value) {
+            dccRateView.onDccRateSelected = value
         }
-        onSubmitClicked?.invoke(card)
-    }
+        get() = dccRateView.onDccRateSelected
+
 
     private fun checkFieldsValidity() {
         submitButton.isEnabled = formValid.cardValid
@@ -218,20 +235,30 @@ class CardFormView @JvmOverloads constructor(
                 }
                 if (text.length != 7) {
                     cardExpiryDateError.visibility = View.GONE
+                    formValid = formValid.copy(dateValid = false)
                     return
                 }
-                val month = text.substring(0, 2).toIntOrNull() ?: return
-                val year = text.substring(3, text.length).toIntOrNull() ?: return
+                val month = text.substring(0, 2).toIntOrNull()
+                val year = text.substring(3, text.length).toIntOrNull()
 
-                val calendar = Calendar.getInstance()
-                val currentMonth = calendar.get(Calendar.MONTH)
-                val currentYear = calendar.get(Calendar.YEAR)
-                val isDateValid = year < currentYear
+                if (month == null || year == null) {
+                    formValid = formValid.copy(dateValid = false)
+                    return
+                }
+
+                val currentMonth = currentDateCalendar.get(Calendar.MONTH)
+                val currentYear = currentDateCalendar.get(Calendar.YEAR)
+                val isDateInvalid = year < currentYear
                         || (year == currentYear && month < currentMonth)
                         || month > 12
-                formValid = formValid.copy(dateValid = !isDateValid)
-                checkFieldsValidity()
-                cardExpiryDateError.visibility = if (isDateValid) View.VISIBLE else View.GONE
+                formValid = formValid.copy(dateValid = !isDateInvalid)
+                cardExpiryDateError.visibility = if (isDateInvalid) View.VISIBLE else View.GONE
+                if (!isDateInvalid) {
+                    creditCardData.apply {
+                        expMonth = month
+                        expYear = year
+                    }
+                }
             }
         }
     }
@@ -239,12 +266,13 @@ class CardFormView @JvmOverloads constructor(
     private fun cardTypeTextWatcher(): TextWatcher {
         return object : EndTextWatcher() {
             override fun textChanged(s: Editable) {
-                val text = s.toString()
-                if (text.length < 6) {
+                val cardNumber = s.toString()
+                if (cardNumber.length < 16) {
                     clearCardNumberError()
                     return
                 }
-                when (CardUtils.mapCardType(text)) {
+                creditCardData.number = cardNumber
+                when (CardUtils.mapCardType(cardNumber)) {
                     "Visa" -> showCard(CardType.Visa)
                     "MC" -> showCard(CardType.MasterCard)
                     "Amex" -> showCard(CardType.AmericanExpress)
@@ -252,16 +280,41 @@ class CardFormView @JvmOverloads constructor(
                     "Discover" -> showCard(CardType.Discover)
                     else -> showCard(CardType.Unknown)
                 }
-                checkFieldsValidity()
             }
         }
+    }
+
+    private fun tryToGetDccRates() {
+        if (!formValid.cardValid) {
+            dccRateView.visibility = View.GONE
+            lastKnownValidCardNumber = ""
+            return
+        }
+        if (creditCardData.number == lastKnownValidCardNumber) return
+        lastKnownValidCardNumber = creditCardData.number
+
+        post {
+            pbLoading.apply {
+                visibility = View.VISIBLE
+                isIndeterminate = true
+            }
+        }
+        onCheckDccRate.invoke(creditCardData)
+    }
+
+    fun onDccRateReceived(transaction: Transaction?) {
+        val dccRate = transaction?.toDccRateModel()
+        dccRateView.visibility = if (dccRate != null) View.VISIBLE else View.GONE
+        postDelayed({ pbLoading.visibility = View.GONE }, 1_000)
+        dccRate ?: return
+        dccRateView.fillViews(dccRate)
     }
 
     private fun cardCvvValid(): TextWatcher {
         return object : EndTextWatcher() {
             override fun textChanged(s: Editable) {
                 formValid = formValid.copy(cvvValid = s.length >= 3)
-                checkFieldsValidity()
+                creditCardData.cvn = s.toString()
             }
         }
     }
@@ -270,7 +323,7 @@ class CardFormView @JvmOverloads constructor(
         return object : EndTextWatcher() {
             override fun textChanged(s: Editable) {
                 formValid = formValid.copy(holderValid = s.length >= 3)
-                checkFieldsValidity()
+                creditCardData.cardHolderName = s.toString()
             }
         }
     }
@@ -278,4 +331,26 @@ class CardFormView @JvmOverloads constructor(
     private enum class CardType {
         Visa, MasterCard, AmericanExpress, DinersClub, Discover, Unknown
     }
+}
+
+private fun Transaction.toDccRateModel() = with(dccRateData) {
+    if (this == null) null else
+        DccRateModel(
+            payerCurrency = this.cardHolderCurrency,
+            merchantCurrency = this.merchantCurrency,
+            payerAmount = this.cardHolderAmount?.toString() ?: "",
+            merchantAmount = this.merchantAmount?.toString() ?: "",
+            exchangeRate = cardHolderRate,
+            marginRatePercentage = BigDecimal(marginRatePercentage).let {
+                PercentageFormatter.format(
+                    it
+                )
+            },
+            commissionPercentage = BigDecimal(commissionPercentage).let {
+                PercentageFormatter.format(
+                    it
+                )
+            },
+            exchangeRateSource = exchangeRateSourceName
+        )
 }
