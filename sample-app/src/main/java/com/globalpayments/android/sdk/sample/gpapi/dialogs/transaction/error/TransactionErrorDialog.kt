@@ -1,4 +1,4 @@
-package com.globalpayments.android.sdk.sample.gpapi.digitalwallet.dialog.error
+package com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -12,7 +12,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.globalpayments.android.sdk.sample.R
 
-class PaymentErrorDialog : DialogFragment(R.layout.dialog_error_payment) {
+class TransactionErrorDialog : DialogFragment(R.layout.dialog_error_transaction) {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,11 +42,11 @@ class PaymentErrorDialog : DialogFragment(R.layout.dialog_error_payment) {
     }
 
     companion object {
-
+        const val TAG = "TransactionErrorDialog"
         private const val ErrorKey = "Error.Key"
-        fun newInstance(errorMessage: String): PaymentErrorDialog {
+        fun newInstance(errorMessage: String): TransactionErrorDialog {
             val args = bundleOf(ErrorKey to errorMessage)
-            val fragment = PaymentErrorDialog()
+            val fragment = TransactionErrorDialog()
             fragment.arguments = args
             return fragment
         }

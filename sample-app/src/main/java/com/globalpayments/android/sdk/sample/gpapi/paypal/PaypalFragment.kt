@@ -12,9 +12,9 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment
-import com.globalpayments.android.sdk.sample.gpapi.paypal.dialog.error.PaymentErrorDialog
-import com.globalpayments.android.sdk.sample.gpapi.paypal.dialog.success.PaymentSuccessDialog
-import com.globalpayments.android.sdk.sample.gpapi.paypal.dialog.success.PaymentSuccessModel
+import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
+import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
+import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessModel
 import com.globalpayments.android.sdk.sample.utils.bindView
 import com.globalpayments.android.sdk.utils.openChromeCustomTabs
 import java.math.BigDecimal
@@ -92,7 +92,8 @@ class PaypalFragment : BaseFragment() {
 
     private fun dismissProgressAndShowMessage(message: String) {
         progressBar.dismiss()
-        PaymentErrorDialog.newInstance(message).show(childFragmentManager, "ERROR_DIALOG")
+        TransactionErrorDialog.newInstance(message)
+            .show(childFragmentManager, TransactionErrorDialog.TAG)
     }
 
     private fun showRefundReverse(transactionId: String) {
@@ -118,14 +119,15 @@ class PaypalFragment : BaseFragment() {
 
     private fun showTransactionCompletedDialog(transaction: com.global.api.entities.Transaction) {
         progressBar.dismiss()
-        val model = PaymentSuccessModel(
+        val model = TransactionSuccessModel(
             id = transaction.transactionId,
             resultCode = transaction.responseCode,
             timeCreated = transaction.timestamp,
             status = transaction.responseMessage,
             amount = transaction.balanceAmount.toString(),
         )
-        PaymentSuccessDialog.newInstance(model).show(childFragmentManager, "PaymentSuccessDialog")
+        TransactionSuccessDialog.newInstance(model)
+            .show(childFragmentManager, TransactionSuccessDialog.TAG)
     }
 
 }

@@ -11,7 +11,7 @@ import com.global.api.entities.enums.TransactionModifier
 import com.global.api.paymentMethods.CreditCardData
 import com.globalpayments.android.sdk.TaskExecutor
 import com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG
-import com.globalpayments.android.sdk.sample.gpapi.digitalwallet.dialog.success.PaymentSuccessModel
+import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessModel
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.IsReadyToPayRequest
@@ -35,8 +35,8 @@ class DigitalWalletViewModel(application: Application) : AndroidViewModel(applic
     }
     val canUseGooglePay: LiveData<Boolean> = _canUseGooglePay
 
-    private val _paymentSuccess = MutableLiveData<PaymentSuccessModel>()
-    val paymentSuccessModel: LiveData<PaymentSuccessModel> = _paymentSuccess
+    private val _paymentSuccess = MutableLiveData<TransactionSuccessModel>()
+    val transactionSuccessModel: LiveData<TransactionSuccessModel> = _paymentSuccess
 
     private val _paymentError = MutableLiveData<String>()
     val paymentError: LiveData<String> = _paymentError
@@ -94,7 +94,7 @@ class DigitalWalletViewModel(application: Application) : AndroidViewModel(applic
                 _progressStatus.postValue(false)
                 transaction ?: return
                 _paymentSuccess.postValue(
-                    PaymentSuccessModel(
+                    TransactionSuccessModel(
                         id = transaction.transactionId,
                         resultCode = transaction.responseCode,
                         timeCreated = transaction.timestamp,

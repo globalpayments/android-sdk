@@ -17,7 +17,8 @@
             android:name=".gpapi.GPAPIActivity"
             android:exported="true"
             android:launchMode="singleInstance"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

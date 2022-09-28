@@ -6,6 +6,13 @@
 
 ## Latest Version
 
+## v1.1.12 (09/22/2022)
+
+### Enhancements:
+
+* ACH
+* EBT
+
 ## v1.1.11 (09/13/2022)
 
 ### Enhancements:

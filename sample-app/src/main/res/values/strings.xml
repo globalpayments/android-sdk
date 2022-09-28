@@ -333,4 +333,6 @@
     <string name="paypal_deep_link_host">paypal</string>
     <string name="charge">Charge</string>
     <string name="authorize">Authorize</string>
+    <string name="ach">ACH</string>
+    <string name="ebt">EBT</string>
 </resources>

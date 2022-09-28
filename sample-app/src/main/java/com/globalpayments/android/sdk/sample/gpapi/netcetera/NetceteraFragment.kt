@@ -11,9 +11,9 @@ import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.Constants.CHALLENGE_REQUIRED
 import com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment
-import com.globalpayments.android.sdk.sample.gpapi.netcetera.dialog.error.PaymentErrorDialog
-import com.globalpayments.android.sdk.sample.gpapi.netcetera.dialog.success.PaymentSuccessDialog
-import com.globalpayments.android.sdk.sample.gpapi.netcetera.dialog.success.PaymentSuccessModel
+import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
+import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
+import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessModel
 import com.globalpayments.android.sdk.ui.cardform.CardFormDialogFragment
 import com.netcetera.threeds.sdk.api.transaction.Transaction
 import com.netcetera.threeds.sdk.api.transaction.challenge.ChallengeParameters
@@ -64,21 +64,16 @@ class NetceteraFragment : BaseFragment() {
 
     private fun dismissProgressAndShowMessage(message: String) {
         progressBar.dismiss()
-        PaymentErrorDialog.newInstance(message).show(childFragmentManager, "ERROR_DIALOG")
+        TransactionErrorDialog.newInstance(message)
+            .show(childFragmentManager, TransactionErrorDialog.TAG)
     }
 
     private fun openForm() {
         CardFormDialogFragment.newInstance(DEFAULT_GPAPI_CONFIG).apply {
-            onSubmitClicked = viewModel::tokenizeCard
-            onCheckDccRate = viewModel::getDCCRate
-            onDccRateSelected = { viewModel.shouldUseDccRate = it }
+            onSubmitClicked = {
+                viewModel.tokenizeCard(it)
+            }
             show(this@NetceteraFragment.childFragmentManager, "CARD_FORM_DIALOG")
-        }
-        viewModel.dccRatesReceived.observe(viewLifecycleOwner) { transaction ->
-            val fragment =
-                childFragmentManager.findFragmentByTag("CARD_FORM_DIALOG") as? CardFormDialogFragment
-                    ?: return@observe
-            fragment.onDccRateReceived(transaction)
         }
     }
 
@@ -101,10 +96,9 @@ class NetceteraFragment : BaseFragment() {
     //14. Frictionless or Challenge
     private fun startChallengeFlow(threeDSecure: ThreeDSecure) {
         if (threeDSecure.status != CHALLENGE_REQUIRED) {
-            //no need for challenge
             viewModel.doAuth(threeDSecure.serverTransactionId)
             return
-        }
+        } //no need for challenge
         val challengeParams = ChallengeParameters().apply {
             acsRefNumber = threeDSecure.acsReferenceNumber
             acsSignedContent = threeDSecure.payerAuthenticationRequest
@@ -159,16 +153,14 @@ class NetceteraFragment : BaseFragment() {
 
     private fun showTransactionCompletedDialog(transaction: com.global.api.entities.Transaction) {
         progressBar.dismiss()
-        val amountPayed = transaction.dccRateData?.let {
-            "${it.cardHolderAmount}${it.cardHolderCurrency}"
-        } ?: transaction.balanceAmount.toString()
-        val model = PaymentSuccessModel(
+        val model = TransactionSuccessModel(
             id = transaction.transactionId,
             resultCode = transaction.responseCode,
             timeCreated = transaction.timestamp,
             status = transaction.responseMessage,
-            amount = amountPayed,
+            amount = transaction.balanceAmount.toString(),
         )
-        PaymentSuccessDialog.newInstance(model).show(childFragmentManager, "PaymentSuccessDialog")
+        TransactionSuccessDialog.newInstance(model)
+            .show(childFragmentManager, TransactionSuccessDialog.TAG)
     }
 }

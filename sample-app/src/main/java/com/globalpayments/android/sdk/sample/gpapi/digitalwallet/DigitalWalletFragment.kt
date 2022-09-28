@@ -12,8 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment
-import com.globalpayments.android.sdk.sample.gpapi.digitalwallet.dialog.error.PaymentErrorDialog
-import com.globalpayments.android.sdk.sample.gpapi.digitalwallet.dialog.success.PaymentSuccessDialog
+import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
+import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.ResolvableApiException
@@ -55,11 +55,13 @@ class DigitalWalletFragment : BaseFragment() {
         model.canUseGooglePay.observe(viewLifecycleOwner, Observer(::setGooglePayAvailable))
         googlePayButton.setOnClickListener { requestPayment() }
 
-        model.paymentSuccessModel.observe(viewLifecycleOwner) {
-            PaymentSuccessDialog.newInstance(it).show(childFragmentManager, "PaymentSuccessDialog")
+        model.transactionSuccessModel.observe(viewLifecycleOwner) {
+            TransactionSuccessDialog.newInstance(it)
+                .show(childFragmentManager, TransactionSuccessDialog.TAG)
         }
         model.paymentError.observe(viewLifecycleOwner) {
-            PaymentErrorDialog.newInstance(it).show(childFragmentManager, "PaymentErrorDialog")
+            TransactionErrorDialog.newInstance(it)
+                .show(childFragmentManager, TransactionErrorDialog.TAG)
         }
     }
 

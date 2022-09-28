@@ -1,9 +1,9 @@
-package com.globalpayments.android.sdk.sample.gpapi.netcetera.dialog.success
+package com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success
 
 import android.os.Parcel
 import android.os.Parcelable
 
-data class PaymentSuccessModel(
+data class TransactionSuccessModel(
     val id: String,
     val resultCode: String,
     val timeCreated: String,
@@ -30,12 +30,12 @@ data class PaymentSuccessModel(
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<PaymentSuccessModel> {
-        override fun createFromParcel(parcel: Parcel): PaymentSuccessModel {
-            return PaymentSuccessModel(parcel)
+    companion object CREATOR : Parcelable.Creator<TransactionSuccessModel> {
+        override fun createFromParcel(parcel: Parcel): TransactionSuccessModel {
+            return TransactionSuccessModel(parcel)
         }
 
-        override fun newArray(size: Int): Array<PaymentSuccessModel?> {
+        override fun newArray(size: Int): Array<TransactionSuccessModel?> {
             return arrayOfNulls(size)
         }
     }

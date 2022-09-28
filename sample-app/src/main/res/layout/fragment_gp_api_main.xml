@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -79,21 +78,21 @@
             android:layout_weight="1"
             android:text="@string/close_batch" />
 
-    <Button
-        android:id="@+id/hosted_fields_button"
-        style="@style/Button.Main"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/hosted_fields" />
+        <Button
+            android:id="@+id/hosted_fields_button"
+            style="@style/Button.Main"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/hosted_fields" />
 
-    <Button
-        android:id="@+id/digitalWallet"
-        style="@style/Button.Main"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="@string/digital_wallet" />
+        <Button
+            android:id="@+id/digitalWallet"
+            style="@style/Button.Main"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/digital_wallet" />
 
         <Button
             android:id="@+id/paypal_button"
@@ -102,6 +101,22 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:text="@string/paypal" />
+
+        <Button
+            android:id="@+id/ach_button"
+            style="@style/Button.Main"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/ach" />
+
+        <Button
+            android:id="@+id/ebt_button"
+            style="@style/Button.Main"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/ebt" />
 
     </LinearLayout>
 </ScrollView>
