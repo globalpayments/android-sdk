@@ -8,6 +8,7 @@ import static com.globalpayments.android.sdk.utils.ViewUtils.hideAllViewsExcludi
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideViews;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -29,6 +31,7 @@ import com.globalpayments.android.sdk.sample.common.base.BaseDialogFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomSpinner;
 import com.globalpayments.android.sdk.sample.gpapi.disputes.report.model.DisputesReportParametersModel;
 import com.globalpayments.android.sdk.sample.gpapi.disputes.report.model.DocumentReportModel;
+import com.globalpayments.android.sdk.sample.gpapi.paymentmethod.report.PaymentMethodReportDialog;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -95,6 +98,16 @@ public class DisputesReportDialog extends BaseDialogFragment {
             if (dialogType instanceof TYPE) {
                 type = (TYPE) dialogType;
             }
+        }
+    }
+
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        Fragment targetFragment = getTargetFragment();
+        if (targetFragment instanceof PaymentMethodReportDialog.Callback) {
+            PaymentMethodReportDialog.Callback callback = (PaymentMethodReportDialog.Callback) targetFragment;
+            callback.onDismissWithoutSelection();
         }
     }
 
@@ -255,6 +268,7 @@ public class DisputesReportDialog extends BaseDialogFragment {
         return null;
     }
 
+
     private DocumentReportModel buildDocumentReportModel() {
         DocumentReportModel documentReportModel = new DocumentReportModel();
         documentReportModel.setDisputeId(etDisputeId.getText().toString());
@@ -304,5 +318,7 @@ public class DisputesReportDialog extends BaseDialogFragment {
         void onSubmitDisputeByDepositId(String disputeId, Date currentDateAndTime);
 
         void onSubmitDocumentReportModel(DocumentReportModel documentReportModel);
+
+        void onDialogCanceled();
     }
 }

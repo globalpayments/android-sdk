@@ -80,14 +80,14 @@
     <string name="card_expiry_year">Card Expiry Year:</string>
     <string name="get_transaction_list">Get Transaction List</string>
     <string name="get_transaction_by_id">Get Transaction By ID</string>
-    <string name="get_payment_methods_list">Get Payment Methods List</string>
-    <string name="get_payment_method_by_id">Get Payment Method By Id</string>
+    <string name="get_payment_methods_list">List</string>
+    <string name="get_payment_method_by_id">By Id</string>
     <string name="payment_method_operations">Payment Method Operations</string>
     <string name="initiate_payment_method_operation">Initiate Payment Method Operation</string>
     <string name="payment_operation">Payment operation</string>
     <string name="payment_method_parameters">Payment method parameters</string>
     <string name="default_payment_method_id">PMT_98e6cbbb-8faf-4134-bfa1-f2cf3a72872f</string>
-    <string name="default_test_document_id">DOC_lskdnfosdfjsdfsdf23dasd</string>
+    <string name="default_test_document_id">DOC_MyEvidence_234234AVCDE-1</string>
     <string name="create_access_token">Create Access Token</string>
     <string name="access_token">Access Token</string>
     <string name="access_token_parameters">Access Token Parameters</string>
@@ -109,8 +109,8 @@
     <string name="deposit_id">Deposit ID:</string>
     <string name="disputes_report">Disputes Report</string>
     <string name="dispute_operations">Dispute Operations</string>
-    <string name="get_disputes_list">Get Disputes List</string>
-    <string name="get_dispute_by_id">Get Dispute By Id</string>
+    <string name="get_disputes_list">List</string>
+    <string name="get_dispute_by_id">By Id</string>
     <string name="dispute_id">Dispute ID:</string>
     <string name="initiate_dispute_operation">Initiate Dispute Operation</string>
     <string name="dispute_operation_parameters">Dispute operation parameters</string>
@@ -136,8 +136,8 @@
     <string name="please_select_a_document_file">Please select a document file !</string>
     <string name="error_no_app_to_handle_action">There are no applications available to handle this action.</string>
     <string name="common_error_unknown">Something went wrong, please try again.</string>
-    <string name="get_document_by_id">Get Document By Id</string>
-    <string name="get_dispute_by_deposit_id">Get Dispute By Deposit Id</string>
+    <string name="get_document_by_id">Document By Id</string>
+    <string name="get_dispute_by_deposit_id">By Deposit Id</string>
     <string name="document_id">Document ID:</string>
     <string name="export_as_pdf_file">Export As PDF File</string>
     <string name="view_as_pdf_file">View As PDF File</string>
@@ -335,4 +335,5 @@
     <string name="authorize">Authorize</string>
     <string name="ach">ACH</string>
     <string name="ebt">EBT</string>
+    <string name="get_payment_method_by_card">By Card</string>
 </resources>

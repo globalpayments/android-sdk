@@ -14,6 +14,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.global.api.builders.TransactionReportBuilder;
+import com.global.api.entities.DisputeDocument;
 import com.global.api.entities.reporting.DataServiceCriteria;
 import com.global.api.entities.reporting.DisputeSummary;
 import com.global.api.entities.reporting.DisputeSummaryPaged;
@@ -29,7 +30,6 @@ import com.globalpayments.android.sdk.sample.gpapi.disputes.report.model.Documen
 import com.globalpayments.android.sdk.utils.FileUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Date;
@@ -44,6 +44,11 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
     private final MutableLiveData<List<DisputeSummary>> disputesLiveData = new MutableLiveData<>();
     private final MutableLiveData<DocumentContent> documentContentLiveData = new MutableLiveData<>();
     private final MutableLiveData<File> documentTemporaryFileLiveData = new ActionLiveData<>();
+
+    private DisputesReportParametersModel currentReportParameters;
+    private int pageSize = 0;
+    private int currentPage = 1;
+    private int totalRecordCount = -1;
 
     public DisputesReportViewModel(@NonNull Application application) {
         super(application);
@@ -62,12 +67,33 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
     }
 
     public void getDisputesList(DisputesReportParametersModel disputesReportParametersModel) {
+        resetPagination();
+        currentReportParameters = disputesReportParametersModel;
+        pageSize = disputesReportParametersModel.getPageSize();
+        getDisputesList();
+    }
+
+    public void loadMore() {
+        boolean hasMore = pageSize * currentPage < totalRecordCount;
+        if (!hasMore || Boolean.TRUE.equals(getProgressStatus().getValue())) return;
+        currentPage += 1;
+        currentReportParameters.setPage(currentPage);
+        getDisputesList();
+    }
+
+    private void resetPagination() {
+        currentPage = 1;
+        totalRecordCount = -1;
+        currentReportParameters = null;
+    }
+
+    private void getDisputesList() {
         showProgress();
 
         TaskExecutor.executeAsync(new TaskExecutor.Task<List<DisputeSummary>>() {
             @Override
             public List<DisputeSummary> executeAsync() throws Exception {
-                return executeGetDisputesListRequest(disputesReportParametersModel);
+                return executeGetDisputesListRequest(currentReportParameters);
             }
 
             @Override
@@ -84,7 +110,7 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
 
     public void getDisputeByDepositId(String depositId, Date currentDateAndTime) {
         showProgress();
-
+        resetPagination();
         TaskExecutor.executeAsync(new TaskExecutor.Task<List<DisputeSummary>>() {
             @Override
             public List<DisputeSummary> executeAsync() throws Exception {
@@ -105,7 +131,7 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
 
     public void getDisputeById(String disputeId, boolean fromSettlements) {
         showProgress();
-
+        resetPagination();
         TaskExecutor.executeAsync(new TaskExecutor.Task<DisputeSummary>() {
             @Override
             public DisputeSummary executeAsync() throws Exception {
@@ -126,7 +152,7 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
 
     public void getDocument(DocumentReportModel documentReportModel) {
         showProgress();
-
+        resetPagination();
         TaskExecutor.executeAsync(new TaskExecutor.Task<DocumentContent>() {
             @Override
             public DocumentContent executeAsync() throws Exception {
@@ -205,27 +231,16 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
     private DocumentContent executeGetDocumentRequest(DocumentReportModel documentReportModel) throws Exception {
         DocumentContent documentContent = new DocumentContent();
 
+        String disputeId = documentReportModel.getDisputeId();
         String documentId = documentReportModel.getDocumentId();
 
-        String filename;
-        if (documentId.equalsIgnoreCase("text")) {
-            filename = "test_text.pdf";
-        } else if (documentId.equalsIgnoreCase("image")) {
-            filename = "gp_logo.png";
-        } else if (documentId.equalsIgnoreCase("big")) {
-            filename = "big.pdf";
-        } else {
-            filename = "gp_logo.pdf";
-        }
+        DisputeDocument disputeDocument = ReportingService
+                .documentDisputeDetail(disputeId)
+                .where(SearchCriteria.DisputeDocumentId, documentId)
+                .execute(DEFAULT_GPAPI_CONFIG);
 
-        File file = new File(getAppDocumentsDirectory(getApplication()), filename);
-        FileInputStream inputStream = new FileInputStream(file);
-
-        byte[] byteArray = FileUtils.readIntoByteArray(inputStream);
-        String base64EncodedFile = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-        documentContent.setBase64Content(base64EncodedFile);
-        documentContent.setDocumentId(documentId);
+        documentContent.setBase64Content(disputeDocument.getBase64Content());
+        documentContent.setDocumentId(disputeDocument.getId());
 
         return documentContent;
     }
@@ -244,18 +259,22 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
         TransactionReportBuilder<DisputeSummaryPaged> reportBuilder = parametersModel.isFromSettlements()
                 ? ReportingService.findSettlementDisputesPaged(page, pageSize)
                 : ReportingService.findDisputesPaged(page, pageSize);
-                    reportBuilder.orderBy(parametersModel.getOrderBy(), parametersModel.getOrder());
-                    reportBuilder.setDisputeOrderBy(parametersModel.getOrderBy());
-                    reportBuilder.where(SearchCriteria.AquirerReferenceNumber, parametersModel.getArn())
-                        .and(SearchCriteria.CardBrand, parametersModel.getBrand())
-                        .and(SearchCriteria.DisputeStatus, parametersModel.getStatus())
-                        .and(SearchCriteria.DisputeStage, parametersModel.getStage())
-                        .and(DataServiceCriteria.StartStageDate, parametersModel.getFromStageTimeCreated())
-                        .and(DataServiceCriteria.EndStageDate, parametersModel.getToStageTimeCreated())
-                        .and(DataServiceCriteria.MerchantId, parametersModel.getSystemMID())
-                        .and(DataServiceCriteria.SystemHierarchy, parametersModel.getSystemHierarchy());
+        reportBuilder.orderBy(parametersModel.getOrderBy(), parametersModel.getOrder());
+        reportBuilder.setDisputeOrderBy(parametersModel.getOrderBy());
+        reportBuilder.where(SearchCriteria.AquirerReferenceNumber, parametersModel.getArn())
+                .and(SearchCriteria.CardBrand, parametersModel.getBrand())
+                .and(SearchCriteria.DisputeStatus, parametersModel.getStatus())
+                .and(SearchCriteria.DisputeStage, parametersModel.getStage())
+                .and(DataServiceCriteria.StartStageDate, parametersModel.getFromStageTimeCreated())
+                .and(DataServiceCriteria.EndStageDate, parametersModel.getToStageTimeCreated())
+                .and(DataServiceCriteria.MerchantId, parametersModel.getSystemMID())
+                .and(DataServiceCriteria.SystemHierarchy, parametersModel.getSystemHierarchy());
 
-        return reportBuilder.execute(DEFAULT_GPAPI_CONFIG).getResults();
+        DisputeSummaryPaged result = reportBuilder.execute(DEFAULT_GPAPI_CONFIG);
+        if (currentPage == 1) {
+            totalRecordCount = result.totalRecordCount;
+        }
+        return result.getResults();
     }
 
     private List<DisputeSummary> executeGetDisputeByDepositRequest(String depositId, Date currentDateAndTime) throws Exception {
@@ -267,5 +286,4 @@ public class DisputesReportViewModel extends BaseAndroidViewModel {
 
         return result.getResults();
     }
-
 }

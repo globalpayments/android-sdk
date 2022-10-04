@@ -7,6 +7,7 @@ import static com.globalpayments.android.sdk.utils.Utils.safeParseInt;
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideAllViewsExcluding;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -94,6 +96,16 @@ public class PaymentMethodReportDialog extends BaseDialogFragment {
             if (dialogType instanceof TYPE) {
                 type = (TYPE) dialogType;
             }
+        }
+    }
+
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        Fragment targetFragment = getTargetFragment();
+        if (targetFragment instanceof Callback) {
+            Callback callback = (Callback) targetFragment;
+            callback.onDismissWithoutSelection();
         }
     }
 
@@ -238,7 +250,10 @@ public class PaymentMethodReportDialog extends BaseDialogFragment {
 
     public interface Callback {
         void onSubmitPaymentMethodId(String paymentMethodId);
+
         void onSubmitPaymentsReportParameters(TransactionReportParameters transactionReportParameters);
+
+        void onDismissWithoutSelection();
     }
 
 }

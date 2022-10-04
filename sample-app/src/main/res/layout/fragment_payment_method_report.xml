@@ -13,14 +13,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/btgMethods"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="@dimen/size_4dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:singleSelection="true">
 
         <Button
             android:id="@+id/btGetPaymentMethodsList"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -28,12 +33,21 @@
 
         <Button
             android:id="@+id/btGetPaymentMethodById"
+            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/get_payment_method_by_id" />
 
-    </LinearLayout>
+        <Button
+            android:id="@+id/btGetPaymentMethodByCard"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/get_payment_method_by_card" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <TextView
         android:id="@+id/errorTextView"
@@ -44,15 +58,6 @@
         android:padding="@dimen/size_16dp"
         android:visibility="gone"
         tools:text="Error"
-        tools:visibility="gone" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:indeterminate="true"
-        android:visibility="gone"
         tools:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView

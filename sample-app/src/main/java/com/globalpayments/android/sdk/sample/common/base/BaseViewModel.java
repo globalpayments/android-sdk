@@ -1,15 +1,15 @@
 package com.globalpayments.android.sdk.sample.common.base;
 
+import static com.globalpayments.android.sdk.utils.Utils.getExceptionDescription;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.globalpayments.android.sdk.sample.common.ActionLiveData;
 
-import static com.globalpayments.android.sdk.utils.Utils.getExceptionDescription;
-
 public abstract class BaseViewModel extends ViewModel {
-    private MutableLiveData<Boolean> progressStatus = new MutableLiveData<>();
+    protected MutableLiveData<Boolean> progressStatus = new MutableLiveData<>();
     private ActionLiveData<String> error = new ActionLiveData<>();
 
     public LiveData<Boolean> getProgressStatus() {

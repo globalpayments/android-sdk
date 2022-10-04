@@ -4,7 +4,7 @@ import static com.globalpayments.android.sdk.sample.common.Constants.CREATE_FILE
 import static com.globalpayments.android.sdk.sample.gpapi.disputes.report.DisputesReportDialog.TYPE.DISPUTE_BY_DEPOSIT_ID;
 import static com.globalpayments.android.sdk.sample.gpapi.disputes.report.DisputesReportDialog.TYPE.DISPUTE_BY_ID;
 import static com.globalpayments.android.sdk.sample.gpapi.disputes.report.DisputesReportDialog.TYPE.DISPUTE_LIST;
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
+import static com.globalpayments.android.sdk.sample.gpapi.disputes.report.DisputesReportDialog.TYPE.DOCUMENT_BY_ID;
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideViews;
 import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
 
@@ -14,15 +14,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.global.api.entities.reporting.DisputeSummary;
@@ -33,13 +34,13 @@ import com.globalpayments.android.sdk.sample.gpapi.disputes.report.model.Dispute
 import com.globalpayments.android.sdk.sample.gpapi.disputes.report.model.DocumentContent;
 import com.globalpayments.android.sdk.sample.gpapi.disputes.report.model.DocumentReportModel;
 import com.globalpayments.android.sdk.utils.IntentUtils;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.io.File;
 import java.util.Date;
 import java.util.List;
 
 public class DisputesReportFragment extends BaseFragment implements DisputesReportDialog.Callback {
-    private ProgressBar progressBar;
     private TextView errorTextView;
     private RecyclerView recyclerView;
 
@@ -53,6 +54,8 @@ public class DisputesReportFragment extends BaseFragment implements DisputesRepo
     private DisputesReportAdapter disputesReportAdapter;
     private DisputesReportViewModel disputesReportViewModel;
     private DocumentContent currentDocumentContent;
+
+    private MaterialButtonToggleGroup materialButtonToggleGroup;
 
     @Override
     protected int getLayoutId() {
@@ -73,12 +76,13 @@ public class DisputesReportFragment extends BaseFragment implements DisputesRepo
         customToolbar.setTitle(R.string.disputes_report);
         customToolbar.setOnBackButtonListener(v -> close());
 
-        progressBar = findViewById(R.id.progressBar);
         errorTextView = findViewById(R.id.errorTextView);
 
         cvDocumentReport = findViewById(R.id.cvDocumentReport);
         tvDocumentId = findViewById(R.id.tvDocumentId);
         tvBase64Content = findViewById(R.id.tvBase64Content);
+
+        materialButtonToggleGroup = findViewById(R.id.btgMethods);
 
         Button btExportAsPDF = findViewById(R.id.btExportAsPDF);
         btExportAsPDF.setOnClickListener(v -> exportAsPDF());
@@ -98,9 +102,38 @@ public class DisputesReportFragment extends BaseFragment implements DisputesRepo
         btGetDisputeByDepositId.setOnClickListener(v -> showDisputesReportDialog(DISPUTE_BY_DEPOSIT_ID));
 
         Button btGetDocumentById = findViewById(R.id.btGetDocumentById);
-//        btGetDocumentById.setOnClickListener(v -> showDisputesReportDialog(DOCUMENT_BY_ID));
-        btGetDocumentById.setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Not implemented yet in the java sdk", Toast.LENGTH_LONG).show());
+        btGetDocumentById.setOnClickListener(v -> showDisputesReportDialog(DOCUMENT_BY_ID));
+
+        progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setMessage(getString(R.string.loading));
+        progressDialog.setIndeterminate(true);
+        progressDialog.setTitle(null);
+
+        recyclerView.setAdapter(disputesReportAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (Boolean.TRUE.equals(disputesReportViewModel.getProgressStatus().getValue()))
+                    return;
+
+                if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == disputesReportAdapter.getItemCount() - 1) {
+                    disputesReportViewModel.loadMore();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onDialogCanceled() {
+        materialButtonToggleGroup.clearChecked();
     }
 
     private void showDisputesReportDialog(DisputesReportDialog.TYPE type) {
@@ -112,10 +145,10 @@ public class DisputesReportFragment extends BaseFragment implements DisputesRepo
     protected void initSubscriptions() {
         disputesReportViewModel.getProgressStatus().observe(this, show -> {
             if (show) {
-                hideViews(recyclerView, errorTextView, cvDocumentReport);
-                showView(progressBar);
+                hideViews(errorTextView, cvDocumentReport);
+                progressDialog.show();
             } else {
-                hideView(progressBar);
+                progressDialog.hide();
             }
         });
 
@@ -146,10 +179,8 @@ public class DisputesReportFragment extends BaseFragment implements DisputesRepo
     }
 
     private void submitDisputes(List<DisputeSummary> disputes) {
-        recyclerView.setAdapter(null);
-        recyclerView.setAdapter(disputesReportAdapter);
         disputesReportAdapter.setExpandedByDefault(disputes.size() == 1);
-        disputesReportAdapter.submitList(disputes);
+        disputesReportAdapter.addItems(disputes);
     }
 
     private void submitDocumentContent(DocumentContent documentContent) {
@@ -223,13 +254,6 @@ public class DisputesReportFragment extends BaseFragment implements DisputesRepo
     }
 
     private void handleLoading(boolean show) {
-        if (progressDialog == null) {
-            progressDialog = new ProgressDialog(requireContext());
-            progressDialog.setMessage(getString(R.string.loading));
-            progressDialog.setIndeterminate(true);
-            progressDialog.setTitle(null);
-        }
-
         if (show) {
             progressDialog.show();
         } else {
@@ -239,21 +263,25 @@ public class DisputesReportFragment extends BaseFragment implements DisputesRepo
 
     @Override
     public void onSubmitDisputesReportParametersModel(DisputesReportParametersModel disputesReportParametersModel) {
+        disputesReportAdapter.clearItems();
         disputesReportViewModel.getDisputesList(disputesReportParametersModel);
     }
 
     @Override
     public void onSubmitDisputeId(String disputeId, boolean fromSettlements) {
+        disputesReportAdapter.clearItems();
         disputesReportViewModel.getDisputeById(disputeId, fromSettlements);
     }
 
     @Override
     public void onSubmitDisputeByDepositId(String disputeId, Date currentDateAndTime) {
+        disputesReportAdapter.clearItems();
         disputesReportViewModel.getDisputeByDepositId(disputeId, currentDateAndTime);
     }
 
     @Override
     public void onSubmitDocumentReportModel(DocumentReportModel documentReportModel) {
+        disputesReportAdapter.clearItems();
         disputesReportViewModel.getDocument(documentReportModel);
     }
 

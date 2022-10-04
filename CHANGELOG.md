@@ -6,6 +6,14 @@
 
 ## Latest Version
 
+## v1.1.13 (10/03/2022)
+
+### Enhancements:
+
+* Stored Payment Methods - POST Search
+* Get a Document associated with a Dispute
+* Adding infinity scroll for pagination on reporting
+
 ## v1.1.12 (09/22/2022)
 
 ### Enhancements:

@@ -5,34 +5,39 @@ import static com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE.LIST
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
 import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
 
+import android.app.ProgressDialog;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.global.api.entities.reporting.StoredPaymentMethodSummary;
+import com.global.api.paymentMethods.CreditCardData;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar;
 import com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.report.model.TransactionReportParameters;
-import com.globalpayments.android.sdk.sample.gpapi.verifications.model.VerificationsModel;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.List;
 
-public class PaymentMethodReportFragment extends BaseFragment implements PaymentMethodReportDialog.Callback {
+public class PaymentMethodReportFragment extends BaseFragment implements PaymentMethodReportDialog.Callback, PaymentMethodReportCardDialog.Callback {
 
-    private ProgressBar progressBar;
     private TextView errorTextView;
     private RecyclerView recyclerViewById;
     private RecyclerView recyclerViewList;
+    private MaterialButtonToggleGroup materialButtonToggleGroup;
 
     private PaymentMethodReportByIdAdapter paymentMethodReportByIdAdapter;
     private PaymentMethodReportListAdapter paymentMethodReportListAdapter;
     private PaymentMethodReportViewModel paymentMethodReportViewModel;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected int getLayoutId() {
@@ -52,7 +57,6 @@ public class PaymentMethodReportFragment extends BaseFragment implements Payment
         customToolbar.setTitle(R.string.payment_method_report);
         customToolbar.setOnBackButtonListener(v -> close());
 
-        progressBar = findViewById(R.id.progressBar);
         errorTextView = findViewById(R.id.errorTextView);
 
         recyclerViewById = findViewById(R.id.recyclerViewById);
@@ -60,17 +64,49 @@ public class PaymentMethodReportFragment extends BaseFragment implements Payment
 
         recyclerViewList = findViewById(R.id.recyclerViewList);
         recyclerViewList.setAdapter(paymentMethodReportListAdapter);
+        recyclerViewList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (paymentMethodReportViewModel.getProgressStatus().getValue()) return;
+
+                if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == paymentMethodReportListAdapter.getItemCount() - 1) {
+                    paymentMethodReportViewModel.loadMore();
+                }
+            }
+        });
+
+
+        materialButtonToggleGroup = findViewById(R.id.btgMethods);
 
         Button btGetPaymentMethodsList = findViewById(R.id.btGetPaymentMethodsList);
         btGetPaymentMethodsList.setOnClickListener(v -> showPaymentMethodReportDialog(LIST));
 
         Button btGetPaymentMethodById = findViewById(R.id.btGetPaymentMethodById);
         btGetPaymentMethodById.setOnClickListener(v -> showPaymentMethodReportDialog(BY_ID));
+
+        Button btGetPaymentMethodByCard = findViewById(R.id.btGetPaymentMethodByCard);
+        btGetPaymentMethodByCard.setOnClickListener(v -> showPaymentMethodReportCardDialog());
+
+        progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setTitle("Retrieving reports");
     }
 
     private void showPaymentMethodReportDialog(TYPE type) {
         PaymentMethodReportDialog paymentMethodReportDialog = PaymentMethodReportDialog.newInstance(this, type);
-        paymentMethodReportDialog.show(requireFragmentManager(), PaymentMethodReportDialog.class.getSimpleName());
+        paymentMethodReportDialog.show(getParentFragmentManager(), PaymentMethodReportDialog.class.getSimpleName());
+    }
+
+    private void showPaymentMethodReportCardDialog() {
+        PaymentMethodReportCardDialog dialog = PaymentMethodReportCardDialog.newInstance(this);
+        dialog.show(getParentFragmentManager(), PaymentMethodReportCardDialog.class.getSimpleName());
     }
 
     @Override
@@ -78,11 +114,10 @@ public class PaymentMethodReportFragment extends BaseFragment implements Payment
         paymentMethodReportViewModel.getProgressStatus().observe(this, show -> {
             if (show) {
                 hideView(recyclerViewById);
-                hideView(recyclerViewList);
                 hideView(errorTextView);
-                showView(progressBar);
+                progressDialog.show();
             } else {
-                hideView(progressBar);
+                progressDialog.hide();
             }
         });
 
@@ -118,17 +153,29 @@ public class PaymentMethodReportFragment extends BaseFragment implements Payment
     }
 
     private void submitPaymentMethodsList(List<StoredPaymentMethodSummary> storedPaymentMethodSummaryList) {
-        paymentMethodReportListAdapter.submitList(storedPaymentMethodSummaryList);
+        paymentMethodReportListAdapter.addItems(storedPaymentMethodSummaryList);
     }
 
     @Override
     public void onSubmitPaymentMethodId(String paymentMethodId) {
+        paymentMethodReportListAdapter.clearItems();
         paymentMethodReportViewModel.getPaymentMethodById(paymentMethodId);
     }
 
     @Override
     public void onSubmitPaymentsReportParameters(TransactionReportParameters transactionReportParameters) {
+        paymentMethodReportListAdapter.clearItems();
         paymentMethodReportViewModel.getPaymentMethodList(transactionReportParameters);
     }
 
+    @Override
+    public void onSubmitPaymentCardMethod(@NonNull CreditCardData card) {
+        paymentMethodReportListAdapter.clearItems();
+        paymentMethodReportViewModel.getPaymentMethodCard(card);
+    }
+
+    @Override
+    public void onDismissWithoutSelection() {
+        materialButtonToggleGroup.clearChecked();
+    }
 }

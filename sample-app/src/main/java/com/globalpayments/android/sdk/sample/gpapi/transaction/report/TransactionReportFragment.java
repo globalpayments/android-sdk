@@ -5,12 +5,15 @@ import static com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE.LIST
 import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
 import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
 
+import android.app.ProgressDialog;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.global.api.entities.TransactionSummary;
@@ -23,7 +26,7 @@ import com.globalpayments.android.sdk.sample.gpapi.transaction.report.model.Tran
 import java.util.List;
 
 public class TransactionReportFragment extends BaseFragment implements TransactionReportDialog.Callback {
-    private ProgressBar progressBar;
+    private ProgressDialog progressDialog;
     private TextView errorTextView;
     private RecyclerView recyclerView;
 
@@ -47,16 +50,38 @@ public class TransactionReportFragment extends BaseFragment implements Transacti
         customToolbar.setTitle(R.string.transaction_report);
         customToolbar.setOnBackButtonListener(v -> close());
 
-        progressBar = findViewById(R.id.progressBar);
         errorTextView = findViewById(R.id.errorTextView);
 
         recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setAdapter(transactionReportAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (Boolean.TRUE.equals(transactionReportViewModel.getProgressStatus().getValue()))
+                    return;
+
+                if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == transactionReportAdapter.getItemCount() - 1) {
+                    transactionReportViewModel.loadMore();
+                }
+            }
+        });
 
         Button btGetTransactionList = findViewById(R.id.btGetTransactionList);
         btGetTransactionList.setOnClickListener(v -> showTransactionReportDialog(LIST));
 
         Button btGetTransactionById = findViewById(R.id.btGetPaymentMethodById);
         btGetTransactionById.setOnClickListener(v -> showTransactionReportDialog(BY_ID));
+
+        progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setTitle("Retrieving reports");
     }
 
     private void showTransactionReportDialog(TYPE type) {
@@ -68,11 +93,10 @@ public class TransactionReportFragment extends BaseFragment implements Transacti
     protected void initSubscriptions() {
         transactionReportViewModel.getProgressStatus().observe(this, show -> {
             if (show) {
-                hideView(recyclerView);
                 hideView(errorTextView);
-                showView(progressBar);
+                progressDialog.show();
             } else {
-                hideView(progressBar);
+                progressDialog.hide();
             }
         });
 
@@ -95,19 +119,19 @@ public class TransactionReportFragment extends BaseFragment implements Transacti
     }
 
     private void submitTransactions(List<TransactionSummary> transactionList) {
-        recyclerView.setAdapter(null);
-        recyclerView.setAdapter(transactionReportAdapter);
         transactionReportAdapter.setExpandedByDefault(transactionList.size() == 1);
-        transactionReportAdapter.submitList(transactionList);
+        transactionReportAdapter.addItems(transactionList);
     }
 
     @Override
     public void onSubmitTransactionReportParameters(TransactionReportParameters transactionReportParameters) {
+        transactionReportAdapter.clearItems();
         transactionReportViewModel.getTransactionList(transactionReportParameters);
     }
 
     @Override
     public void onSubmitTransactionId(String transactionId) {
+        transactionReportAdapter.clearItems();
         transactionReportViewModel.getTransactionById(transactionId);
     }
 }

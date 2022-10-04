@@ -20,6 +20,16 @@ public abstract class BaseAdapter<T, VH extends BaseViewHolder<T>> extends Recyc
         notifyDataSetChanged();
     }
 
+    public void addItems(List<T> itemsToAdd) {
+        itemList.addAll(itemsToAdd);
+        notifyDataSetChanged();
+    }
+
+    public void clearItems() {
+        itemList.clear();
+        notifyDataSetChanged();
+    }
+
     @LayoutRes
     protected abstract int getLayoutId();
 

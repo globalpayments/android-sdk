@@ -20,17 +20,44 @@ import java.util.List;
 public class DepositsViewModel extends BaseViewModel {
     private final MutableLiveData<List<DepositSummary>> depositSummaryListLiveData = new MutableLiveData<>();
 
+    private DepositParametersModel currentReportParameters;
+    private int pageSize = 0;
+    private int currentPage = 1;
+    private int totalRecordCount = -1;
+
     public LiveData<List<DepositSummary>> getDepositSummaryListLiveData() {
         return depositSummaryListLiveData;
     }
 
     public void getDepositsList(DepositParametersModel depositParametersModel) {
+        resetPagination();
+        currentReportParameters = depositParametersModel;
+        pageSize = depositParametersModel.getPageSize();
+        getDepositsList();
+    }
+
+    public void loadMore() {
+        boolean hasMore = pageSize * currentPage < totalRecordCount;
+        if (!hasMore || Boolean.TRUE.equals(getProgressStatus().getValue())) return;
+        currentPage += 1;
+        currentReportParameters.setPage(currentPage);
+        getDepositsList();
+    }
+
+    private void resetPagination() {
+        currentPage = 1;
+        totalRecordCount = -1;
+        pageSize = 5;
+        currentReportParameters = null;
+    }
+
+    private void getDepositsList() {
         showProgress();
 
         TaskExecutor.executeAsync(new TaskExecutor.Task<List<DepositSummary>>() {
             @Override
             public List<DepositSummary> executeAsync() throws Exception {
-                return executeGetDepositsListRequest(depositParametersModel);
+                return executeGetDepositsListRequest(currentReportParameters);
             }
 
             @Override
@@ -47,7 +74,7 @@ public class DepositsViewModel extends BaseViewModel {
 
     public void getDepositById(String depositId) {
         showProgress();
-
+        resetPagination();
         TaskExecutor.executeAsync(new TaskExecutor.Task<DepositSummary>() {
             @Override
             public DepositSummary executeAsync() throws Exception {
@@ -98,7 +125,10 @@ public class DepositsViewModel extends BaseViewModel {
         searchBuilder.setAccountNumberLastFour(parametersModel.getMaskedAccountNumberLast4());
         searchBuilder.setMerchantId(parametersModel.getSystemMID());
         searchBuilder.setSystemHierarchy(parametersModel.getSystemHierarchy());
-
-        return reportBuilder.execute(DEFAULT_GPAPI_CONFIG).getResults();
+        DepositSummaryPaged result = reportBuilder.execute(DEFAULT_GPAPI_CONFIG);
+        if (currentPage == 1) {
+            totalRecordCount = result.totalRecordCount;
+        }
+        return result.getResults();
     }
 }

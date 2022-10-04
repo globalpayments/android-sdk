@@ -1,11 +1,18 @@
 package com.globalpayments.android.sdk.sample.gpapi.deposits;
 
+import static com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE.BY_ID;
+import static com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE.LIST;
+import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
+import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
+
+import android.app.ProgressDialog;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.global.api.entities.reporting.DepositSummary;
@@ -17,13 +24,9 @@ import com.globalpayments.android.sdk.sample.gpapi.deposits.model.DepositParamet
 
 import java.util.List;
 
-import static com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE.BY_ID;
-import static com.globalpayments.android.sdk.sample.gpapi.common.model.TYPE.LIST;
-import static com.globalpayments.android.sdk.utils.ViewUtils.hideView;
-import static com.globalpayments.android.sdk.utils.ViewUtils.showView;
-
 public class DepositsFragment extends BaseFragment implements DepositsDialog.Callback {
-    private ProgressBar progressBar;
+
+    private ProgressDialog progressDialog;
     private TextView errorTextView;
     private RecyclerView recyclerView;
 
@@ -47,16 +50,38 @@ public class DepositsFragment extends BaseFragment implements DepositsDialog.Cal
         customToolbar.setTitle(R.string.deposits);
         customToolbar.setOnBackButtonListener(v -> close());
 
-        progressBar = findViewById(R.id.progressBar);
         errorTextView = findViewById(R.id.errorTextView);
 
         recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setAdapter(depositsAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (Boolean.TRUE.equals(depositsViewModel.getProgressStatus().getValue()))
+                    return;
+
+                if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == depositsAdapter.getItemCount() - 1) {
+                    depositsViewModel.loadMore();
+                }
+            }
+        });
 
         Button btGetDepositsList = findViewById(R.id.btGetDepositsList);
         btGetDepositsList.setOnClickListener(v -> showDepositsDialog(LIST));
 
         Button btGetDepositById = findViewById(R.id.btGetDepositById);
         btGetDepositById.setOnClickListener(v -> showDepositsDialog(BY_ID));
+
+        progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setTitle("Retrieving deposits");
     }
 
     private void showDepositsDialog(TYPE type) {
@@ -68,11 +93,10 @@ public class DepositsFragment extends BaseFragment implements DepositsDialog.Cal
     protected void initSubscriptions() {
         depositsViewModel.getProgressStatus().observe(this, show -> {
             if (show) {
-                hideView(recyclerView);
                 hideView(errorTextView);
-                showView(progressBar);
+                progressDialog.show();
             } else {
-                hideView(progressBar);
+                progressDialog.hide();
             }
         });
 
@@ -95,20 +119,20 @@ public class DepositsFragment extends BaseFragment implements DepositsDialog.Cal
     }
 
     private void submitDeposits(List<DepositSummary> depositSummaryList) {
-        recyclerView.setAdapter(null);
-        recyclerView.setAdapter(depositsAdapter);
         depositsAdapter.setExpandedByDefault(depositSummaryList.size() == 1);
-        depositsAdapter.submitList(depositSummaryList);
+        depositsAdapter.addItems(depositSummaryList);
     }
 
 
     @Override
     public void onSubmitDepositParametersModel(DepositParametersModel depositParametersModel) {
+        depositsAdapter.clearItems();
         depositsViewModel.getDepositsList(depositParametersModel);
     }
 
     @Override
     public void onSubmitDepositId(String depositId) {
+        depositsAdapter.clearItems();
         depositsViewModel.getDepositById(depositId);
     }
 }
