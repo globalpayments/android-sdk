@@ -5,6 +5,9 @@ import com.global.api.entities.enums.Environment;
 import com.global.api.entities.enums.IntervalToExpire;
 
 public class GPAPIConfiguration {
+    private String merchantId;
+    private String transactionProcessingAccountName;
+    private String tokenizationAccountName;
     private String appId;
     private String appKey;
     private String serviceUrl;
@@ -16,6 +19,14 @@ public class GPAPIConfiguration {
     private IntervalToExpire tokenIntervalToExpire;
     private Environment environment;
     private String selectedCountry;
+
+    public String getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(String merchantId) {
+        this.merchantId = merchantId;
+    }
 
     public String getAppId() {
         return appId;
@@ -103,5 +114,21 @@ public class GPAPIConfiguration {
 
     public void setChannel(Channel channel) {
         this.channel = channel;
+    }
+
+    public String getTransactionProcessingAccountName() {
+        return transactionProcessingAccountName;
+    }
+
+    public void setTransactionProcessingAccountName(String transactionProcessingAccountName) {
+        this.transactionProcessingAccountName = transactionProcessingAccountName;
+    }
+
+    public String getTokenizationAccountName() {
+        return tokenizationAccountName;
+    }
+
+    public void setTokenizationAccountName(String tokenizationAccountName) {
+        this.tokenizationAccountName = tokenizationAccountName;
     }
 }

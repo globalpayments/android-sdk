@@ -1,6 +1,5 @@
 package com.globalpayments.android.sdk.sample.gpapi;
 
-import static com.globalpayments.android.sdk.sample.utils.GPAPIConfigurationUtils.initializeDCCRateGPAPIConfiguration;
 import static com.globalpayments.android.sdk.sample.utils.GPAPIConfigurationUtils.initializeDefaultGPAPIConfiguration;
 
 import android.os.Bundle;
@@ -35,7 +34,6 @@ public class GPAPIActivity extends BaseActivity {
 
     private void checkGPAPIConfiguration() {
         GPAPIConfiguration gpapiConfiguration = appPreferences.getGPAPIConfiguration();
-        initializeDCCRateGPAPIConfiguration();
         if (gpapiConfiguration == null) {
             showFragment(GPAPIConfigurationFragment.newInstance(false));
         } else {

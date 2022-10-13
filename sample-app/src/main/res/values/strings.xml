@@ -145,6 +145,7 @@
     <string name="base64_content_preview">Base64 Content Preview:</string>
     <string name="success">Success !</string>
     <string name="loading">LOADING…</string>
+    <string name="merchand_id_configuration"><b>MERCHANT ID</b></string>
     <string name="app_id_configuration"><b>APP ID</b> (required)</string>
     <string name="app_key_configuration"><b>APP KEY</b> (required)</string>
     <string name="service_url_configuration"><b>SERVICE URL</b> (optional)</string>

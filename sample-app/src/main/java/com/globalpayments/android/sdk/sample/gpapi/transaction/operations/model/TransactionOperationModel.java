@@ -7,13 +7,13 @@ import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode;
 import java.math.BigDecimal;
 
 public class TransactionOperationModel {
-    private String typeCardOption;
     private String cardNumber;
     private int expiryMonth;
     private int expiryYear;
     private String cvnCvv;
     private BigDecimal amount;
     private String currency;
+    private String address;
     private TransactionOperationType transactionOperationType;
     private PaymentMethodUsageMode paymentMethodUsageMode;
     private Boolean requestMultiUseToken;
@@ -23,14 +23,6 @@ public class TransactionOperationModel {
     private String paymentLinkId;
     private String dynamicDescriptor;
     private ManualEntryMethodUsageMode manualEntryMethodUsageMode;
-
-    public String getTypeCardOption() {
-        return typeCardOption;
-    }
-
-    public void setTypeCardOption(String typeCardOption) {
-        this.typeCardOption = typeCardOption;
-    }
 
     public String getCardNumber() {
         return cardNumber;
@@ -78,6 +70,14 @@ public class TransactionOperationModel {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public TransactionOperationType getTransactionOperationType() {

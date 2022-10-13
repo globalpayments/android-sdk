@@ -12,10 +12,14 @@ import static com.globalpayments.android.sdk.utils.Utils.safeParseInt;
 import static com.globalpayments.android.sdk.utils.ViewUtils.getEditTextValue;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.global.api.entities.enums.Channel;
@@ -28,6 +32,7 @@ import com.globalpayments.android.sdk.sample.common.views.CustomToolbar;
 import com.globalpayments.android.sdk.sample.gpapi.GPAPIActivity;
 import com.globalpayments.android.sdk.sample.gpapi.partials.CountryUtils;
 import com.globalpayments.android.sdk.sample.utils.AppPreferences;
+import com.globalpayments.android.sdk.utils.EndTextWatcher;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -37,6 +42,15 @@ import java.util.List;
 
 public class GPAPIConfigurationFragment extends BaseFragment {
     private static final String RECONFIGURATION = "RECONFIGURATION";
+
+    private TextInputEditText etMerchantId;
+
+    private TextInputLayout transactionProcessingAccountNameLayout;
+    private TextInputEditText etTransactionProcessingAccountName;
+
+    private TextInputLayout tokenizationAccountNameLayout;
+    private TextInputEditText etTokenizationAccountName;
+    private LinearLayout llMerchantIdLayout;
 
     private TextInputLayout appIdTextInputLayout;
     private TextInputEditText etAppId;
@@ -115,6 +129,17 @@ public class GPAPIConfigurationFragment extends BaseFragment {
             customToolbar.setOnBackButtonListener(v -> close());
         }
 
+        TextInputLayout merchantIdTextInputLayout = findViewById(R.id.merchantIdTextInputLayout);
+        etMerchantId = findViewById(R.id.etMerchantId);
+
+        transactionProcessingAccountNameLayout = findViewById(R.id.transactionProcessingAccountNameLayout);
+        etTransactionProcessingAccountName = findViewById(R.id.etTransactionProcessingAccountName);
+
+        tokenizationAccountNameLayout = findViewById(R.id.tokenizationAccountNameLayout);
+        etTokenizationAccountName = findViewById(R.id.etTokenizationAccountName);
+
+        llMerchantIdLayout = findViewById(R.id.merchant_id_account_name_layout);
+
         appIdTextInputLayout = findViewById(R.id.appIdTextInputLayout);
         etAppId = findViewById(R.id.etAppId);
 
@@ -148,11 +173,14 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         Collections.sort(listCountries);
         selectCountrySpinner.init(listCountries);
 
+        etMerchantId.setOnFocusChangeListener(getFocusChangeListener(merchantIdTextInputLayout));
         etAppId.setOnFocusChangeListener(getFocusChangeListener(appIdTextInputLayout));
         etAppKey.setOnFocusChangeListener(getFocusChangeListener(appKeyTextInputLayout));
         etServiceUrl.setOnFocusChangeListener(getFocusChangeListener(serviceUrlTextInputLayout));
         etApiVersion.setOnFocusChangeListener(getFocusChangeListener(apiVersionTextInputLayout));
         etTokenSecondsToExpire.setOnFocusChangeListener(getFocusChangeListener(tokenSecondsToExpireTextInputLayout));
+
+        setupMerchantIdListener();
 
         fillStoredGPAPIConfiguration();
 
@@ -168,11 +196,26 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         };
     }
 
+    private void setupMerchantIdListener() {
+        etMerchantId.addTextChangedListener(new EndTextWatcher() {
+            @Override
+            public void textChanged(@NonNull Editable s) {
+                llMerchantIdLayout.setVisibility(!TextUtils.isEmpty(s.toString()) ? View.VISIBLE : View.GONE);
+            }
+        });
+    }
+
     private void fillStoredGPAPIConfiguration() {
         if (isStartedForReconfiguration) {
             GPAPIConfiguration gpapiConfiguration = appPreferences.getGPAPIConfiguration();
 
             if (gpapiConfiguration != null) {
+                String merchantId = gpapiConfiguration.getMerchantId();
+                if (isNotNullOrBlank(merchantId)) {
+                    etMerchantId.setText(merchantId);
+                    etTransactionProcessingAccountName.setText(gpapiConfiguration.getTransactionProcessingAccountName());
+                    etTokenizationAccountName.setText(gpapiConfiguration.getTokenizationAccountName());
+                }
                 etAppId.setText(gpapiConfiguration.getAppId());
                 etAppKey.setText(gpapiConfiguration.getAppKey());
                 etServiceUrl.setText(gpapiConfiguration.getServiceUrl());
@@ -191,6 +234,9 @@ public class GPAPIConfigurationFragment extends BaseFragment {
     private void onSaveConfigurationClicked() {
         resetErrors();
 
+        String merchantId = getEditTextValue(etMerchantId);
+        String transactionProcessingAccountName = getEditTextValue(etTransactionProcessingAccountName);
+        String tokenizationAccountName = getEditTextValue(etTokenizationAccountName);
         String appId = getEditTextValue(etAppId);
         String appKey = getEditTextValue(etAppKey);
         String serviceUrl = getEditTextValue(etServiceUrl);
@@ -203,8 +249,10 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         String selectedCountry = selectCountrySpinner.getSelectedOption();
         Channel channel = selectChannel.getSelectedOption();
 
-        if (areAllInputValuesValid(appId, appKey, serviceUrl, apiVersion, tokenSecondsToExpire)) {
-            saveConfiguration(appId, appKey, serviceUrl, challengeNotificationUrl, methodNotificationUrl,
+        if (areAllInputValuesValid(merchantId, transactionProcessingAccountName, tokenizationAccountName, appId, appKey, serviceUrl, apiVersion, tokenSecondsToExpire)) {
+            saveConfiguration( merchantId, transactionProcessingAccountName,
+                    tokenizationAccountName, appId, appKey,
+                    serviceUrl, challengeNotificationUrl, methodNotificationUrl,
                     apiVersion, tokenSecondsToExpire,
                     tokenIntervalToExpire, environment, selectedCountry, channel);
             initGPAPIConfiguration();
@@ -224,7 +272,10 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         }
     }
 
-    private void saveConfiguration(String appId,
+    private void saveConfiguration(String merchantId,
+                                   String transactionProcessingAccountName,
+                                   String tokenizationAccountName,
+                                   String appId,
                                    String appKey,
                                    String serviceUrl,
                                    String challengeNotificationUrl,
@@ -237,6 +288,11 @@ public class GPAPIConfigurationFragment extends BaseFragment {
                                    Channel channel) {
 
         GPAPIConfiguration gpapiConfiguration = new GPAPIConfiguration();
+        if (isNotNullOrBlank(merchantId)) {
+            gpapiConfiguration.setMerchantId(merchantId);
+            gpapiConfiguration.setTransactionProcessingAccountName(transactionProcessingAccountName);
+            gpapiConfiguration.setTokenizationAccountName(tokenizationAccountName);
+        }
         gpapiConfiguration.setAppId(appId);
         gpapiConfiguration.setAppKey(appKey);
         gpapiConfiguration.setServiceUrl(serviceUrl);
@@ -265,7 +321,10 @@ public class GPAPIConfigurationFragment extends BaseFragment {
         tokenSecondsToExpireTextInputLayout.setError(EMPTY);
     }
 
-    private boolean areAllInputValuesValid(String appId,
+    private boolean areAllInputValuesValid(String merchantId,
+                                           String transactionProcessingAccountName,
+                                           String tokenizationAccountName,
+                                           String appId,
                                            String appKey,
                                            String serviceUrl,
                                            String apiVersion,
@@ -273,6 +332,17 @@ public class GPAPIConfigurationFragment extends BaseFragment {
 
         boolean areAllValuesValid = true;
 
+        if (isNotNullOrBlank(merchantId)) {
+            if (isNullOrBlank(transactionProcessingAccountName)) {
+                areAllValuesValid = false;
+                transactionProcessingAccountNameLayout.setError(emptyRequiredField);
+            }
+            if (isNullOrBlank(tokenizationAccountName)) {
+                areAllValuesValid = false;
+                tokenizationAccountNameLayout.setError(emptyRequiredField);
+            }
+
+        }
         if (isNullOrBlank(appId)) {
             areAllValuesValid = false;
             appIdTextInputLayout.setError(emptyRequiredField);

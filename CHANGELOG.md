@@ -6,6 +6,12 @@
 
 ## Latest Version
 
+## v1.1.14 (10/12/2022)
+
+### Enhancements:
+
+* GP-API: Add merchantId on GpApiConfig for partnership active
+
 ## v1.1.13 (10/03/2022)
 
 ### Enhancements:

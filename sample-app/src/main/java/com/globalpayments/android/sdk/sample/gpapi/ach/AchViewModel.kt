@@ -1,14 +1,12 @@
 package com.globalpayments.android.sdk.sample.gpapi.ach
 
 import androidx.lifecycle.MutableLiveData
-import com.global.api.ServicesContainer
 import com.global.api.entities.Address
 import com.global.api.entities.Customer
 import com.global.api.entities.enums.AccountType
-import com.global.api.entities.enums.Channel
 import com.global.api.entities.enums.SecCode
 import com.global.api.paymentMethods.eCheck
-import com.global.api.serviceConfigs.GpApiConfig
+import com.globalpayments.android.sdk.sample.common.Constants
 import com.globalpayments.android.sdk.sample.common.base.BaseViewModel
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessModel
 import com.globalpayments.android.sdk.task.TaskExecutor
@@ -22,10 +20,6 @@ class AchViewModel : BaseViewModel() {
     val errorTransaction = MutableLiveData<String>()
 
     private val eCheck = eCheck()
-
-    init {
-        initAchConfiguration()
-    }
 
     fun onAccountTypeSelected(accountType: AccountType) {
         eCheck.accountType = accountType
@@ -68,7 +62,7 @@ class AchViewModel : BaseViewModel() {
                     .withCurrency(Currency)
                     .withAddress(billingAddress)
                     .withCustomer(customer)
-                    .execute(GpAchApiConfigName)
+                    .execute(Constants.DEFAULT_GPAPI_CONFIG)
             },
             onFinished = {
                 hideProgress()
@@ -105,7 +99,7 @@ class AchViewModel : BaseViewModel() {
                     .withCurrency(Currency)
                     .withAddress(billingAddress)
                     .withCustomer(customer)
-                    .execute(GpAchApiConfigName)
+                    .execute(Constants.DEFAULT_GPAPI_CONFIG)
             },
             onFinished = {
                 hideProgress()
@@ -130,19 +124,8 @@ class AchViewModel : BaseViewModel() {
         )
     }
 
-    private fun initAchConfiguration() {
-        val config = GpApiConfig().apply {
-            appId = "Uyq6PzRbkorv2D4RQGlldEtunEeGNZll"
-            appKey = "QDsW1ETQKHX6Y4TA"
-            channel = Channel.CardNotPresent.value
-            isEnableLogging = true
-        }
-        ServicesContainer.configureService(config, GpAchApiConfigName)
-    }
-
     companion object {
         private const val Currency = "USD"
-        private const val GpAchApiConfigName = "GP_ACH_API_CONFIG"
     }
 
     enum class OrderType {

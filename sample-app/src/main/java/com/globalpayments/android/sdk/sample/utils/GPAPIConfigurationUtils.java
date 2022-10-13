@@ -54,6 +54,7 @@ public class GPAPIConfigurationUtils {
                                            String configName) {
         boolean isSuccessful;
         try {
+            gpApiConfig.setAndroid(true);
             ServicesContainer.configureService(gpApiConfig, configName);
             setApiVersion(
                     gpapiConfiguration.getApiVersion(),
@@ -87,13 +88,24 @@ public class GPAPIConfigurationUtils {
     public static GpApiConfig buildDefaultGpApiConfig(GPAPIConfiguration gpapiConfiguration) {
         GpApiConfig gpApiConfig = new GpApiConfig();
         HashMap<String, String> androidHeader = new HashMap<>();
+        androidHeader.put("x-gp-library", "java;version=" + com.globalpayments.android.sdk.BuildConfig.JAVA_VERSION);
         androidHeader.put("x-gp-sdk", "Android;version=" + BuildConfig.VERSION_NAME);
 
+        String merchantId = gpapiConfiguration.getMerchantId();
+        if (isNotNullOrBlank(merchantId)) {
+            gpApiConfig.setMerchantId(merchantId);
+            AccessTokenInfo accessTokenInfo = new AccessTokenInfo();
+            accessTokenInfo.setTransactionProcessingAccountName(gpapiConfiguration.getTransactionProcessingAccountName());
+            accessTokenInfo.setTokenizationAccountName(gpapiConfiguration.getTokenizationAccountName());
+            gpApiConfig.setAccessTokenInfo(accessTokenInfo);
+        }
         gpApiConfig.setAppId(gpapiConfiguration.getAppId());
         gpApiConfig.setAppKey(gpapiConfiguration.getAppKey());
         gpApiConfig.setChannel(gpapiConfiguration.getChannel().getValue());
+        gpApiConfig.setMerchantId(gpapiConfiguration.getMerchantId());
         gpApiConfig.setDynamicHeaders(androidHeader);
 
+        gpApiConfig.setMerchantId(gpapiConfiguration.getMerchantId());
         gpApiConfig.setChallengeNotificationUrl("https://enp4qhvjseljg.x.pipedream.net/");
         gpApiConfig.setMethodNotificationUrl("https://enp4qhvjseljg.x.pipedream.net/");
         gpApiConfig.setMerchantContactUrl("https://enp4qhvjseljg.x.pipedream.net/");

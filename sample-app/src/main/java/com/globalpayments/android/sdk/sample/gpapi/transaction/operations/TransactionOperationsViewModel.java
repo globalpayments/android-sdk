@@ -54,12 +54,6 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
         return transactionMessageError;
     }
 
-    private final MutableLiveData<ThreeDSecure> typeCardSelectedOption = new MutableLiveData<>();
-
-    public LiveData<ThreeDSecure> getTypeCardSelectedOption() {
-        return typeCardSelectedOption;
-    }
-
     private TransactionOperationModel transactionOperationModel;
 
     private CreditCardData card;
@@ -81,10 +75,6 @@ public class TransactionOperationsViewModel extends BaseAndroidViewModel {
     private void showResult(Transaction transaction) {
         hideProgress();
         transactionLiveData.setValue(transaction);
-    }
-
-    private void showTypeCard(ThreeDSecure typeMessage) {
-        typeCardSelectedOption.setValue(typeMessage);
     }
 
     private void setCreditCardData(String cardNumber, int expiryMonth, int expiryYear, String cvnCvv) {

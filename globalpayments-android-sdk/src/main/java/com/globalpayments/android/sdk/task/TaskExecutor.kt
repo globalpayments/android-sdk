@@ -2,6 +2,7 @@ package com.globalpayments.android.sdk.task
 
 import android.os.Handler
 import android.os.Looper
+import java.lang.Integer.max
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
@@ -9,7 +10,7 @@ object TaskExecutor {
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private val executorService =
-        Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() / 2)
+        Executors.newFixedThreadPool(max(2, Runtime.getRuntime().availableProcessors() / 2))
 
     /**
      * Execute a method from sdk on a background thread.

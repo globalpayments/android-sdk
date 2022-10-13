@@ -130,7 +130,6 @@ public class TransactionOperationDialog extends BaseDialogFragment {
             boolean fingerPrint = cbFromFingerPrint.isChecked();
             transactionOperationModel.setFingerPrintSelection(fingerPrint);
             transactionOperationModel.setFingerprintMethodUsageMode(multiFingerPrintUsageMode.getSelectedOption());
-            transactionOperationModel.setTypeCardOption(cardModelsSpinner.getSelectedOption().toString());
             transactionOperationModel.setCardNumber(etCardNumber.getText().toString());
             transactionOperationModel.setExpiryMonth(Integer.parseInt(etExpiryMonth.getText().toString()));
             transactionOperationModel.setExpiryYear(Integer.parseInt(etExpiryYear.getText().toString()));

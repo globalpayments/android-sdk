@@ -42,7 +42,7 @@ class NetceteraViewModel : BaseViewModel() {
                 creditCardData.getDccRate()
                     .withAmount(amount)
                     .withCurrency(Currency)
-                    .execute(Constants.DCC_RATE_GP_API_CONFIG_NAME);
+                    .execute(Constants.DEFAULT_GPAPI_CONFIG);
             },
             onFinished = {
                 when (it) {

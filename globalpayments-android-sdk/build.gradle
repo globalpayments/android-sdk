@@ -9,23 +9,18 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 1
-        versionName "1.1.13"
-    }
+        versionName "1.1.14"
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+        buildConfigField "String", 'JAVA_VERSION', "\"${java_version}\""
     }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.6.1'
     // Production
-    api 'com.heartlandpaymentsystems:globalpayments-sdk:8.0.5'
+    api "com.heartlandpaymentsystems:globalpayments-sdk:$java_version"
 
     // Snapshot - mavenLocal (For testing only)
     // api 'com.heartlandpaymentsystems:globalpayments-sdk:6.1.90'
