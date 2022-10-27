@@ -25,11 +25,11 @@ public abstract class BaseViewModel extends ViewModel {
     }
 
     public void showProgress() {
-        progressStatus.setValue(true);
+        progressStatus.postValue(true);
     }
 
     public void hideProgress() {
-        progressStatus.setValue(false);
+        progressStatus.postValue(false);
     }
 
     public void showError(String errorMessage) {

@@ -2,11 +2,16 @@ package com.globalpayments.android.sdk.sample.gpapi.netcetera
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.global.api.ServicesContainer
 import com.global.api.entities.MobileData
 import com.global.api.entities.StoredCredential
 import com.global.api.entities.ThreeDSecure
 import com.global.api.entities.Transaction
-import com.global.api.entities.enums.*
+import com.global.api.entities.enums.AuthenticationSource
+import com.global.api.entities.enums.SdkInterface
+import com.global.api.entities.enums.SdkUiType
+import com.global.api.entities.enums.Secure3dVersion
+import com.global.api.gateways.GpApiConnector
 import com.global.api.paymentMethods.CreditCardData
 import com.global.api.services.Secure3dService
 import com.global.api.utils.JsonDoc
@@ -25,6 +30,7 @@ class NetceteraViewModel : BaseViewModel() {
     private var tokenizedCard = CreditCardData()
     private var cardBrand: String? = null
 
+    val accessToken = MutableLiveData<String>()
     val startChallengeFlow = MutableLiveData<ThreeDSecure>()
     val paymentCompleted = MutableLiveData<Transaction>()
     val createNetceteraTransaction = MutableLiveData<ThreeDSecure>()
@@ -55,28 +61,31 @@ class NetceteraViewModel : BaseViewModel() {
         )
     }
 
-    //1. Capture Cardholder Data
-    fun tokenizeCard(creditCardData: CreditCardData) {
+    fun getAccessToken() {
         showProgress()
         TaskExecutor.executeAsync(
             taskToExecute = {
-                val response = creditCardData
-                    .tokenize(true, PaymentMethodUsageMode.SINGLE)
-                    .execute(Constants.DEFAULT_GPAPI_CONFIG)
-                cardBrand = response.cardType
-                response.token
+                (ServicesContainer.getInstance()
+                    .getGateway(Constants.DEFAULT_GPAPI_CONFIG) as? GpApiConnector)
+                    ?.accessToken
+                    ?.token
+                    ?: throw IllegalArgumentException("Something went wrong")
             },
             onFinished = {
+                hideProgress()
                 when (it) {
                     is TaskResult.Error -> showError(it.exception.message)
-                    is TaskResult.Success -> checkEnrollment(it.data)
+                    is TaskResult.Success -> accessToken.postValue(it.data)
                 }
+
             }
         )
     }
 
     //2. Send Cardholder data to server
-    private fun checkEnrollment(cardToken: String) {
+    fun checkEnrollment(cardToken: String, cardType: String) {
+        showProgress()
+        cardBrand = cardType
         tokenizedCard = CreditCardData(cardToken)
         TaskExecutor.executeAsync(
             taskToExecute = {

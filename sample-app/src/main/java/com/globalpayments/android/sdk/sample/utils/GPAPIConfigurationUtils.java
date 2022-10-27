@@ -1,6 +1,5 @@
 package com.globalpayments.android.sdk.sample.utils;
 
-import static com.globalpayments.android.sdk.sample.common.Constants.DCC_RATE_GP_API_CONFIG_NAME;
 import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
 import static com.globalpayments.android.sdk.utils.Utils.isNotNull;
 import static com.globalpayments.android.sdk.utils.Utils.isNotNullOrBlank;
@@ -8,9 +7,6 @@ import static com.globalpayments.android.sdk.utils.Utils.isNotNullOrBlank;
 import android.util.Log;
 
 import com.global.api.ServicesContainer;
-import com.global.api.entities.enums.Channel;
-import com.global.api.entities.enums.Environment;
-import com.global.api.entities.exceptions.ApiException;
 import com.global.api.entities.exceptions.ConfigurationException;
 import com.global.api.entities.gpApi.entities.AccessTokenInfo;
 import com.global.api.gateways.GpApiConnector;
@@ -26,27 +22,6 @@ public class GPAPIConfigurationUtils {
     public static void initializeDefaultGPAPIConfiguration(GPAPIConfiguration gpapiConfiguration) {
         GpApiConfig gpApiConfig = buildDefaultGpApiConfig(gpapiConfiguration);
         configureService(gpApiConfig, gpapiConfiguration, DEFAULT_GPAPI_CONFIG);
-    }
-
-    public static void initializeDCCRateGPAPIConfiguration() {
-        GpApiConfig config = new GpApiConfig();
-
-        // GP-API settings
-        config
-                .setAppId(BuildConfig.APP_ID_FOR_DCC)
-                .setAppKey(BuildConfig.APP_KEY_FOR_DCC)
-                .setCountry("GB")
-                .setEnvironment(Environment.TEST);
-        config.setChannel(Channel.CardNotPresent.getValue());
-
-        config
-                .setAccessTokenInfo(new AccessTokenInfo().setTransactionProcessingAccountName("dcc"))
-                .setEnableLogging(true);
-        try {
-            ServicesContainer.configureService(config, DCC_RATE_GP_API_CONFIG_NAME);
-        } catch (ApiException exception) {
-            Log.e(TAG, exception.getLocalizedMessage());
-        }
     }
 
     public static boolean configureService(GpApiConfig gpApiConfig,

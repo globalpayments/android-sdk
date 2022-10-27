@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Merchant3DS</string>
+    <string name="placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque non scelerisque sapien. Etiam nisi sem, tempus at ligula a, porta lacinia tortor. Quisque suscipit tortor id tellus lobortis suscipit.</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+    <string name="processing">Processing…</string>
+</resources>

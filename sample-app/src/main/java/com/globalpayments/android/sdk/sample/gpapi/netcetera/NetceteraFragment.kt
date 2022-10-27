@@ -9,12 +9,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.global.api.entities.ThreeDSecure
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.Constants.CHALLENGE_REQUIRED
-import com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessModel
-import com.globalpayments.android.sdk.ui.cardform.CardFormDialogFragment
+import com.globalpayments.android.sdk.ui.hf.HostedFieldsDialog
 import com.netcetera.threeds.sdk.api.transaction.Transaction
 import com.netcetera.threeds.sdk.api.transaction.challenge.ChallengeParameters
 import com.netcetera.threeds.sdk.api.transaction.challenge.ChallengeStatusReceiver
@@ -39,7 +38,7 @@ class NetceteraFragment : BaseFragment() {
             val amount = view.findViewById<EditText>(R.id.amount).text.toString()
             if (amount.isBlank()) return@setOnClickListener
             viewModel.amount = BigDecimal(amount)
-            openForm()
+            viewModel.getAccessToken()
         }
         progressBar = ProgressDialog(requireContext()).apply {
             this.setTitle("Payment in progress")
@@ -53,13 +52,14 @@ class NetceteraFragment : BaseFragment() {
 
     override fun initSubscriptions() {
         super.initSubscriptions()
-        viewModel.progressStatus.observe(viewLifecycleOwner) { if (it) progressBar.show() else progressBar.show() }
+        viewModel.progressStatus.observe(viewLifecycleOwner) { if (it) progressBar.show() else progressBar.hide() }
         viewModel.error.observe(viewLifecycleOwner, this::dismissProgressAndShowMessage)
         viewModel.startChallengeFlow.observe(viewLifecycleOwner) { startChallengeFlow(it) }
         viewModel.paymentCompleted.observe(viewLifecycleOwner, this::showTransactionCompletedDialog)
         viewModel.createNetceteraTransaction.observe(viewLifecycleOwner) {
             createTransaction(it)
         }
+        viewModel.accessToken.observe(viewLifecycleOwner, this::openHFDialog)
     }
 
     private fun dismissProgressAndShowMessage(message: String) {
@@ -68,12 +68,12 @@ class NetceteraFragment : BaseFragment() {
             .show(childFragmentManager, TransactionErrorDialog.TAG)
     }
 
-    private fun openForm() {
-        CardFormDialogFragment.newInstance(DEFAULT_GPAPI_CONFIG).apply {
-            onSubmitClicked = {
-                viewModel.tokenizeCard(it)
-            }
-            show(this@NetceteraFragment.childFragmentManager, "CARD_FORM_DIALOG")
+    //1. Capture Cardholder Data
+    private fun openHFDialog(accessToken: String) {
+        HostedFieldsDialog.newInstance(accessToken).apply {
+            onTokenReceived =
+                { cardToken, cardType -> viewModel.checkEnrollment(cardToken, cardType) }
+            show(this@NetceteraFragment.childFragmentManager, "HFDialog")
         }
     }
 

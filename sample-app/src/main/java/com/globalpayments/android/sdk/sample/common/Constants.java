@@ -5,7 +5,6 @@ public class Constants {
     // GP-API
     public static final String DEFAULT_GPAPI_CONFIG = "DEFAULT_GPAPI_CONFIG";
     public static final String GP_API_CONFIG_NAME = "GP_API_CONFIG";
-    public static final String DCC_RATE_GP_API_CONFIG_NAME = "DCC_RATE_GP_API_CONFIG";
 
     // Finger Print
     public static final String FP_ALWAYS = "ALWAYS";
@@ -24,12 +23,6 @@ public class Constants {
     public static final int PAGE = 1;
     public static final int PAGE_SIZE = 5;
 
-    public final static String VISA_3DS2_FRICTIONLESS = "VISA_3DS2_FRICTIONLESS";
     public final static String CHALLENGE_REQUIRED = "CHALLENGE_REQUIRED";
-    public final static String VISA_3DS1_ENROLLED = "VISA_3DS1_ENROLLED";
-    public final static String VISA_3DS1_NOT_ENROLLED = "VISA_3DS1_NOT_ENROLLED";
-    public final static String VISA_3DS2_CHALLENGE = "VISA_3DS2_CHALLENGE";
-
-    public static final String CHALLENGE_SUCCESS = "success";
 
 }

@@ -6,6 +6,13 @@
 
 ## Latest Version
 
+## v1.1.15 (10/26/2022)
+
+### Enhancements:
+
+* Add merchant 3DS example app
+* Remove 3DS1 cards
+
 ## v1.1.14 (10/12/2022)
 
 ### Enhancements:

@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 1
-        versionName "1.1.14"
+        versionName "1.1.15"
 
         buildConfigField "String", 'JAVA_VERSION', "\"${java_version}\""
     }
@@ -19,6 +19,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.6.1'
+    implementation("androidx.webkit:webkit:1.5.0")
+
     // Production
     api "com.heartlandpaymentsystems:globalpayments-sdk:$java_version"
 

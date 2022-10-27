@@ -10,7 +10,7 @@ object TaskExecutor {
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private val executorService =
-        Executors.newFixedThreadPool(max(2, Runtime.getRuntime().availableProcessors() / 2))
+        Executors.newFixedThreadPool(max(Runtime.getRuntime().availableProcessors() / 2, 2))
 
     /**
      * Execute a method from sdk on a background thread.

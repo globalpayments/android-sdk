@@ -1,10 +1,24 @@
 apply plugin: 'com.android.application'
 apply plugin: "kotlin-android"
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-def appIdForDcc = properties.getProperty('APP_ID_FOR_DCC', "")
-def appKeyForDcc = properties.getProperty('APP_KEY_FOR_DCC', "")
+Properties configProperties = new Properties()
+if (project.file("local.properties").exists()) {
+    configProperties.load(project.file("local.properties").newDataInputStream())
+} else {
+    configProperties.load(project.file("configuration.properties").newDataInputStream())
+}
+def appId = configProperties.getProperty("appId")
+def appKey = configProperties.getProperty("appKey")
+def serviceUrl = configProperties.getProperty("serviceUrl")
+def challengeNotificationUrl = configProperties.getProperty("challengeNotificationUrl")
+def methodNotificationUrl = configProperties.getProperty("methodNotificationUrl")
+def apiVersion = configProperties.getProperty("apiVersion")
+def tokenSecondsToExpire = configProperties.getProperty("tokenSecondsToExpire")
+def tokenIntervalToExpire = configProperties.getProperty("tokenIntervalToExpire")
+def country = configProperties.getProperty("country")
+def channel = configProperties.getProperty("channel")
+def environment = configProperties.getProperty("environment")
+
 
 android {
     compileSdkVersion 32
@@ -14,10 +28,19 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 1
-        versionName "1.1.14"
+        versionName "1.1.15"
 
-        buildConfigField "String", "APP_ID_FOR_DCC", "\"$appIdForDcc\""
-        buildConfigField "String", "APP_KEY_FOR_DCC", "\"$appKeyForDcc\""
+        buildConfigField "String", "APP_ID", "\"$appId\""
+        buildConfigField "String", "APP_KEY", "\"$appKey\""
+        buildConfigField "String", "SERVICE_URL", "\"$serviceUrl\""
+        buildConfigField "String", "CHALLENGE_NOTIFICATION_URL", "\"$challengeNotificationUrl\""
+        buildConfigField "String", "METHOD_NOTIFICATION_URL", "\"$methodNotificationUrl\""
+        buildConfigField "String", "API_VERSION", "\"$apiVersion\""
+        buildConfigField "Integer", "TOKEN_SECONDS_TO_EXPIRE", "$tokenSecondsToExpire"
+        buildConfigField "String", "TOKEN_INTERVAL_TO_EXPIRE", "\"$tokenIntervalToExpire\""
+        buildConfigField "String", "COUNTRY", "\"$country\""
+        buildConfigField "String", "CHANNEL", "\"$channel\""
+        buildConfigField "String", "ENVIRONMENT", "\"$environment\""
 
     }
 
