@@ -1,0 +1,8 @@
+[*.{kt, kts}]
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+max_line_length = 150
+disabled_rules = no-wildcard-imports, experimental:annotation
+ij_kotlin_keep_blank_lines_in_code = 2

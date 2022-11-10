@@ -44,7 +44,9 @@ class PaypalFragment : BaseFragment() {
 
         val button = view.findViewById<AppCompatButton>(R.id.button_pay)
         button.setOnClickListener {
-            val amount = BigDecimal(amountInput.text.toString())
+            val stringAmount =
+                    amountInput.text.toString().takeIf { it.isNotBlank() } ?: return@setOnClickListener
+            val amount = BigDecimal(stringAmount)
             paypalViewModel.makePayment(paypalScheme, paypalHost, amount)
         }
         paypalViewModel.onUrlReceived.observe(viewLifecycleOwner) { urlToOpen ->

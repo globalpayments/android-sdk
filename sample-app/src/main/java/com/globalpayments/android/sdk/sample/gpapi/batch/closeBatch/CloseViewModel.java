@@ -1,18 +1,21 @@
 package com.globalpayments.android.sdk.sample.gpapi.batch.closeBatch;
 
 import static com.globalpayments.android.sdk.sample.common.Constants.GP_API_CONFIG_NAME;
+
 import android.app.Application;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import com.global.api.ServicesContainer;
 import com.global.api.entities.BatchSummary;
 import com.global.api.serviceConfigs.GpApiConfig;
 import com.global.api.services.BatchService;
 import com.globalpayments.android.sdk.TaskExecutor;
 import com.globalpayments.android.sdk.sample.common.base.BaseAndroidViewModel;
-import com.globalpayments.android.sdk.sample.gpapi.configuration.GPAPIConfiguration;
-import com.globalpayments.android.sdk.sample.utils.AppPreferences;
+import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfiguration;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -58,7 +61,7 @@ public class CloseViewModel extends BaseAndroidViewModel {
     }
 
     private BatchSummary executeGetCloseBatchByIdRequest(String batchId) throws Exception {
-        GPAPIConfiguration gpapiConfiguration = new AppPreferences(getApplication()).getGPAPIConfiguration();
+        GPAPIConfiguration gpapiConfiguration = GPAPIConfiguration.createDefaultConfig();
         GpApiConfig config = new GpApiConfig();
 
         // GP-API settings

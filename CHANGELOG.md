@@ -6,6 +6,12 @@
 
 ## Latest Version
 
+## v1.1.16 (11/10/2022)
+
+### Enhancements:
+
+* Add incremental auth example
+
 ## v1.1.15 (10/26/2022)
 
 ### Enhancements:

@@ -1,5 +1,5 @@
 buildscript {
-    ext.java_version = '8.0.5'
+    ext.java_version = '9.0.3'
     ext {
         compose_ui_version = '1.2.1'
     }

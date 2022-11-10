@@ -1,4 +1,4 @@
-package com.globalpayments.android.sdk.sample.utils;
+package com.globalpayments.android.sdk.sample.utils.configuration;
 
 import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
 import static com.globalpayments.android.sdk.utils.Utils.isNotNull;
@@ -12,7 +12,6 @@ import com.global.api.entities.gpApi.entities.AccessTokenInfo;
 import com.global.api.gateways.GpApiConnector;
 import com.global.api.serviceConfigs.GpApiConfig;
 import com.globalpayments.android.sdk.sample.BuildConfig;
-import com.globalpayments.android.sdk.sample.gpapi.configuration.GPAPIConfiguration;
 
 import java.util.HashMap;
 

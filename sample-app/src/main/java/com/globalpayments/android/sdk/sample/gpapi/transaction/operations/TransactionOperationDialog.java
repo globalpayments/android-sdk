@@ -16,13 +16,12 @@ import com.globalpayments.android.sdk.model.PaymentCardModel;
 import com.globalpayments.android.sdk.sample.R;
 import com.globalpayments.android.sdk.sample.common.base.BaseDialogFragment;
 import com.globalpayments.android.sdk.sample.common.views.CustomSpinner;
-import com.globalpayments.android.sdk.sample.gpapi.configuration.GPAPIConfiguration;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.TransactionOperationModel;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.TransactionOperationType;
-import com.globalpayments.android.sdk.sample.utils.AppPreferences;
 import com.globalpayments.android.sdk.sample.utils.FingerprintMethodUsageMode;
 import com.globalpayments.android.sdk.sample.utils.ManualEntryMethodUsageMode;
 import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode;
+import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfiguration;
 
 import java.math.BigDecimal;
 
@@ -92,8 +91,7 @@ public class TransactionOperationDialog extends BaseDialogFragment {
             }
         });
 
-        AppPreferences appPreferences = new AppPreferences(requireContext());
-        gpapiConfiguration = appPreferences.getGPAPIConfiguration();
+        gpapiConfiguration = GPAPIConfiguration.createDefaultConfig();
 
         if (gpapiConfiguration.getChannel() == Channel.CardNotPresent) {
             tvManualEntryMode.setVisibility(View.VISIBLE);
@@ -106,7 +104,7 @@ public class TransactionOperationDialog extends BaseDialogFragment {
     }
 
     private void initSpinners() {
-        transactionTypeSpinner.init(TransactionOperationType.values());
+        transactionTypeSpinner.init(TransactionOperationType.getRoots());
         currenciesSpinner.init(getResources().getStringArray(R.array.currencies));
         multiTokenSpinner.init(PaymentMethodUsageMode.values());
         cardModelsSpinner = findViewById(R.id.cardModelsSpinner);
@@ -126,23 +124,23 @@ public class TransactionOperationDialog extends BaseDialogFragment {
         Fragment targetFragment = getTargetFragment();
         if (targetFragment instanceof TransactionOperationDialog.Callback) {
             TransactionOperationDialog.Callback callback = (TransactionOperationDialog.Callback) targetFragment;
-            TransactionOperationModel transactionOperationModel = new TransactionOperationModel();
-            boolean fingerPrint = cbFromFingerPrint.isChecked();
-            transactionOperationModel.setFingerPrintSelection(fingerPrint);
-            transactionOperationModel.setFingerprintMethodUsageMode(multiFingerPrintUsageMode.getSelectedOption());
-            transactionOperationModel.setCardNumber(etCardNumber.getText().toString());
-            transactionOperationModel.setExpiryMonth(Integer.parseInt(etExpiryMonth.getText().toString()));
-            transactionOperationModel.setExpiryYear(Integer.parseInt(etExpiryYear.getText().toString()));
-            transactionOperationModel.setCvnCvv(etCvnCvv.getText().toString());
-            transactionOperationModel.setAmount(amount == null ? new BigDecimal(0) : amount);
-            transactionOperationModel.setCurrency(currenciesSpinner.getSelectedOption());
-            transactionOperationModel.setTransactionOperationType(transactionTypeSpinner.getSelectedOption());
-            transactionOperationModel.setIdempotencyKey(etIdempotencyKey.getText().toString());
-            transactionOperationModel.setRequestMultiUseToken(cbRequestMultiUseToken.isChecked());
-            transactionOperationModel.setPaymentMethodUsageMode(multiTokenSpinner.getSelectedOption());
-            transactionOperationModel.setPaymentLinkId(etPaymentLinkId.getText().toString());
-            transactionOperationModel.setDynamicDescriptor(etDynamicDescriptor.getText().toString());
-            transactionOperationModel.setManualEntryMethodUsageMode(manualEntryModeSpinner.getSelectedOption());
+            TransactionOperationModel transactionOperationModel = new TransactionOperationModel(
+                    etCardNumber.getText().toString(),
+                    Integer.parseInt(etExpiryMonth.getText().toString()),
+                    Integer.parseInt(etExpiryYear.getText().toString()),
+                    etCvnCvv.getText().toString(),
+                    amount == null ? new BigDecimal(0) : amount,
+                    currenciesSpinner.getSelectedOption(),
+                    transactionTypeSpinner.getSelectedOption(),
+                    multiTokenSpinner.getSelectedOption(),
+                    cbRequestMultiUseToken.isChecked(),
+                    multiFingerPrintUsageMode.getSelectedOption(),
+                    etIdempotencyKey.getText().toString(),
+                    cbFromFingerPrint.isChecked(),
+                    etPaymentLinkId.getText().toString(),
+                    etDynamicDescriptor.getText().toString(),
+                    manualEntryModeSpinner.getSelectedOption()
+            );
             callback.onSubmitTransactionOperationModel(transactionOperationModel);
         }
         dismiss();

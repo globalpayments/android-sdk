@@ -12,7 +12,6 @@ import com.globalpayments.android.sdk.sample.gpapi.accesstoken.AccessTokenFragme
 import com.globalpayments.android.sdk.sample.gpapi.ach.AchFragment;
 import com.globalpayments.android.sdk.sample.gpapi.actions.actionsReport.ActionsReportFragment;
 import com.globalpayments.android.sdk.sample.gpapi.batch.closeBatch.CloseFragment;
-import com.globalpayments.android.sdk.sample.gpapi.configuration.GPAPIConfigurationFragment;
 import com.globalpayments.android.sdk.sample.gpapi.deposits.DepositsFragment;
 import com.globalpayments.android.sdk.sample.gpapi.digitalwallet.DigitalWalletFragment;
 import com.globalpayments.android.sdk.sample.gpapi.disputes.DisputesFragment;
@@ -34,8 +33,6 @@ public class GPAPIMainFragment extends BaseFragment {
     protected void initViews() {
         CustomToolbar customToolbar = findViewById(R.id.toolbar);
         customToolbar.setTitle(R.string.gp_api);
-        customToolbar.addAdditionalButton(R.drawable.ic_settings_24, v ->
-                show(R.id.gp_api_fragment_container, GPAPIConfigurationFragment.newInstance(true)));
 
         setButtonClickListener(R.id.accessTokenButton, new AccessTokenFragment());
         setButtonClickListener(R.id.transactionsButton, new TransactionFragment());

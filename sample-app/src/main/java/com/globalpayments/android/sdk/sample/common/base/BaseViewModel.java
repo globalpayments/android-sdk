@@ -34,7 +34,7 @@ public abstract class BaseViewModel extends ViewModel {
 
     public void showError(String errorMessage) {
         hideProgress();
-        error.setValue(errorMessage);
+        error.postValue(errorMessage);
     }
 
     public void showError(Exception exception) {

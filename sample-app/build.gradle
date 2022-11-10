@@ -1,24 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: "kotlin-android"
-
-Properties configProperties = new Properties()
-if (project.file("local.properties").exists()) {
-    configProperties.load(project.file("local.properties").newDataInputStream())
-} else {
-    configProperties.load(project.file("configuration.properties").newDataInputStream())
-}
-def appId = configProperties.getProperty("appId")
-def appKey = configProperties.getProperty("appKey")
-def serviceUrl = configProperties.getProperty("serviceUrl")
-def challengeNotificationUrl = configProperties.getProperty("challengeNotificationUrl")
-def methodNotificationUrl = configProperties.getProperty("methodNotificationUrl")
-def apiVersion = configProperties.getProperty("apiVersion")
-def tokenSecondsToExpire = configProperties.getProperty("tokenSecondsToExpire")
-def tokenIntervalToExpire = configProperties.getProperty("tokenIntervalToExpire")
-def country = configProperties.getProperty("country")
-def channel = configProperties.getProperty("channel")
-def environment = configProperties.getProperty("environment")
-
+apply from: 'envConfig.gradle'
 
 android {
     compileSdkVersion 32
@@ -28,20 +10,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 1
-        versionName "1.1.15"
-
-        buildConfigField "String", "APP_ID", "\"$appId\""
-        buildConfigField "String", "APP_KEY", "\"$appKey\""
-        buildConfigField "String", "SERVICE_URL", "\"$serviceUrl\""
-        buildConfigField "String", "CHALLENGE_NOTIFICATION_URL", "\"$challengeNotificationUrl\""
-        buildConfigField "String", "METHOD_NOTIFICATION_URL", "\"$methodNotificationUrl\""
-        buildConfigField "String", "API_VERSION", "\"$apiVersion\""
-        buildConfigField "Integer", "TOKEN_SECONDS_TO_EXPIRE", "$tokenSecondsToExpire"
-        buildConfigField "String", "TOKEN_INTERVAL_TO_EXPIRE", "\"$tokenIntervalToExpire\""
-        buildConfigField "String", "COUNTRY", "\"$country\""
-        buildConfigField "String", "CHANNEL", "\"$channel\""
-        buildConfigField "String", "ENVIRONMENT", "\"$environment\""
-
+        versionName "1.1.16"
     }
 
     compileOptions {
@@ -61,18 +30,19 @@ android {
 dependencies {
     implementation files("libs/3ds-sdk.aar")
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     // Google
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation "androidx.fragment:fragment-ktx:1.3.6"
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation "androidx.fragment:fragment-ktx:1.5.4"
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.7.0'
 
     // globalpayments-android-sdk
     implementation project(':globalpayments-android-sdk')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
 
     implementation 'com.google.android.gms:play-services-base:18.1.0'
     implementation 'org.slf4j:slf4j-simple:1.7.36'

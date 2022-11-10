@@ -7,10 +7,17 @@ public enum PaymentMethodUsageMode implements IStringConstant {
     Single_use_token("SINGLE"),
     Multiple_use_token("MULTIPLE");
 
-    String value;
+    final String value;
+
     PaymentMethodUsageMode(String value) {
         this.value = value;
     }
-    public String getValue() { return this.value; }
-    public byte[] getBytes() { return this.value.getBytes(); }
+
+    public String getValue() {
+        return this.value;
+    }
+
+    public byte[] getBytes() {
+        return this.value.getBytes();
+    }
 }
