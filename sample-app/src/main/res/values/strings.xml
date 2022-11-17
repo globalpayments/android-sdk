@@ -70,6 +70,7 @@
     <string name="default_amount">15.99</string>
     <string name="transaction_data">Transaction data</string>
     <string name="transaction_type">Transaction type:</string>
+    <string name="fraud_mode">Fraud mode:</string>
     <string name="select_multi_token_type">Tokenize card before transaction:</string>
     <string name="token_usage_mode">Token usage mode</string>
     <string name="finger_print_usage_mode">Finger Print usage mode</string>
@@ -337,4 +338,6 @@
     <string name="ach">ACH</string>
     <string name="ebt">EBT</string>
     <string name="get_payment_method_by_card">By Card</string>
+    <string name="filter_mode">Filter Mode</string>
+    <string name="filter_result">Filter Result</string>
 </resources>

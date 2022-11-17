@@ -113,14 +113,14 @@
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
             android:text="@string/manual_entry_mode"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
             android:id="@+id/manualEntryModeSpinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1.5"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             style="@style/Dialog.Label"
@@ -179,6 +179,19 @@
             android:layout_columnWeight="1.5" />
 
         <TextView
+            style="@style/Dialog.Label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:text="@string/fraud_mode" />
+
+        <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
+            android:id="@+id/fraudModeSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1.5" />
+
+        <TextView
             android:id="@+id/tvLabelRequestMultiUseToken"
             style="@style/Dialog.Label"
             android:layout_width="0dp"
@@ -217,15 +230,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1"
-            android:visibility="gone"
-            android:text="@string/finger_print_usage_mode" />
+            android:text="@string/finger_print_usage_mode"
+            android:visibility="gone" />
 
         <com.globalpayments.android.sdk.sample.common.views.CustomSpinner
             android:id="@+id/multiFingerPrintUsageMode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_columnWeight="1.5"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             style="@style/Dialog.Label"

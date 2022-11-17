@@ -6,6 +6,12 @@
 
 ## Latest Version
 
+## v1.1.17 (11/17/2022)
+
+### Enhancements:
+
+* Add fraud management example
+
 ## v1.1.16 (11/10/2022)
 
 ### Enhancements:

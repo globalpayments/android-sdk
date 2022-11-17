@@ -1,12 +1,16 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model
 
-import java.util.*
-
 enum class TransactionOperationType(val parent: TransactionOperationType? = null) {
     Authorization,
         Capture(Authorization),
             RefundCapture(Capture),
             ReverseCapture(Capture),
+        HoldAuthorization(Authorization),
+            ReleaseHoldAuthorization(HoldAuthorization),
+            ReverseHoldAuthorization(HoldAuthorization),
+        PendingReviewAuthorization(Authorization),
+            HoldPendingReviewAuthorization(PendingReviewAuthorization),
+            CapturePendingReviewAuthorization(PendingReviewAuthorization),
         ReverseAuthorization(Authorization),
             Reauthorize(ReverseAuthorization),
         Increment(Authorization),
@@ -15,10 +19,14 @@ enum class TransactionOperationType(val parent: TransactionOperationType? = null
     Sale,
         RefundSale(Sale),
         ReverseSale(Sale),
+        HoldSale(Sale),
+            ReleaseHoldSale(HoldSale),
+        PendingReviewSale(Sale),
+            HoldPendingSale(PendingReviewSale),
     Refund,
         ReverseRefund(Refund);
 
-    val children = LinkedList<TransactionOperationType>()
+    val children = mutableListOf<TransactionOperationType>()
 
     init {
         if (this.parent != null) {

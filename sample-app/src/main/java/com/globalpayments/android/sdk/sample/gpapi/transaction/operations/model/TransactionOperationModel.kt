@@ -1,5 +1,6 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model
 
+import com.global.api.entities.enums.FraudFilterMode
 import com.globalpayments.android.sdk.sample.utils.FingerprintMethodUsageMode
 import com.globalpayments.android.sdk.sample.utils.ManualEntryMethodUsageMode
 import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode
@@ -21,4 +22,5 @@ data class TransactionOperationModel(
     val paymentLinkId: String? = null,
     val dynamicDescriptor: String? = null,
     val manualEntryMethodUsageMode: ManualEntryMethodUsageMode?,
+    val fraudMode: FraudFilterMode = FraudFilterMode.None
 )

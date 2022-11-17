@@ -5,10 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.global.api.ServicesContainer
 import com.global.api.builders.AuthorizationBuilder
 import com.global.api.entities.*
-import com.global.api.entities.enums.Channel
-import com.global.api.entities.enums.LodgingItemType
-import com.global.api.entities.enums.ManualEntryMethod
-import com.global.api.entities.enums.PaymentMethodProgram
+import com.global.api.entities.enums.*
 import com.global.api.gateways.GpApiConnector
 import com.global.api.paymentMethods.CreditCardData
 import com.global.api.utils.DateUtils
@@ -57,7 +54,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
             FingerPrintUsageMethod.fingerPrintSelectedOption(transactionOperationModel.fingerprintMethodUsageMode)
         else
             null
-
+        transactionType.postValue(null)
         when (transactionOperationModel.transactionOperationType) {
             TransactionOperationType.Authorization -> authorize(transactionOperationModel, cardData, customer)
             TransactionOperationType.Sale -> sale(transactionOperationModel, cardData, customer)
@@ -149,11 +146,32 @@ class TransactionOperationsViewModel : BaseViewModel() {
                 .withDynamicDescriptor(transactionOperationModel.dynamicDescriptor)
                 .withPaymentLinkId(transactionOperationModel.paymentLinkId)
                 .withCustomerIfNotNull(customer)
+                .withFraudIfNotNone(transactionOperationModel.fraudMode)
                 .withRequestMultiUseToken(transactionOperationModel.requestMultiUseToken)
                 .withIdempotencyKey(transactionOperationModel.idempotencyKey)
                 .execute(Constants.DEFAULT_GPAPI_CONFIG)
+
             transactionLiveData.postValue(transaction)
-            transactionType.postValue(TransactionOperationType.Authorization)
+            val filterMode = transaction
+                ?.fraudFilterResponse
+                ?.fraudResponseMode
+                ?.let { mode -> FraudFilterMode.values().firstOrNull { it.value == mode } }
+            val filterResult = transaction
+                ?.fraudFilterResponse
+                ?.fraudResponseResult
+                ?.let { result -> FraudFilterResult.values().firstOrNull { it.value == result } }
+
+            if (filterResult == FraudFilterResult.BLOCK) {
+                showError("Fraud blocked")
+                return@launchPrintingError
+            }
+
+            val transactionType = when {
+                FraudFilterMode.Passive == filterMode && FraudFilterResult.HOLD == filterResult -> TransactionOperationType.PendingReviewAuthorization
+                FraudFilterResult.HOLD == filterResult -> TransactionOperationType.HoldAuthorization
+                else -> TransactionOperationType.Authorization
+            }
+            this.transactionType.postValue(transactionType)
         }
     }
 
@@ -163,16 +181,37 @@ class TransactionOperationsViewModel : BaseViewModel() {
         customer: Customer?
     ) {
         viewModelScope.launchPrintingError {
-            val transaction = creditCardData.charge(transactionOperationModel.amount)
+            val transaction = creditCardData
+                .charge(transactionOperationModel.amount)
                 .withCurrency(transactionOperationModel.currency)
                 .withDynamicDescriptor(transactionOperationModel.dynamicDescriptor)
                 .withPaymentLinkId(transactionOperationModel.paymentLinkId)
                 .withCustomerIfNotNull(customer)
+                .withFraudIfNotNone(transactionOperationModel.fraudMode)
                 .withRequestMultiUseToken(transactionOperationModel.requestMultiUseToken)
                 .withIdempotencyKey(transactionOperationModel.idempotencyKey)
                 .execute(Constants.DEFAULT_GPAPI_CONFIG)
+
             transactionLiveData.postValue(transaction)
-            transactionType.postValue(TransactionOperationType.Sale)
+            val filterMode = transaction
+                ?.fraudFilterResponse
+                ?.fraudResponseMode
+                ?.let { mode -> FraudFilterMode.values().firstOrNull { it.value == mode } }
+            val filterResult = transaction
+                ?.fraudFilterResponse
+                ?.fraudResponseResult
+                ?.let { result -> FraudFilterResult.values().firstOrNull { it.value == result } }
+
+            if (filterResult == FraudFilterResult.BLOCK) {
+                showError("Fraud blocked")
+                return@launchPrintingError
+            }
+            val transactionType = when {
+                FraudFilterMode.Passive == filterMode && FraudFilterResult.HOLD == filterResult -> TransactionOperationType.PendingReviewSale
+                FraudFilterResult.HOLD == filterResult -> TransactionOperationType.HoldSale
+                else -> TransactionOperationType.Sale
+            }
+            this.transactionType.postValue(transactionType)
         }
     }
 
@@ -357,6 +396,77 @@ class TransactionOperationsViewModel : BaseViewModel() {
         }
     }
 
+    fun releaseAuthorizationFraud() {
+        val lastTransaction = transactionLiveData.value ?: return
+        viewModelScope.launchPrintingError {
+            val transaction = lastTransaction
+                .release()
+                .withReasonCode(ReasonCode.FalsePositive)
+                .execute(Constants.DEFAULT_GPAPI_CONFIG)
+
+            transactionLiveData.postValue(transaction)
+            transactionType.postValue(TransactionOperationType.Authorization)
+        }
+    }
+
+    fun reverseAuthorizationFraud() {
+        val lastTransaction = transactionLiveData.value ?: return
+        viewModelScope.launchPrintingError {
+            val transaction = lastTransaction
+                .reverse()
+                .execute(Constants.DEFAULT_GPAPI_CONFIG)
+            transactionLiveData.postValue(transaction)
+            transactionType.postValue(null)
+        }
+    }
+
+    fun releaseSaleFraud() {
+        val lastTransaction = transactionLiveData.value ?: return
+        viewModelScope.launchPrintingError {
+            val transaction = lastTransaction
+                .release()
+                .withReasonCode(ReasonCode.FalsePositive)
+                .execute(Constants.DEFAULT_GPAPI_CONFIG)
+            transactionLiveData.postValue(transaction)
+            transactionType.postValue(TransactionOperationType.Sale)
+        }
+    }
+
+    fun holdAuthorization() {
+        val lastTransaction = transactionLiveData.value ?: return
+        viewModelScope.launchPrintingError {
+            val transaction = lastTransaction
+                .hold()
+                .withReasonCode(ReasonCode.Fraud)
+                .execute(Constants.DEFAULT_GPAPI_CONFIG)
+            transactionLiveData.postValue(transaction)
+            transactionType.postValue(TransactionOperationType.HoldAuthorization)
+        }
+    }
+
+    fun captureAuthorization() {
+        val lastTransaction = transactionLiveData.value ?: return
+        viewModelScope.launchPrintingError {
+            val transaction = lastTransaction
+                .capture()
+                .execute(Constants.DEFAULT_GPAPI_CONFIG)
+            transactionLiveData.postValue(transaction)
+            transactionType.postValue(TransactionOperationType.Sale)
+        }
+    }
+
+    fun holdSale() {
+        val lastTransaction = transactionLiveData.value ?: return
+        viewModelScope.launchPrintingError {
+            val transaction = lastTransaction
+                .hold()
+                .withReasonCode(ReasonCode.Fraud)
+                .execute(Constants.DEFAULT_GPAPI_CONFIG)
+            transactionLiveData.postValue(transaction)
+            transactionType.postValue(TransactionOperationType.HoldSale)
+        }
+    }
+
     private fun CoroutineScope.launchPrintingError(block: () -> Unit) {
         launch(Dispatchers.IO) {
             showProgress()
@@ -372,5 +482,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     private fun AuthorizationBuilder.withCustomerIfNotNull(customer: Customer?) =
         if (customer != null) this.withCustomerData(customer) else this
 
+    private fun AuthorizationBuilder.withFraudIfNotNone(fraudFilterMode: FraudFilterMode) =
+        if (fraudFilterMode != FraudFilterMode.None) this.withFraudFilter(fraudFilterMode) else this
 
 }

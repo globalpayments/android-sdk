@@ -66,8 +66,12 @@ public class GPAPIConfigurationUtils {
         androidHeader.put("x-gp-sdk", "Android;version=" + BuildConfig.VERSION_NAME);
 
         String merchantId = gpapiConfiguration.getMerchantId();
+        String transactionProcessingAccountName = gpapiConfiguration.getTransactionProcessingAccountName();
+        String tokenizationAccountName = gpapiConfiguration.getTokenizationAccountName();
         if (isNotNullOrBlank(merchantId)) {
             gpApiConfig.setMerchantId(merchantId);
+        }
+        if (isNotNullOrBlank(transactionProcessingAccountName) || isNotNullOrBlank(tokenizationAccountName)) {
             AccessTokenInfo accessTokenInfo = new AccessTokenInfo();
             accessTokenInfo.setTransactionProcessingAccountName(gpapiConfiguration.getTransactionProcessingAccountName());
             accessTokenInfo.setTokenizationAccountName(gpapiConfiguration.getTokenizationAccountName());

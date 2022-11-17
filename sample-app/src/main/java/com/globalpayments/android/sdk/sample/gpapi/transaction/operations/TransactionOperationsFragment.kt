@@ -11,9 +11,11 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.global.api.ServicesContainer
+import com.global.api.entities.FraudManagementResponse
 import com.global.api.entities.ThreeDSecure
 import com.global.api.entities.Transaction
 import com.global.api.entities.enums.Channel
+import com.global.api.entities.enums.FraudFilterResult
 import com.global.api.gateways.GpApiConnector
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.Constants
@@ -89,7 +91,7 @@ class TransactionOperationsFragment : BaseFragment(), TransactionOperationDialog
                 errorTextView.text = errorMessage
             }
         }
-        transactionOperationsViewModel.transactionLiveData.observe(viewLifecycleOwner) { transaction: Transaction? ->
+        transactionOperationsViewModel.transactionLiveData.observe(viewLifecycleOwner) { transaction: Transaction ->
             ViewUtils.hideView(errorTextView)
             ViewUtils.hideView(webView)
             ViewUtils.showView(cvTransaction)
@@ -107,7 +109,7 @@ class TransactionOperationsFragment : BaseFragment(), TransactionOperationDialog
                 errorTextView.text = result
             }
         }
-        transactionOperationsViewModel.transactionLiveDataError.observe(viewLifecycleOwner) { result: ThreeDSecure? ->
+        transactionOperationsViewModel.transactionLiveDataError.observe(viewLifecycleOwner) { result: ThreeDSecure ->
             ViewUtils.showView(errorTextView)
             ViewUtils.showView(cvTransaction)
             ViewUtils.hideView(progressBar)
@@ -120,11 +122,30 @@ class TransactionOperationsFragment : BaseFragment(), TransactionOperationDialog
         if (transactionOperationType == null) {
             return
         }
-        val transactionChildren = transactionOperationType.children
+        val fraudFilterResponse = transactionOperationsViewModel
+            .transactionLiveData
+            .value
+            ?.fraudFilterResponse
+        val transactionChildren = transactionOperationType.children.filterAgainstFraudResult(fraudFilterResponse)
         for (operation in transactionChildren) {
             val button = createButtonForTransactionOperationType(operation) ?: continue
             actionButtonLayout.addView(button)
         }
+    }
+
+    private fun List<TransactionOperationType>.filterAgainstFraudResult(fraudFilterResponse: FraudManagementResponse?): List<TransactionOperationType> {
+        val filterResult = fraudFilterResponse?.fraudResponseResult?.asFraudFilterResult()
+        return this
+            .asSequence()
+            .filter { it != TransactionOperationType.PendingReviewSale && it != TransactionOperationType.PendingReviewAuthorization }
+            .filter {
+                if (FraudFilterResult.PASS != filterResult) {
+                    it != TransactionOperationType.HoldSale && it != TransactionOperationType.HoldAuthorization
+                } else {
+                    true
+                }
+            }
+            .toList()
     }
 
     private fun createButtonForTransactionOperationType(transactionOperationType: TransactionOperationType): Button? {
@@ -165,7 +186,27 @@ class TransactionOperationsFragment : BaseFragment(), TransactionOperationDialog
             TransactionOperationType.RefundSale -> createButton("Refund", transactionOperationsViewModel::refundSale)
             TransactionOperationType.ReverseSale -> createButton("Reverse", transactionOperationsViewModel::reverseSale)
             TransactionOperationType.ReverseRefund -> createButton("Reverse", transactionOperationsViewModel::reverseRefund)
+
+            TransactionOperationType.ReleaseHoldAuthorization -> createButton("Release", transactionOperationsViewModel::releaseAuthorizationFraud)
+            TransactionOperationType.ReverseHoldAuthorization -> createButton("Reverse", transactionOperationsViewModel::reverseAuthorizationFraud)
+
+            TransactionOperationType.ReleaseHoldSale -> createButton("Release", transactionOperationsViewModel::releaseSaleFraud)
+
+            TransactionOperationType.HoldAuthorization -> createButton("Hold", transactionOperationsViewModel::holdAuthorization)
+            TransactionOperationType.HoldSale -> createButton("Hold", transactionOperationsViewModel::holdSale)
+
+            TransactionOperationType.HoldPendingReviewAuthorization -> createButton("Hold", transactionOperationsViewModel::holdAuthorization)
+            TransactionOperationType.CapturePendingReviewAuthorization -> createButton(
+                "Capture",
+                transactionOperationsViewModel::captureAuthorization
+            )
+
+            TransactionOperationType.PendingReviewSale -> createButton("Hold", transactionOperationsViewModel::releaseSaleFraud)
             else -> null
         }
+    }
+
+    private fun String.asFraudFilterResult(): FraudFilterResult? {
+        return FraudFilterResult.values().firstOrNull { it.value == this }
     }
 }
