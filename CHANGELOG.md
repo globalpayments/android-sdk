@@ -6,6 +6,13 @@
 
 ## Latest Version
 
+## v1.1.18 (12/12/2022)
+
+### Enhancements:
+
+* Add paylink example
+* Add pagination to actions
+
 ## v1.1.17 (11/17/2022)
 
 ### Enhancements:

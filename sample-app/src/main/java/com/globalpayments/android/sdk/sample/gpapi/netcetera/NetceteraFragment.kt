@@ -10,6 +10,7 @@ import com.global.api.entities.ThreeDSecure
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.Constants.CHALLENGE_REQUIRED
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment
+import com.globalpayments.android.sdk.sample.common.views.CustomToolbar
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessModel
@@ -34,6 +35,11 @@ class NetceteraFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val customToolbar = findViewById<CustomToolbar>(R.id.toolbar)
+        customToolbar.setTitle(R.string.hosted_fields)
+        customToolbar.setOnBackButtonListener { close() }
+
         view.findViewById<View>(R.id.button_pay).setOnClickListener {
             val amount = view.findViewById<EditText>(R.id.amount).text.toString()
             if (amount.isBlank()) return@setOnClickListener

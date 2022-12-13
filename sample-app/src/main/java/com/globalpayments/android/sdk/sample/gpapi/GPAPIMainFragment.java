@@ -17,6 +17,7 @@ import com.globalpayments.android.sdk.sample.gpapi.digitalwallet.DigitalWalletFr
 import com.globalpayments.android.sdk.sample.gpapi.disputes.DisputesFragment;
 import com.globalpayments.android.sdk.sample.gpapi.ebt.EbtFragment;
 import com.globalpayments.android.sdk.sample.gpapi.netcetera.NetceteraFragment;
+import com.globalpayments.android.sdk.sample.gpapi.paylink.PaylinkFragment;
 import com.globalpayments.android.sdk.sample.gpapi.paymentmethod.PaymentMethodsFragment;
 import com.globalpayments.android.sdk.sample.gpapi.paypal.PaypalFragment;
 import com.globalpayments.android.sdk.sample.gpapi.transaction.TransactionFragment;
@@ -47,6 +48,7 @@ public class GPAPIMainFragment extends BaseFragment {
         setButtonClickListener(R.id.paypal_button, new PaypalFragment());
         setButtonClickListener(R.id.ach_button, new AchFragment());
         setButtonClickListener(R.id.ebt_button, new EbtFragment());
+        setButtonClickListener(R.id.paylink_button, new PaylinkFragment());
     }
 
     private void setButtonClickListener(@IdRes int buttonId, Fragment fragment) {

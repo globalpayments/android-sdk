@@ -83,7 +83,7 @@ public class GPAPIConfigurationUtils {
         gpApiConfig.setMerchantId(gpapiConfiguration.getMerchantId());
         gpApiConfig.setDynamicHeaders(androidHeader);
 
-        gpApiConfig.setMerchantId(gpapiConfiguration.getMerchantId());
+        gpApiConfig.setCountry(gpapiConfiguration.getSelectedCountry());
         gpApiConfig.setChallengeNotificationUrl("https://enp4qhvjseljg.x.pipedream.net/");
         gpApiConfig.setMethodNotificationUrl("https://enp4qhvjseljg.x.pipedream.net/");
         gpApiConfig.setMerchantContactUrl("https://enp4qhvjseljg.x.pipedream.net/");

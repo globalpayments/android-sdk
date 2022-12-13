@@ -1,7 +1,6 @@
 package com.globalpayments.android.sdk.sample.gpapi.transaction.operations
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.global.api.ServicesContainer
 import com.global.api.builders.AuthorizationBuilder
 import com.global.api.entities.*
@@ -16,9 +15,7 @@ import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.
 import com.globalpayments.android.sdk.sample.utils.FingerPrintUsageMethod
 import com.globalpayments.android.sdk.sample.utils.ManualEntryMethodUsageMode
 import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.globalpayments.android.sdk.sample.utils.launchPrintingError
 import org.joda.time.DateTime
 import java.math.BigDecimal
 
@@ -139,7 +136,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
         creditCardData: CreditCardData,
         customer: Customer?
     ) {
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = creditCardData
                 .authorize(transactionOperationModel.amount)
                 .withCurrency(transactionOperationModel.currency)
@@ -180,7 +177,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
         creditCardData: CreditCardData,
         customer: Customer?
     ) {
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = creditCardData
                 .charge(transactionOperationModel.amount)
                 .withCurrency(transactionOperationModel.currency)
@@ -220,7 +217,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
         creditCardData: CreditCardData,
         customer: Customer?
     ) {
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = creditCardData
                 .refund(transactionOperationModel.amount)
                 .withCurrency(transactionOperationModel.currency)
@@ -237,7 +234,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     fun captureTransaction() {
         val lastTransaction = transactionLiveData.value ?: return
         val transactionOperationModel = transactionOperationModel ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .capture(transactionOperationModel.amount)
                 .withIdempotencyKey(transactionOperationModel.idempotencyKey)
@@ -250,7 +247,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     fun refundCapture() {
         val lastTransaction = transactionLiveData.value ?: return
         val transactionOperationModel = transactionOperationModel ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .refund(transactionOperationModel.amount)
                 .withIdempotencyKey(transactionOperationModel.idempotencyKey)
@@ -264,7 +261,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     fun reverseCapture() {
         val lastTransaction = transactionLiveData.value ?: return
         val transactionOperationModel = transactionOperationModel ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .reverse(transactionOperationModel.amount)
                 .withIdempotencyKey(transactionOperationModel.idempotencyKey)
@@ -278,7 +275,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     fun reverseAuthorization() {
         val lastTransaction = transactionLiveData.value ?: return
         val transactionOperationModel = transactionOperationModel ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .reverse(transactionOperationModel.amount)
                 .withIdempotencyKey(transactionOperationModel.idempotencyKey)
@@ -291,7 +288,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     fun reauthorize() {
         val lastTransaction = transactionLiveData.value ?: return
         val transactionOperationModel = transactionOperationModel ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .reauthorize(transactionOperationModel.amount)
                 .execute(Constants.DEFAULT_GPAPI_CONFIG)
@@ -303,8 +300,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     fun increment() {
         val lastTransaction = transactionLiveData.value ?: return
         val transactionOperationModel = transactionOperationModel ?: return
-        viewModelScope.launchPrintingError {
-
+        launchPrintingError {
             val lodgingInfo = LodgingData()
             lodgingInfo.bookingReference = "s9RpaDwXq1sPRkbP"
             lodgingInfo.stayDuration = 10
@@ -331,7 +327,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     fun captureIncrement() {
         val lastTransaction = transactionLiveData.value ?: return
         val transactionOperationModel = transactionOperationModel ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .capture()
                 .withIdempotencyKey(transactionOperationModel.idempotencyKey)
@@ -344,7 +340,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     fun reverseIncrement() {
         val lastTransaction = transactionLiveData.value ?: return
         val transactionOperationModel = transactionOperationModel ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .reverse()
                 .withIdempotencyKey(transactionOperationModel.idempotencyKey)
@@ -357,7 +353,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     fun refundSale() {
         val saleTransaction = transactionLiveData.value ?: return
         val transactionOperationModel = transactionOperationModel ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = saleTransaction
                 .refund(transactionOperationModel.amount)
                 .withIdempotencyKey(transactionOperationModel.idempotencyKey)
@@ -371,7 +367,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     fun reverseSale() {
         val saleTransaction = transactionLiveData.value ?: return
         val transactionOperationModel = transactionOperationModel ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = saleTransaction
                 .reverse(transactionOperationModel.amount)
                 .withIdempotencyKey(transactionOperationModel.idempotencyKey)
@@ -385,7 +381,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     fun reverseRefund() {
         val refundTransaction = transactionLiveData.value ?: return
         val transactionOperationModel = transactionOperationModel ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = refundTransaction
                 .reverse(transactionOperationModel.amount)
                 .withIdempotencyKey(transactionOperationModel.idempotencyKey)
@@ -398,7 +394,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
 
     fun releaseAuthorizationFraud() {
         val lastTransaction = transactionLiveData.value ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .release()
                 .withReasonCode(ReasonCode.FalsePositive)
@@ -411,7 +407,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
 
     fun reverseAuthorizationFraud() {
         val lastTransaction = transactionLiveData.value ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .reverse()
                 .execute(Constants.DEFAULT_GPAPI_CONFIG)
@@ -422,7 +418,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
 
     fun releaseSaleFraud() {
         val lastTransaction = transactionLiveData.value ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .release()
                 .withReasonCode(ReasonCode.FalsePositive)
@@ -434,7 +430,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
 
     fun holdAuthorization() {
         val lastTransaction = transactionLiveData.value ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .hold()
                 .withReasonCode(ReasonCode.Fraud)
@@ -446,7 +442,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
 
     fun captureAuthorization() {
         val lastTransaction = transactionLiveData.value ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .capture()
                 .execute(Constants.DEFAULT_GPAPI_CONFIG)
@@ -457,25 +453,13 @@ class TransactionOperationsViewModel : BaseViewModel() {
 
     fun holdSale() {
         val lastTransaction = transactionLiveData.value ?: return
-        viewModelScope.launchPrintingError {
+        launchPrintingError {
             val transaction = lastTransaction
                 .hold()
                 .withReasonCode(ReasonCode.Fraud)
                 .execute(Constants.DEFAULT_GPAPI_CONFIG)
             transactionLiveData.postValue(transaction)
             transactionType.postValue(TransactionOperationType.HoldSale)
-        }
-    }
-
-    private fun CoroutineScope.launchPrintingError(block: () -> Unit) {
-        launch(Dispatchers.IO) {
-            showProgress()
-            try {
-                block()
-                hideProgress()
-            } catch (exception: Exception) {
-                showError(exception)
-            }
         }
     }
 

@@ -5,20 +5,22 @@ import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.global.api.entities.Address
 import com.global.api.entities.Customer
 import com.global.api.entities.enums.AccountType
 import com.global.api.entities.enums.SecCode
 import com.globalpayments.android.sdk.sample.R
+import com.globalpayments.android.sdk.sample.common.base.BaseFragment
+import com.globalpayments.android.sdk.sample.common.views.CustomToolbar
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
+import com.globalpayments.android.sdk.sample.utils.bindView
 import java.math.BigDecimal
 import java.util.*
 
 
-class AchFragment : Fragment(R.layout.fragment_ach) {
+class AchFragment : BaseFragment() {
 
     private val achViewModel: AchViewModel by viewModels()
 
@@ -50,8 +52,12 @@ class AchFragment : Fragment(R.layout.fragment_ach) {
 
     private val btnPlaceOrder: Button by lazy { requireView().findViewById(R.id.btn_place_order) }
 
+    private val customToolbar: CustomToolbar by bindView(R.id.toolbar)
+
     private lateinit var progressBar: ProgressDialog
 
+
+    override fun getLayoutId(): Int = R.layout.fragment_ach
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,24 +70,23 @@ class AchFragment : Fragment(R.layout.fragment_ach) {
             openCalendar()
         }
         achViewModel.successTransaction.observe(viewLifecycleOwner) {
-            TransactionSuccessDialog.newInstance(it)
-                .show(childFragmentManager, TransactionSuccessDialog.TAG)
+            TransactionSuccessDialog.newInstance(it).show(childFragmentManager, TransactionSuccessDialog.TAG)
         }
         achViewModel.errorTransaction.observe(viewLifecycleOwner) {
-            TransactionErrorDialog.newInstance(it)
-                .show(childFragmentManager, TransactionErrorDialog.TAG)
+            TransactionErrorDialog.newInstance(it).show(childFragmentManager, TransactionErrorDialog.TAG)
         }
         progressBar = ProgressDialog(requireContext()).apply {
             this.setTitle("Operation in progress")
         }
         achViewModel.progressStatus.observe(viewLifecycleOwner) { if (it) progressBar.show() else progressBar.dismiss() }
+
+        customToolbar.setTitle(R.string.ach)
+        customToolbar.setOnBackButtonListener { close() }
     }
 
     private fun setupAccountTypeSpinner() {
         ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            AccountType.values().map(AccountType::name)
+            requireContext(), android.R.layout.simple_spinner_item, AccountType.values().map(AccountType::name)
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spAccountType.setAdapter(adapter)
@@ -95,9 +100,7 @@ class AchFragment : Fragment(R.layout.fragment_ach) {
 
     private fun setupSecCodeSpinner() {
         ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            SecCode.values().map(SecCode::name)
+            requireContext(), android.R.layout.simple_spinner_item, SecCode.values().map(SecCode::name)
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spSecCode.setAdapter(adapter)
@@ -115,9 +118,7 @@ class AchFragment : Fragment(R.layout.fragment_ach) {
         val month = calendar.get(Calendar.MONTH)
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
         val timePickerDialog = DatePickerDialog(
-            requireContext(),
-            { _, y, m, d -> showDate(y, m, d) },
-            year, month, dayOfMonth
+            requireContext(), { _, y, m, d -> showDate(y, m, d) }, year, month, dayOfMonth
         )
         timePickerDialog.show()
     }
@@ -155,13 +156,7 @@ class AchFragment : Fragment(R.layout.fragment_ach) {
         }
 
         achViewModel.makePayment(
-            amount,
-            accountHolderName,
-            routingNumber,
-            accountNumber,
-            billingAddress,
-            customer,
-            orderType
+            amount, accountHolderName, routingNumber, accountNumber, billingAddress, customer, orderType
         )
     }
 }

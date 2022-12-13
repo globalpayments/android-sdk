@@ -340,4 +340,7 @@
     <string name="get_payment_method_by_card">By Card</string>
     <string name="filter_mode">Filter Mode</string>
     <string name="filter_result">Filter Result</string>
+    <string name="paylink">Paylink</string>
+    <string name="single_payer">Single Payer</string>
+    <string name="multiple_payer">Multiple Payer</string>
 </resources>

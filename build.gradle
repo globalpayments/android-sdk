@@ -24,7 +24,7 @@ allprojects {
 //        mavenLocal()
     }
 
-    tasks.withType(Javadoc){
+    tasks.withType(Javadoc) {
         excludes = ['**/*.kt'] // < ---- Exclude all kotlin files from javadoc file.
     }
 }

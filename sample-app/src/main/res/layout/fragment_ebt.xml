@@ -4,15 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.globalpayments.android.sdk.sample.common.views.CustomToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Pay with EBT"
-        app:titleTextColor="@android:color/white" />
+        android:layout_height="wrap_content" />
 
     <ScrollView
         android:id="@+id/sv_input"

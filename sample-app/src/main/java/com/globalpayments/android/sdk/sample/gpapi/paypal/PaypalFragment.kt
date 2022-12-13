@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment
+import com.globalpayments.android.sdk.sample.common.views.CustomToolbar
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessModel
@@ -42,10 +43,14 @@ class PaypalFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val customToolbar = findViewById<CustomToolbar>(R.id.toolbar)
+        customToolbar.setTitle(R.string.paypal)
+        customToolbar.setOnBackButtonListener { close() }
+
         val button = view.findViewById<AppCompatButton>(R.id.button_pay)
         button.setOnClickListener {
             val stringAmount =
-                    amountInput.text.toString().takeIf { it.isNotBlank() } ?: return@setOnClickListener
+                amountInput.text.toString().takeIf { it.isNotBlank() } ?: return@setOnClickListener
             val amount = BigDecimal(stringAmount)
             paypalViewModel.makePayment(paypalScheme, paypalHost, amount)
         }

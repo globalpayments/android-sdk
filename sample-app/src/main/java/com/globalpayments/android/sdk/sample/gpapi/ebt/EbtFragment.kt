@@ -6,15 +6,14 @@ import android.view.View
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.ScrollView
-import androidx.appcompat.widget.Toolbar
-
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment
+import com.globalpayments.android.sdk.sample.common.views.CustomToolbar
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
+import com.globalpayments.android.sdk.sample.utils.bindView
 import java.math.BigDecimal
 import java.util.*
 
@@ -22,7 +21,7 @@ class EbtFragment : BaseFragment() {
 
     private val viewModel: EbtViewModel by viewModels()
 
-    private val toolbar: Toolbar by lazy { requireView().findViewById(R.id.toolbar) }
+    private val customToolbar: CustomToolbar by bindView(R.id.toolbar)
 
     private val svInput: ScrollView by lazy { requireView().findViewById(R.id.sv_input) }
     private val rgTransactionType: RadioGroup by lazy { requireView().findViewById(R.id.rg_transaction_type) }
@@ -54,6 +53,15 @@ class EbtFragment : BaseFragment() {
         rgRefundReverse.setOnCheckedChangeListener { _, checkedId ->
             etRefundAmount.isVisible = checkedId == R.id.rb_refund_transaction
         }
+
+        customToolbar.setTitle(R.string.ebt)
+        customToolbar.setOnBackButtonListener {
+            if (viewModel.transactionToRefund.value != null) {
+                viewModel.transactionToRefund.postValue(null)
+                return@setOnBackButtonListener
+            }
+            close()
+        }
     }
 
     override fun initSubscriptions() {
@@ -72,12 +80,7 @@ class EbtFragment : BaseFragment() {
             if (transaction == null) {
                 llRefundReverse.isVisible = false
                 svInput.isVisible = true
-                toolbar.navigationIcon = null
                 return@observe
-            }
-            toolbar.apply {
-                navigationIcon = ResourcesCompat.getDrawable(resources, R.drawable.back_arrow, null)
-                setNavigationOnClickListener { viewModel.transactionToRefund.postValue(null) }
             }
             svInput.isVisible = false
             etTransactionId.setText(transaction.transactionId)
@@ -113,10 +116,10 @@ class EbtFragment : BaseFragment() {
 
     private fun areFieldsCompleted(): Boolean {
         return etAmount.isFieldCompleted() &&
-                etCardNumber.isFieldCompleted() &&
-                etCardExpirationDate.isFieldCompleted() &&
-                etPinBlock.isFieldCompleted() &&
-                etAccountHolder.isFieldCompleted()
+            etCardNumber.isFieldCompleted() &&
+            etCardExpirationDate.isFieldCompleted() &&
+            etPinBlock.isFieldCompleted() &&
+            etAccountHolder.isFieldCompleted()
     }
 
     private fun EditText.isFieldCompleted(): Boolean {

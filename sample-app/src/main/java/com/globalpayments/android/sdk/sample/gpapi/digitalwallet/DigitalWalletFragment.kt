@@ -12,8 +12,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment
+import com.globalpayments.android.sdk.sample.common.views.CustomToolbar
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
+import com.globalpayments.android.sdk.sample.utils.bindView
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.ResolvableApiException
@@ -26,27 +28,29 @@ class DigitalWalletFragment : BaseFragment() {
     private lateinit var googlePayButton: View
     private val model: DigitalWalletViewModel by viewModels()
 
+    private val customToolbar: CustomToolbar by bindView(R.id.toolbar)
+
     private val progressBar by lazy { ProgressDialog(requireContext()).apply { setTitle("Payment in progress") } }
 
     // Handle potential conflict from calling loadPaymentData
-    private val resolvePaymentForResult =
-        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result: ActivityResult ->
-            when (result.resultCode) {
-                AppCompatActivity.RESULT_OK ->
-                    result.data?.let { intent ->
-                        PaymentData.getFromIntent(intent)?.let(::handlePaymentSuccess)
-                    }
+    private val resolvePaymentForResult = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result: ActivityResult ->
+        when (result.resultCode) {
+            AppCompatActivity.RESULT_OK -> result.data?.let { intent ->
+                PaymentData.getFromIntent(intent)?.let(::handlePaymentSuccess)
+            }
 
-                AppCompatActivity.RESULT_CANCELED -> {
-                    // The user cancelled the payment attempt
-                }
+            AppCompatActivity.RESULT_CANCELED -> {
+                // The user cancelled the payment attempt
             }
         }
+    }
 
     override fun getLayoutId(): Int = R.layout.fragment_digital_wallet
 
     override fun initViews() {
         googlePayButton = requireView().findViewById(R.id.googlePayButton)
+        customToolbar.setTitle(R.string.digital_wallet)
+        customToolbar.setOnBackButtonListener { close() }
     }
 
     override fun initSubscriptions() {
@@ -56,12 +60,10 @@ class DigitalWalletFragment : BaseFragment() {
         googlePayButton.setOnClickListener { requestPayment() }
 
         model.transactionSuccessModel.observe(viewLifecycleOwner) {
-            TransactionSuccessDialog.newInstance(it)
-                .show(childFragmentManager, TransactionSuccessDialog.TAG)
+            TransactionSuccessDialog.newInstance(it).show(childFragmentManager, TransactionSuccessDialog.TAG)
         }
         model.paymentError.observe(viewLifecycleOwner) {
-            TransactionErrorDialog.newInstance(it)
-                .show(childFragmentManager, TransactionErrorDialog.TAG)
+            TransactionErrorDialog.newInstance(it).show(childFragmentManager, TransactionErrorDialog.TAG)
         }
     }
 
@@ -76,9 +78,7 @@ class DigitalWalletFragment : BaseFragment() {
             googlePayButton.visibility = View.VISIBLE
         } else {
             Toast.makeText(
-                requireContext(),
-                R.string.google_pay_status_unavailable,
-                Toast.LENGTH_LONG
+                requireContext(), R.string.google_pay_status_unavailable, Toast.LENGTH_LONG
             ).show()
         }
     }
@@ -104,8 +104,8 @@ class DigitalWalletFragment : BaseFragment() {
                     }
                     else -> {
                         handleError(
-                            CommonStatusCodes.INTERNAL_ERROR, "Unexpected non API" +
-                                    " exception when trying to deliver the task result to an activity!"
+                            CommonStatusCodes.INTERNAL_ERROR,
+                            "Unexpected non API" + " exception when trying to deliver the task result to an activity!"
                         )
                     }
                 }
@@ -142,12 +142,9 @@ class DigitalWalletFragment : BaseFragment() {
 
         try {
             // Token will be null if PaymentDataRequest was not constructed using fromJson(String).
-            val paymentMethodData =
-                JSONObject(paymentInformation).getJSONObject("paymentMethodData")
+            val paymentMethodData = JSONObject(paymentInformation).getJSONObject("paymentMethodData")
 
-            val token = paymentMethodData
-                .getJSONObject("tokenizationData")
-                .getString("token")
+            val token = paymentMethodData.getJSONObject("tokenizationData").getString("token")
 
             model.makeTransactionWithGooglePay(token, PRICE)
 

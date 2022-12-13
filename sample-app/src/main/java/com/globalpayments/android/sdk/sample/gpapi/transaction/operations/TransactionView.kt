@@ -3,6 +3,7 @@ package com.globalpayments.android.sdk.sample.gpapi.transaction.operations
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import com.global.api.entities.ThreeDSecure
 import com.global.api.entities.Transaction
 import com.global.api.entities.enums.FraudFilterMode
@@ -32,6 +33,8 @@ class TransactionView @JvmOverloads constructor(
     private val cardTypeItemView: ItemView = ItemView.create(context, R.string.card_type, this)
     private val maskedCardNumberItemView: ItemView = ItemView.create(context, R.string.masked_card_number, this)
     private val cvvResultItemView: ItemView = ItemView.create(context, R.string.cvv_result, this, Position.BOTTOM)
+    private val filterModeView: ItemView = ItemView.create(context, R.string.filter_mode, this).apply { isVisible = false }
+    private val filterResultView: ItemView = ItemView.create(context, R.string.filter_result, this).apply { isVisible = false }
 
     init {
         orientation = VERTICAL
@@ -56,12 +59,18 @@ class TransactionView @JvmOverloads constructor(
             .fraudFilterResponse
             ?.fraudResponseMode
             ?.let { mode -> FraudFilterMode.values().firstOrNull { it.value == mode } }
-            ?.let { ItemView.create(context, R.string.filter_mode, this).setValue(it.value) }
+        filterModeView.apply {
+            isVisible = filterMode != null
+            setValue(filterMode?.value)
+        }
         val filterResult = transaction
             .fraudFilterResponse
             ?.fraudResponseResult
             ?.let { result -> FraudFilterResult.values().firstOrNull { it.value == result } }
-            ?.let { ItemView.create(context, R.string.filter_result, this).setValue(it.value) }
+        filterResultView.apply {
+            isVisible = filterResult != null
+            setValue(filterResult?.value)
+        }
     }
 
     fun bind(threeDSecure: ThreeDSecure) {
