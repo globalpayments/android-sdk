@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: "kotlin-android"
+apply plugin: 'kotlin-parcelize'
 apply from: 'envConfig.gradle'
 
 android {
@@ -10,12 +11,12 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 1
-        versionName "1.1.18"
+        versionName "1.1.19"
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
 

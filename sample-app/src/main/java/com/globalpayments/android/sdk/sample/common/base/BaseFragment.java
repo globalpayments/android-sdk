@@ -49,23 +49,17 @@ public abstract class BaseFragment extends Fragment {
     }
 
     protected void close() {
-        FragmentManager fragmentManager = getFragmentManager();
-
-        if (fragmentManager != null) {
-            fragmentManager.popBackStackImmediate();
-        }
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        fragmentManager.popBackStackImmediate();
     }
 
     protected void show(@IdRes int containerViewId, @NonNull Fragment fragment) {
-        FragmentManager fragmentManager = getFragmentManager();
-
-        if (fragmentManager != null) {
-            fragmentManager
-                    .beginTransaction()
-                    .replace(containerViewId, fragment)
-                    .addToBackStack(this.getClass().getSimpleName() + SPACE + fragment.getClass().getSimpleName())
-                    .commit();
-        }
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .replace(containerViewId, fragment)
+                .addToBackStack(this.getClass().getSimpleName() + SPACE + fragment.getClass().getSimpleName())
+                .commit();
     }
 
     public final <T extends View> T findViewById(@IdRes int id) {

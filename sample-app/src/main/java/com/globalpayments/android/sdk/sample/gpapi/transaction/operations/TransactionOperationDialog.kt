@@ -21,8 +21,8 @@ import com.globalpayments.android.sdk.sample.gpapi.transaction.operations.model.
 import com.globalpayments.android.sdk.sample.utils.FingerprintMethodUsageMode
 import com.globalpayments.android.sdk.sample.utils.ManualEntryMethodUsageMode
 import com.globalpayments.android.sdk.sample.utils.PaymentMethodUsageMode
-import com.globalpayments.android.sdk.sample.utils.bindView
 import com.globalpayments.android.sdk.utils.Utils
+import com.globalpayments.android.sdk.utils.bindView
 import java.math.BigDecimal
 
 class TransactionOperationDialog : BaseDialogFragment() {

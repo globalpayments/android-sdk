@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.globalpayments.android.sdk.sample.R
 
@@ -33,26 +34,31 @@ class TransactionSuccessDialog : DialogFragment(R.layout.dialog_success_transact
                 text = model.id
                 inputType = InputType.TYPE_NULL
                 setTextIsSelectable(true)
+                isVisible = model.id.isNotBlank()
             }
             findViewById<TextView>(R.id.result_code).apply {
                 text = model.resultCode
                 inputType = InputType.TYPE_NULL
                 setTextIsSelectable(true)
+                isVisible = model.resultCode.isNotBlank()
             }
             findViewById<TextView>(R.id.time_created).apply {
                 text = model.timeCreated
                 inputType = InputType.TYPE_NULL
                 setTextIsSelectable(true)
+                isVisible = model.timeCreated.isNotBlank()
             }
             findViewById<TextView>(R.id.status).apply {
                 text = model.status
                 inputType = InputType.TYPE_NULL
                 setTextIsSelectable(true)
+                isVisible = model.status.isNotBlank()
             }
             findViewById<TextView>(R.id.amount).apply {
                 text = model.amount
                 inputType = InputType.TYPE_NULL
                 setTextIsSelectable(true)
+                isVisible = model.amount.isNotBlank()
             }
             findViewById<View>(R.id.ok_button).setOnClickListener { dismiss() }
         }

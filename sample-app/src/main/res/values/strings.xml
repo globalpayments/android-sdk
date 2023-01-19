@@ -343,4 +343,11 @@
     <string name="paylink">Paylink</string>
     <string name="single_payer">Single Payer</string>
     <string name="multiple_payer">Multiple Payer</string>
+    <string name="address">Address</string>
+    <string name="create_merchant">Create merchant</string>
+    <string name="merchant_onboarding">Merchant Onboarding</string>
+    <string name="products">Products</string>
+    <string name="merchant_data">Merchant Data</string>
+    <string name="bank_account">Bank account</string>
+    <string name="payment_statistics">Payment Statistics</string>
 </resources>

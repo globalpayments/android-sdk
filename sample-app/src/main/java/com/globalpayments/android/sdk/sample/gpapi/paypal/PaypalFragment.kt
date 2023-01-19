@@ -16,7 +16,7 @@ import com.globalpayments.android.sdk.sample.common.views.CustomToolbar
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessModel
-import com.globalpayments.android.sdk.sample.utils.bindView
+import com.globalpayments.android.sdk.utils.bindView
 import com.globalpayments.android.sdk.utils.openChromeCustomTabs
 import java.math.BigDecimal
 

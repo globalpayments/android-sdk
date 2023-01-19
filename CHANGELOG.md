@@ -6,6 +6,12 @@
 
 ## Latest Version
 
+## v1.1.19 (01/18/2023)
+
+### Enhancements:
+
+* Add merchant OnBoarding example
+
 ## v1.1.18 (12/12/2022)
 
 ### Enhancements:
