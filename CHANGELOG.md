@@ -6,6 +6,12 @@
 
 ## Latest Version
 
+## v1.1.20 (02/01/2023)
+
+### Enhancements:
+
+* Decoupled auth flow on merchant 3ds app example
+
 ## v1.1.19 (01/18/2023)
 
 ### Enhancements:

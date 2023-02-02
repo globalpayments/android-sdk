@@ -11,5 +11,6 @@ data class CheckEnrollmentResponse(
     val sessionDataFieldName: String,
     val methodUrl: String,
     val methodData: String?,
-    val messageType: String
+    val messageType: String,
+    val acsInfoIndicator:String?
 )

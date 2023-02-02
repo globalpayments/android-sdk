@@ -18,6 +18,8 @@ if (project.file("local.properties").exists()) {
 val appId: String = configProperties.getProperty("appId")
 val appKey: String = configProperties.getProperty("appKey")
 val serverUrl: String = configProperties.getProperty("serverUrl")
+val preferDecoupledFlow: String = configProperties.getProperty("preferDecoupledFlow")
+val authTimeout: String = configProperties.getProperty("authTimeout")
 
 android {
     namespace = "com.globalpatments.android.sdk.merchant3ds"
@@ -27,8 +29,8 @@ android {
         applicationId = "com.globalpatments.android.sdk.merchant3ds"
         minSdk = 21
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName =  "1.1.20"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -38,6 +40,9 @@ android {
         buildConfigField("String", "APP_ID", "\"$appId\"")
         buildConfigField("String", "APP_KEY", "\"$appKey\"")
         buildConfigField("String", "SERVER_URL", "\"$serverUrl\"")
+        buildConfigField("Boolean", "PREFER_DECOUPLED_FLOW", preferDecoupledFlow)
+        buildConfigField("int", "AUTH_TIMEOUT", authTimeout)
+
     }
 
 

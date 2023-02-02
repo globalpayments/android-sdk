@@ -15,9 +15,8 @@ import com.globalpayments.android.sdk.sample.common.base.BaseFragment
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
-import com.globalpayments.android.sdk.sample.utils.bindView
-import com.google.android.gms.common.api.ApiException
 import com.globalpayments.android.sdk.utils.bindView
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.wallet.PaymentData

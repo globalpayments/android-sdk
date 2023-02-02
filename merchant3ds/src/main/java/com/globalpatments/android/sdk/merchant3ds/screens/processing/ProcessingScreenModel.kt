@@ -4,7 +4,8 @@ data class ProcessingScreenModel(
     val transactionModel: TransactionModel = TransactionModel(),
     val startChallenge: Boolean = false,
     val error: String = "",
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val isWaitingForAuth: Boolean = false,
 )
 
 data class TransactionModel(

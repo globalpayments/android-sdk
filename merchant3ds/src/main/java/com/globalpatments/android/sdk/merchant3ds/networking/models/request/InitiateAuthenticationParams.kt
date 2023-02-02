@@ -7,7 +7,9 @@ data class InitiateAuthenticationParams(
     val currency: String = "",
     val customerEmail: String = "",
     val mobileData: MobileDataRequest,
-    val threeDsecure: ThreeDsecureRequest
+    val threeDsecure: ThreeDsecureRequest,
+    val preferredDecoupledAuth: Boolean,
+    val decoupledFlowTimeout: Int
 )
 
 @kotlinx.serialization.Serializable

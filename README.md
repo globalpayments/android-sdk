@@ -91,3 +91,41 @@ Payment Method Operation | Payment Method Report
 Disputes Report | Disputes Operation
 ----------------| ---------------------
 ![](demo_clips/disputes_report.gif) | ![](demo_clips/disputes_operation.gif)
+
+---
+
+# Merchant 3DS example
+A [sample app](merchant3ds) of how to integrate Netcetera SDK.
+
+## Requirements
+ - Android 5.0+ (API 21+)
+ - Java 1.8
+ - Kotlin 1.7.20
+ - Backend from: https://github.com/globalpayments/java-sdk/tree/master/examples/iOS-Hybrid-App-Java-Server 
+
+## Installation
+ - Clone the project
+ - Import the project in Android Studio or Intellij
+ - Update `configuration.properties` file with the url where the java backend is running
+ - Select `merchant3ds` from configuration and run the app
+ - For configuration of the java backend check [Merchant3DSSpringBackend](https://github.com/globalpayments/java-sdk/blob/master/examples/iOS-Hybrid-App-Java-Server/README.md)
+
+## Documentation and Examples
+
+You can find documentation for Netcetera SDK on [Netcetera website](https://3dss.netcetera.com/3dssdk/doc/2.4.0/)
+
+#### App configuration
+
+Edit the [configuration file](merchant3ds/configuration.properties) with the appropriate values from the backend example
+
+#### Test Card Data
+
+Name        | Number           | Exp Month | Exp Year | CVN | Type
+----------- | ---------------- | --------- | -------- | ---- | ---
+Visa        | 4012001038488884 | 12        | 2025     | 123 | Challenge
+Visa        | 4263970000005262 | 12        | 2025     | 123 | Frictionless
+
+### Sample App Demo Clips
+Netcetera Challenge | Decoupled flow
+--------------------|-----------------------------------
+![](demo_clips/merchant3DS.gif) | ![](demo_clips/merchantDecoupled.gif)

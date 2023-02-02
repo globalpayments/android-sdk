@@ -21,6 +21,7 @@ import com.netcetera.threeds.sdk.api.transaction.AuthenticationRequestParameters
 import com.netcetera.threeds.sdk.api.transaction.Transaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
@@ -51,18 +52,22 @@ class ProcessingViewModel @Inject constructor(
         withContext(Dispatchers.IO) {
             try {
                 val response = merchant3DSApi.checkEnrollment(
-                    CheckEnrollmentRequest(cardToken, ProductPrice, currency = ProductCurrency)
+                    CheckEnrollmentRequest(
+                        cardToken = cardToken,
+                        amount = ProductPrice,
+                        currency = ProductCurrency,
+                        preferredDecoupledAuth = BuildConfig.PREFER_DECOUPLED_FLOW
+                    )
                 )
                 when (EnrolledStatus.valueOf(response.enrolled)) {
                     EnrolledStatus.ENROLLED -> {
                         state = state.copy(
                             transactionModel = state.transactionModel.copy(
-                                messageVersion = response.messageVersion,
-                                serverTransactionId = response.serverTransactionId
+                                messageVersion = response.messageVersion, serverTransactionId = response.serverTransactionId
                             )
                         )
                     }
-                    EnrolledStatus.NOT_AVAILABLE -> throw  TryAnotherCardException()
+                    EnrolledStatus.NOT_AVAILABLE -> throw TryAnotherCardException()
                     EnrolledStatus.NOT_ENROLLED -> {
                         if (cardType.lowercase() == "amex") {
                             throw TryAnotherCardException()
@@ -79,65 +84,68 @@ class ProcessingViewModel @Inject constructor(
 
     fun init3DS(context: Context) = viewModelScope.launch(Dispatchers.IO) {
         try {
-            val messageVersion =
-                state.transactionModel.messageVersion.takeIf(String::isNotBlank) ?: return@launch
+            val messageVersion = state.transactionModel.messageVersion.takeIf(String::isNotBlank) ?: return@launch
             state = state.copy(transactionModel = state.transactionModel.copy(messageVersion = ""))
             netceteraHolder.init3DS(context)
             transaction = netceteraHolder.createTransaction(cardType, messageVersion)
-            val netceteraParams =
-                transaction?.authenticationRequestParameters ?: throw  TryAnotherCardException()
+            val netceteraParams = transaction?.authenticationRequestParameters ?: throw TryAnotherCardException()
             authenticateTransaction(netceteraParams)
         } catch (exception: Exception) {
             handleException(exception)
         }
     }
 
-    private suspend fun authenticateTransaction(netceteraParams: AuthenticationRequestParameters) =
-        withContext(Dispatchers.IO) {
-            try {
-                val serverTransactionId =
-                    state.transactionModel.serverTransactionId.takeIf(String::isNotBlank)
-                        ?: return@withContext
-                val ephemeralPublicKey =
-                    json.decodeFromString<EphemeralPublicKey>(netceteraParams.sdkEphemeralPublicKey)
-                val response = merchant3DSApi.initiateAuthentication(
-                    InitiateAuthenticationParams(
-                        cardToken = cardToken,
-                        amount = ProductPrice,
-                        currency = ProductCurrency,
-                        mobileData = MobileDataRequest(
-                            ephemeralPublicKeyX = ephemeralPublicKey.x,
-                            ephemeralPublicKeyY = ephemeralPublicKey.y,
-                            maximumTimeout = 15,
-                            sdkTransReference = netceteraParams.sdkTransactionID,
-                            applicationReference = netceteraParams.sdkAppID,
-                            sdkInterface = SdkInterface,
-                            encodedData = netceteraParams.deviceData,
-                            sdkUiTypes = SdkUiType,
-                            referenceNumber = netceteraParams.sdkReferenceNumber
-                        ),
-                        threeDsecure = ThreeDsecureRequest(serverTransactionId)
-                    )
+    private suspend fun authenticateTransaction(netceteraParams: AuthenticationRequestParameters) = withContext(Dispatchers.IO) {
+        try {
+            val serverTransactionId = state.transactionModel.serverTransactionId.takeIf(String::isNotBlank) ?: return@withContext
+            val ephemeralPublicKey = json.decodeFromString<EphemeralPublicKey>(netceteraParams.sdkEphemeralPublicKey)
+            val response = merchant3DSApi.initiateAuthentication(
+                InitiateAuthenticationParams(
+                    cardToken = cardToken,
+                    amount = ProductPrice,
+                    currency = ProductCurrency,
+                    mobileData = MobileDataRequest(
+                        ephemeralPublicKeyX = ephemeralPublicKey.x,
+                        ephemeralPublicKeyY = ephemeralPublicKey.y,
+                        maximumTimeout = 15,
+                        sdkTransReference = netceteraParams.sdkTransactionID,
+                        applicationReference = netceteraParams.sdkAppID,
+                        sdkInterface = SdkInterface,
+                        encodedData = netceteraParams.deviceData,
+                        sdkUiTypes = SdkUiType,
+                        referenceNumber = netceteraParams.sdkReferenceNumber
+                    ),
+                    threeDsecure = ThreeDsecureRequest(serverTransactionId),
+                    preferredDecoupledAuth = BuildConfig.PREFER_DECOUPLED_FLOW,
+                    decoupledFlowTimeout = BuildConfig.AUTH_TIMEOUT
                 )
-                when (ChallengeStatus.valueOf(response.status)) {
-                    ChallengeStatus.CHALLENGE_REQUIRED -> {
-                        state = state.copy(
-                            startChallenge = true, transactionModel = state.transactionModel.copy(
-                                acsReferenceNumber = response.acsReferenceNumber,
-                                payerAuthenticationRequest = response.payerAuthenticationRequest
-                                    ?: "",
-                                acsTransactionId = response.acsTransactionId,
-                                providerServerTransRef = response.serverTransactionId
-                            )
+            )
+            when (ChallengeStatus.valueOf(response.status)) {
+                ChallengeStatus.CHALLENGE_REQUIRED -> {
+                    state = state.copy(
+                        startChallenge = true, transactionModel = state.transactionModel.copy(
+                            acsReferenceNumber = response.acsReferenceNumber,
+                            payerAuthenticationRequest = response.payerAuthenticationRequest ?: "",
+                            acsTransactionId = response.acsTransactionId,
+                            providerServerTransRef = response.serverTransactionId
                         )
-                    }
-                    ChallengeStatus.SUCCESS, ChallengeStatus.SUCCESS_ATTEMPT_MADE, ChallengeStatus.SUCCESS_AUTHENTICATED -> doAuth(response.serverTransactionId)
-                    ChallengeStatus.FAILED, ChallengeStatus.NOT_AUTHENTICATED -> throw TryAnotherCardException()
+                    )
                 }
-            } catch (exception: Exception) {
-                handleException(exception)
+                ChallengeStatus.SUCCESS, ChallengeStatus.SUCCESS_ATTEMPT_MADE -> doAuth(response.serverTransactionId)
+                ChallengeStatus.FAILED, ChallengeStatus.NOT_AUTHENTICATED -> throw TryAnotherCardException()
+                ChallengeStatus.SUCCESS_AUTHENTICATED -> {
+                    if(BuildConfig.PREFER_DECOUPLED_FLOW) {
+                        state = state.copy(isWaitingForAuth = true)
+                        delay(BuildConfig.AUTH_TIMEOUT.toLong())
+                        state = state.copy(isWaitingForAuth = false)
+                    }
+                    doAuth(serverTransactionId)
+                }
             }
+        } catch (exception: Exception) {
+            handleException(exception)
         }
+    }
 
     fun startChallenge(activity: Activity) = viewModelScope.launch {
         val transaction = this@ProcessingViewModel.transaction ?: return@launch

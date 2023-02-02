@@ -6,10 +6,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -39,6 +36,7 @@ fun HostedFieldsScreen(viewModel: HostedFieldsViewModel = hiltViewModel()) {
             .background(color = Background)
             .fillMaxSize()
             .systemBarsPadding()
+            .imePadding()
     ) {
 
         IconButton(

@@ -9,12 +9,11 @@ import android.widget.ScrollView
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.globalpayments.android.sdk.sample.R
-import com.globalpayments.android.sdk.utils.bindView
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
-import com.globalpayments.android.sdk.sample.utils.bindView
+import com.globalpayments.android.sdk.utils.bindView
 import java.math.BigDecimal
 import java.util.*
 

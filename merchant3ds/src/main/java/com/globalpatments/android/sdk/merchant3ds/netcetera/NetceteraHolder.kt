@@ -112,8 +112,8 @@ class NetceteraHolder @Inject constructor() {
         val assetManager = context.assets
         return ConfigurationBuilder().license(assetManager.readLicense()).configureScheme(
             SchemeConfiguration.visaSchemeConfiguration()
-                .encryptionPublicKeyFromAssetCertificate(assetManager, "acs2021.pem")
-                .rootPublicKeyFromAssetCertificate(assetManager, "acs2021.pem").build()
+                .encryptionPublicKeyFromAssetCertificate(assetManager, "acs2022.pem")
+                .rootPublicKeyFromAssetCertificate(assetManager, "acs2022.pem").build()
         ).build()
     }
 

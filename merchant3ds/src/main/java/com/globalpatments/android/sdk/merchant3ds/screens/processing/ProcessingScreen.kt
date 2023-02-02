@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.globalpatments.android.sdk.merchant3ds.R
 import com.globalpatments.android.sdk.merchant3ds.ui.findActivity
 import com.globalpatments.android.sdk.merchant3ds.ui.theme.Background
 import com.globalpatments.android.sdk.merchant3ds.ui.theme.Black
@@ -59,9 +60,14 @@ fun ProcessingScreen(viewModel: ProcessingViewModel = hiltViewModel()) {
 
         Spacer(modifier = Modifier.weight(1f))
 
+        val textToDisplay = if (screenState.isWaitingForAuth) {
+            R.string.waiting_for_auth
+        } else {
+            R.string.processing
+        }
         Text(
             modifier = Modifier.padding(top = 50.dp),
-            text = stringResource(id = com.globalpatments.android.sdk.merchant3ds.R.string.processing),
+            text = stringResource(id = textToDisplay),
             color = Black,
             fontSize = 48.sp,
             fontWeight = FontWeight.Bold

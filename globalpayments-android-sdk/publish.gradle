@@ -4,7 +4,7 @@ apply plugin: 'signing'
 // Artifact parameters
 def sdkGroupId = 'com.heartlandpaymentsystems'
 def sdkArtifactId = 'globalpayments-android-sdk'
-def sdkVersion = '1.1.19'
+def sdkVersion = '1.1.22'
 
 // publish.properties should contain signing properties and maven central credentials
 File publishPropertiesFile = file('publish.properties')
@@ -28,7 +28,7 @@ afterEvaluate {
 
                 groupId = sdkGroupId
                 artifactId = sdkArtifactId
-                version = sdkVersion
+                version =  sdkVersion
 
                 pom {
                     name = sdkArtifactId

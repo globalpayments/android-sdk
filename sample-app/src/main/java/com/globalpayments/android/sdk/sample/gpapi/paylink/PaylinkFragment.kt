@@ -14,7 +14,7 @@ import com.global.api.entities.reporting.PayLinkSummary
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.base.BaseFragment
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar
-import com.globalpayments.android.sdk.sample.utils.bindView
+import com.globalpayments.android.sdk.utils.bindView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
 import org.joda.time.DateTime
