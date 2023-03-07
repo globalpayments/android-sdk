@@ -330,6 +330,7 @@
     <string name="payments_show_name">Successfully received payment data for %s!</string>
     <string name="paypal">Paypal</string>
     <string name="paypal_filter">Filter for paypal deep link</string>
+    <string name="bnpl_deep_link">Filter for bnpl deeplink</string>
 
     <string name="paypal_deep_link_scheme">custom</string>
     <string name="paypal_deep_link_host">paypal</string>
@@ -350,4 +351,5 @@
     <string name="merchant_data">Merchant Data</string>
     <string name="bank_account">Bank account</string>
     <string name="payment_statistics">Payment Statistics</string>
+    <string name="bnpl">Buy now pay later</string>
 </resources>

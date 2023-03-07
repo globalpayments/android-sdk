@@ -5,11 +5,15 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.global.api.ServicesContainer
 import com.global.api.entities.Transaction
 import com.global.api.entities.enums.MobilePaymentMethodType
 import com.global.api.entities.enums.TransactionModifier
+import com.global.api.gateways.GpApiConnector
 import com.global.api.paymentMethods.CreditCardData
 import com.globalpayments.android.sdk.TaskExecutor
+import com.globalpayments.android.sdk.sample.common.Constants
 import com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessModel
 import com.google.android.gms.common.api.ApiException
@@ -18,6 +22,8 @@ import com.google.android.gms.wallet.IsReadyToPayRequest
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.PaymentDataRequest
 import com.google.android.gms.wallet.PaymentsClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 
@@ -43,6 +49,9 @@ class DigitalWalletViewModel(application: Application) : AndroidViewModel(applic
 
     private val _progressStatus = MutableLiveData<Boolean>()
     val progressStatus: LiveData<Boolean> = _progressStatus
+
+    private val _accessToken = MutableLiveData<String>()
+    val accessToken: LiveData<String> = _accessToken
 
 
     /**
@@ -122,6 +131,48 @@ class DigitalWalletViewModel(application: Application) : AndroidViewModel(applic
             .withCurrency(CURRENCY_CODE)
             .withModifier(TransactionModifier.EncryptedMobile)
             .execute(DEFAULT_GPAPI_CONFIG)
+    }
+
+    fun getAccessToken() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val accessToken = (ServicesContainer.getInstance()
+                    .getGateway(Constants.DEFAULT_GPAPI_CONFIG) as? GpApiConnector)
+                    ?.accessToken
+                    ?.token
+                    ?: throw IllegalArgumentException("Something went wrong")
+                this@DigitalWalletViewModel._accessToken.postValue(accessToken)
+            } catch (exception: Exception) {
+                Log.e("ClickToPay", exception.message ?: "Error")
+            }
+        }
+    }
+
+    fun captureTransaction(cardToken: String, amount: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val card = CreditCardData().apply {
+                token = cardToken
+                mobileType = MobilePaymentMethodType.CLICK_TO_PAY;
+                cardHolderName = "James Mason#"
+            }
+
+            val response =
+                card
+                    .charge(BigDecimal(amount))
+                    .withCurrency("EUR")
+                    .withModifier(TransactionModifier.EncryptedMobile)
+                    .withMaskedDataResponse(true)
+                    .execute(Constants.DEFAULT_GPAPI_CONFIG);
+
+            val transactionSuccessModel = TransactionSuccessModel(
+                id = response.transactionId,
+                resultCode = response.responseCode,
+                timeCreated = response.timestamp,
+                status = response.responseMessage,
+                amount = response.balanceAmount?.toString() ?: ""
+            )
+            _paymentSuccess.postValue(transactionSuccessModel)
+        }
     }
 
 

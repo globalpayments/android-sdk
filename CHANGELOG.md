@@ -6,6 +6,13 @@
 
 ## Latest Version
 
+## v1.1.23 (03/03/2023)
+
+### Enhancements:
+
+* Buy now pay later sample
+* Click to pay sample
+
 ## v1.1.20 (02/01/2023)
 
 ### Enhancements:

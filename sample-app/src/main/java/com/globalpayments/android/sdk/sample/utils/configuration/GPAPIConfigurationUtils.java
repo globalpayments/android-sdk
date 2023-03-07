@@ -1,7 +1,6 @@
 package com.globalpayments.android.sdk.sample.utils.configuration;
 
 import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
-import static com.globalpayments.android.sdk.utils.Utils.isNotNull;
 import static com.globalpayments.android.sdk.utils.Utils.isNotNullOrBlank;
 
 import android.util.Log;
@@ -80,26 +79,25 @@ public class GPAPIConfigurationUtils {
         gpApiConfig.setAppId(gpapiConfiguration.getAppId());
         gpApiConfig.setAppKey(gpapiConfiguration.getAppKey());
         gpApiConfig.setChannel(gpapiConfiguration.getChannel().getValue());
-        gpApiConfig.setMerchantId(gpapiConfiguration.getMerchantId());
         gpApiConfig.setDynamicHeaders(androidHeader);
 
         gpApiConfig.setCountry(gpapiConfiguration.getSelectedCountry());
-        gpApiConfig.setChallengeNotificationUrl("https://enp4qhvjseljg.x.pipedream.net/");
-        gpApiConfig.setMethodNotificationUrl("https://enp4qhvjseljg.x.pipedream.net/");
-        gpApiConfig.setMerchantContactUrl("https://enp4qhvjseljg.x.pipedream.net/");
+//        gpApiConfig.setChallengeNotificationUrl("https://enp4qhvjseljg.x.pipedream.net/");
+//        gpApiConfig.setMethodNotificationUrl("https://enp4qhvjseljg.x.pipedream.net/");
+//        gpApiConfig.setMerchantContactUrl("https://enp4qhvjseljg.x.pipedream.net/");
 
-        String serviceUrl = gpapiConfiguration.getServiceUrl();
-        if (isNotNullOrBlank(serviceUrl)) {
-            gpApiConfig.setServiceUrl(serviceUrl);
-        }
-
-        Integer tokenSecondsToExpire = gpapiConfiguration.getTokenSecondsToExpire();
-        if (isNotNull(tokenSecondsToExpire) && tokenSecondsToExpire > 60) {
-            gpApiConfig.setSecondsToExpire(tokenSecondsToExpire);
-        }
-
-        gpApiConfig.setIntervalToExpire(gpapiConfiguration.getTokenIntervalToExpire());
-        gpApiConfig.setEnvironment(gpapiConfiguration.getEnvironment());
+//        String serviceUrl = gpapiConfiguration.getServiceUrl();
+//        if (isNotNullOrBlank(serviceUrl)) {
+//            gpApiConfig.setServiceUrl(serviceUrl);
+//        }
+//
+//        Integer tokenSecondsToExpire = gpapiConfiguration.getTokenSecondsToExpire();
+//        if (isNotNull(tokenSecondsToExpire) && tokenSecondsToExpire > 60) {
+//            gpApiConfig.setSecondsToExpire(tokenSecondsToExpire);
+//        }
+//
+//        gpApiConfig.setIntervalToExpire(gpapiConfiguration.getTokenIntervalToExpire());
+//        gpApiConfig.setEnvironment(gpapiConfiguration.getEnvironment());
         gpApiConfig.setEnableLogging(true);
 
         return gpApiConfig;

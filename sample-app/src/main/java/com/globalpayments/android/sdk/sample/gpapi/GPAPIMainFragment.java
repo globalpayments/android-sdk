@@ -12,6 +12,7 @@ import com.globalpayments.android.sdk.sample.gpapi.accesstoken.AccessTokenFragme
 import com.globalpayments.android.sdk.sample.gpapi.ach.AchFragment;
 import com.globalpayments.android.sdk.sample.gpapi.actions.actionsReport.ActionsReportFragment;
 import com.globalpayments.android.sdk.sample.gpapi.batch.closeBatch.CloseFragment;
+import com.globalpayments.android.sdk.sample.gpapi.bnpl.BnplFragment;
 import com.globalpayments.android.sdk.sample.gpapi.deposits.DepositsFragment;
 import com.globalpayments.android.sdk.sample.gpapi.digitalwallet.DigitalWalletFragment;
 import com.globalpayments.android.sdk.sample.gpapi.disputes.DisputesFragment;
@@ -51,6 +52,7 @@ public class GPAPIMainFragment extends BaseFragment {
         setButtonClickListener(R.id.ach_button, new AchFragment());
         setButtonClickListener(R.id.ebt_button, new EbtFragment());
         setButtonClickListener(R.id.paylink_button, new PaylinkFragment());
+        setButtonClickListener(R.id.bnpl_button, new BnplFragment());
     }
 
     private void setButtonClickListener(@IdRes int buttonId, Fragment fragment) {

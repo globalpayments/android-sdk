@@ -3,11 +3,14 @@ package com.globalpayments.android.sdk.sample.gpapi.digitalwallet
 import android.app.ProgressDialog
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.globalpayments.android.sdk.sample.R
@@ -15,6 +18,8 @@ import com.globalpayments.android.sdk.sample.common.base.BaseFragment
 import com.globalpayments.android.sdk.sample.common.views.CustomToolbar
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.error.TransactionErrorDialog
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessDialog
+import com.globalpayments.android.sdk.ui.clicktopay.ClickToPayFragment
+import com.globalpayments.android.sdk.ui.clicktopay.ClickToPayModel
 import com.globalpayments.android.sdk.utils.bindView
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -26,10 +31,12 @@ import org.json.JSONObject
 class DigitalWalletFragment : BaseFragment() {
 
     private lateinit var googlePayButton: View
-    private val model: DigitalWalletViewModel by viewModels()
+    private val viewModel: DigitalWalletViewModel by viewModels()
 
     private val customToolbar: CustomToolbar by bindView(R.id.toolbar)
+    private val clickToPay: Button by bindView(R.id.btn_click_to_pay)
 
+    private val etPrice by bindView<EditText>(R.id.priceEditText)
     private val progressBar by lazy { ProgressDialog(requireContext()).apply { setTitle("Payment in progress") } }
 
     // Handle potential conflict from calling loadPaymentData
@@ -51,20 +58,47 @@ class DigitalWalletFragment : BaseFragment() {
         googlePayButton = requireView().findViewById(R.id.googlePayButton)
         customToolbar.setTitle(R.string.digital_wallet)
         customToolbar.setOnBackButtonListener { close() }
+        clickToPay.setOnClickListener {
+            viewModel.getAccessToken()
+        }
     }
 
     override fun initSubscriptions() {
 
-        model.progressStatus.observe(viewLifecycleOwner) { if (it) progressBar.show() else progressBar.dismiss() }
-        model.canUseGooglePay.observe(viewLifecycleOwner, Observer(::setGooglePayAvailable))
+        viewModel.progressStatus.observe(viewLifecycleOwner) { if (it) progressBar.show() else progressBar.dismiss() }
+        viewModel.canUseGooglePay.observe(viewLifecycleOwner, Observer(::setGooglePayAvailable))
         googlePayButton.setOnClickListener { requestPayment() }
 
-        model.transactionSuccessModel.observe(viewLifecycleOwner) {
+        viewModel.transactionSuccessModel.observe(viewLifecycleOwner) {
             TransactionSuccessDialog.newInstance(it).show(childFragmentManager, TransactionSuccessDialog.TAG)
         }
-        model.paymentError.observe(viewLifecycleOwner) {
+        viewModel.paymentError.observe(viewLifecycleOwner) {
             TransactionErrorDialog.newInstance(it).show(childFragmentManager, TransactionErrorDialog.TAG)
         }
+        viewModel.accessToken.observe(viewLifecycleOwner) { token ->
+            showClickToPay(token)
+        }
+    }
+
+    private fun showClickToPay(token: String) {
+        val amount = etPrice.text.toString().takeIf { it.isNotBlank() } ?: "10"
+        val clickToPayModel =
+            ClickToPayModel(
+                amount = amount,
+                accessKey = token,
+                javaScriptToEvaluate = "initGlobalPayments('sandbox','$token', '$amount', 'd83e8615-9d0a-46fe-9677-8040887e27fa')"
+            )
+        val clickToPayDialog = ClickToPayFragment.newInstance(clickToPayModel)
+        setFragmentResultListener(ClickToPayFragment.ClickToPayResultKey) { _, bundle ->
+            val cardToken = bundle.getString(ClickToPayFragment.ClickToPayTokenKey)
+            if (cardToken != null) {
+                viewModel.captureTransaction(cardToken, amount)
+                return@setFragmentResultListener
+            }
+            val error = bundle.getString(ClickToPayFragment.ClickToPayErrorKey) ?: "Error"
+            TransactionErrorDialog.newInstance(error).show(childFragmentManager, TransactionErrorDialog.TAG)
+        }
+        clickToPayDialog.show(parentFragmentManager, "ClickToPayDialog")
     }
 
     /**
@@ -87,7 +121,7 @@ class DigitalWalletFragment : BaseFragment() {
 
         // Disables the button to prevent multiple clicks.
         googlePayButton.isClickable = false
-        val task = model.getLoadPaymentDataTask(PRICE.toString())
+        val task = viewModel.getLoadPaymentDataTask(PRICE.toString())
 
         task.addOnCompleteListener { completedTask ->
             if (completedTask.isSuccessful) {
@@ -146,7 +180,7 @@ class DigitalWalletFragment : BaseFragment() {
 
             val token = paymentMethodData.getJSONObject("tokenizationData").getString("token")
 
-            model.makeTransactionWithGooglePay(token, PRICE)
+            viewModel.makeTransactionWithGooglePay(token, PRICE)
 
         } catch (error: JSONException) {
             Log.e("handlePaymentSuccess", "Error: $error")

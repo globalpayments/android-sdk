@@ -41,9 +41,19 @@
         android:layout_height="@dimen/pay_button_height"
         android:layout_marginHorizontal="@dimen/size_16dp"
         android:layout_marginTop="@dimen/size_10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="5dp"
         android:visibility="gone"
         tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/btn_click_to_pay"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pay_button_height"
+        android:layout_marginHorizontal="@dimen/size_16dp"
+        android:layout_marginTop="@dimen/size_5dp"
+        android:layout_marginBottom="20dp"
+        android:text="Click to Pay"
+        app:cornerRadius="5dp" />
 
     <View
         android:layout_width="0dp"

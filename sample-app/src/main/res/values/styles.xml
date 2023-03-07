@@ -57,7 +57,7 @@
     <style name="Button.Main">
         <item name="android:textSize">@dimen/text_size_35sp</item>
         <item name="android:backgroundTint">@null</item>
-        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
     <style name="ErrorText">

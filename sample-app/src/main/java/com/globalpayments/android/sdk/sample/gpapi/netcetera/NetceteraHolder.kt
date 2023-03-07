@@ -52,8 +52,8 @@ object NetceteraHolder {
             .license(assetManager.readLicense())
             .configureScheme(
                 SchemeConfiguration.visaSchemeConfiguration()
-                    .encryptionPublicKeyFromAssetCertificate(assetManager, "acs2021.pem")
-                    .rootPublicKeyFromAssetCertificate(assetManager, "acs2021.pem")
+                    .encryptionPublicKeyFromAssetCertificate(assetManager, "acs2022.pem")
+                    .rootPublicKeyFromAssetCertificate(assetManager, "acs2022.pem")
                     .build()
             )
             .build()
