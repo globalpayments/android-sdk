@@ -11,6 +11,11 @@ def appKey = configProperties.getProperty("appKey")
 def merchantId = configProperties.getProperty("merchantId")
 def transactionProcessingAccountName = configProperties.get("transactionProcessingAccountName")
 def tokenizationAccountName = configProperties.get("tokenizationAccountName")
+def transactionProcessingAccountId = configProperties.get("transactionProcessingAccountId")
+def dataAccountId = configProperties.get("dataAccountId")
+def disputeManagementAccountId = configProperties.get("disputeManagementAccountId")
+def tokenizationAccountId = configProperties.get("tokenizationAccountId")
+def riskAssessmentAccountId = configProperties.get("riskAssessmentAccountId")
 def serviceUrl = configProperties.getProperty("serviceUrl")
 def challengeNotificationUrl = configProperties.getProperty("challengeNotificationUrl")
 def methodNotificationUrl = configProperties.getProperty("methodNotificationUrl")
@@ -26,6 +31,11 @@ android {
         buildConfigField "String", "MERCHANT_ID", "\"$merchantId\""
         buildConfigField "String", "TRANSACTION_PROCESSING_ACCOUNT_NAME", "\"$transactionProcessingAccountName\""
         buildConfigField "String", "TOKENIZATION_ACCOUNT_NAME", "\"$tokenizationAccountName\""
+        buildConfigField "String", "TRANSACTION_PROCESSING_ACCOUNT_ID", "\"$transactionProcessingAccountId\""
+        buildConfigField "String", "DATA_ACCOUNT_ID", "\"$dataAccountId\""
+        buildConfigField "String", "DISPUTE_MANAGEMENT_ACCOUNT_ID", "\"$disputeManagementAccountId\""
+        buildConfigField "String", "TOKENIZATION_ACCOUNT_ID", "\"$tokenizationAccountId\""
+        buildConfigField "String", "RISK_ASSESSMENT_ACCOUNT_ID", "\"$riskAssessmentAccountId\""
         buildConfigField "String", "APP_ID", "\"$appId\""
         buildConfigField "String", "APP_KEY", "\"$appKey\""
         buildConfigField "String", "SERVICE_URL", "\"$serviceUrl\""

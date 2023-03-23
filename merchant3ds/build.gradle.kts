@@ -30,7 +30,7 @@ android {
         minSdk = 21
         targetSdk = 33
         versionCode = 2
-        versionName =  "1.1.23"
+        versionName =  "1.1.24"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -57,7 +57,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = "1.4.3"
     }
     packagingOptions {
         resources {
@@ -67,7 +67,6 @@ android {
 }
 
 dependencies {
-    val composeUiVersion = "1.2.1"
     val accompanist = "0.26.5-rc"
 
     implementation(files("libs/3ds-sdk.aar"))
@@ -77,10 +76,11 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.5.3")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.activity:activity-compose:1.6.0")
-    implementation("androidx.compose.ui:ui:$composeUiVersion")
-    implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
+    implementation(platform("androidx.compose:compose-bom:2023.01.00"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-    implementation("androidx.compose.material:material:1.2.1")
+    implementation("androidx.compose.material:material")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanist")
     implementation("com.google.accompanist:accompanist-webview:$accompanist")
     implementation("androidx.webkit:webkit:1.5.0")
@@ -104,9 +104,8 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
-    debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
 
 kapt {

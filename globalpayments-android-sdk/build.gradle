@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 1
-        versionName  "1.1.23"
+        versionName  "1.1.24"
 
         buildConfigField "String", 'JAVA_VERSION', "\"${java_version}\""
     }

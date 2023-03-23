@@ -6,6 +6,12 @@
 
 ## Latest Version
 
+## v1.1.24 (03/21/2023)
+
+### Enhancements:
+
+* added account_id to all gp-api requests  
+
 ## v1.1.23 (03/03/2023)
 
 ### Enhancements:

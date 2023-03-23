@@ -1,6 +1,7 @@
 package com.globalpayments.android.sdk.sample.utils.configuration;
 
 import static com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG;
+import static com.globalpayments.android.sdk.utils.Utils.isNotNull;
 import static com.globalpayments.android.sdk.utils.Utils.isNotNullOrBlank;
 
 import android.util.Log;
@@ -65,41 +66,62 @@ public class GPAPIConfigurationUtils {
         androidHeader.put("x-gp-sdk", "Android;version=" + BuildConfig.VERSION_NAME);
 
         String merchantId = gpapiConfiguration.getMerchantId();
-        String transactionProcessingAccountName = gpapiConfiguration.getTransactionProcessingAccountName();
-        String tokenizationAccountName = gpapiConfiguration.getTokenizationAccountName();
         if (isNotNullOrBlank(merchantId)) {
             gpApiConfig.setMerchantId(merchantId);
         }
-        if (isNotNullOrBlank(transactionProcessingAccountName) || isNotNullOrBlank(tokenizationAccountName)) {
-            AccessTokenInfo accessTokenInfo = new AccessTokenInfo();
-            accessTokenInfo.setTransactionProcessingAccountName(gpapiConfiguration.getTransactionProcessingAccountName());
-            accessTokenInfo.setTokenizationAccountName(gpapiConfiguration.getTokenizationAccountName());
-            gpApiConfig.setAccessTokenInfo(accessTokenInfo);
-        }
+        gpApiConfig.setAccessTokenInfo(createAccessTokenInfo(gpapiConfiguration));
         gpApiConfig.setAppId(gpapiConfiguration.getAppId());
         gpApiConfig.setAppKey(gpapiConfiguration.getAppKey());
         gpApiConfig.setChannel(gpapiConfiguration.getChannel().getValue());
         gpApiConfig.setDynamicHeaders(androidHeader);
 
         gpApiConfig.setCountry(gpapiConfiguration.getSelectedCountry());
-//        gpApiConfig.setChallengeNotificationUrl("https://enp4qhvjseljg.x.pipedream.net/");
-//        gpApiConfig.setMethodNotificationUrl("https://enp4qhvjseljg.x.pipedream.net/");
-//        gpApiConfig.setMerchantContactUrl("https://enp4qhvjseljg.x.pipedream.net/");
+        String notificationUrl = gpapiConfiguration.getChallengeNotificationUrl();
+        if (isNotNullOrBlank(notificationUrl)) {
+            gpApiConfig.setChallengeNotificationUrl(notificationUrl);
+            gpApiConfig.setMethodNotificationUrl(notificationUrl);
+            gpApiConfig.setMerchantContactUrl(notificationUrl);
+        }
+        String serviceUrl = gpapiConfiguration.getServiceUrl();
+        if (isNotNullOrBlank(serviceUrl)) {
+            gpApiConfig.setServiceUrl(serviceUrl);
+        }
 
-//        String serviceUrl = gpapiConfiguration.getServiceUrl();
-//        if (isNotNullOrBlank(serviceUrl)) {
-//            gpApiConfig.setServiceUrl(serviceUrl);
-//        }
-//
-//        Integer tokenSecondsToExpire = gpapiConfiguration.getTokenSecondsToExpire();
-//        if (isNotNull(tokenSecondsToExpire) && tokenSecondsToExpire > 60) {
-//            gpApiConfig.setSecondsToExpire(tokenSecondsToExpire);
-//        }
-//
-//        gpApiConfig.setIntervalToExpire(gpapiConfiguration.getTokenIntervalToExpire());
-//        gpApiConfig.setEnvironment(gpapiConfiguration.getEnvironment());
+        Integer tokenSecondsToExpire = gpapiConfiguration.getTokenSecondsToExpire();
+        if (isNotNull(tokenSecondsToExpire) && tokenSecondsToExpire > 60) {
+            gpApiConfig.setSecondsToExpire(tokenSecondsToExpire);
+        }
+
+        gpApiConfig.setIntervalToExpire(gpapiConfiguration.getTokenIntervalToExpire());
+        gpApiConfig.setEnvironment(gpapiConfiguration.getEnvironment());
         gpApiConfig.setEnableLogging(true);
 
         return gpApiConfig;
+    }
+
+    private static AccessTokenInfo createAccessTokenInfo(GPAPIConfiguration gpapiConfiguration) {
+        AccessTokenInfo accessTokenInfo = new AccessTokenInfo();
+        if (isNotNullOrBlank(gpapiConfiguration.getTransactionProcessingAccountName())) {
+            accessTokenInfo.setTransactionProcessingAccountName(gpapiConfiguration.getTransactionProcessingAccountName());
+        }
+        if (isNotNullOrBlank(gpapiConfiguration.getTokenizationAccountName())) {
+            accessTokenInfo.setTokenizationAccountName(gpapiConfiguration.getTokenizationAccountName());
+        }
+        if (isNotNullOrBlank(gpapiConfiguration.getTransactionProcessingAccountId())) {
+            accessTokenInfo.setTransactionProcessingAccountID(gpapiConfiguration.getTransactionProcessingAccountId());
+        }
+        if (isNotNullOrBlank(gpapiConfiguration.getDataAccountId())) {
+            accessTokenInfo.setDataAccountID(gpapiConfiguration.getDataAccountId());
+        }
+        if (isNotNullOrBlank(gpapiConfiguration.getTokenizationAccountId())) {
+            accessTokenInfo.setTokenizationAccountID(gpapiConfiguration.getTokenizationAccountId());
+        }
+        if (isNotNullOrBlank(gpapiConfiguration.getDisputeManagementAccountId())) {
+            accessTokenInfo.setDisputeManagementAccountID(gpapiConfiguration.getDisputeManagementAccountId());
+        }
+        if (isNotNullOrBlank(gpapiConfiguration.getRiskAssessmentAccountId())) {
+            accessTokenInfo.setRiskAssessmentAccountID(gpapiConfiguration.getRiskAssessmentAccountId());
+        }
+        return accessTokenInfo;
     }
 }
