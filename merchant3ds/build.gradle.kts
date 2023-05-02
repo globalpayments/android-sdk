@@ -1,5 +1,5 @@
 import java.io.DataInputStream
-import java.util.*
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -30,7 +30,7 @@ android {
         minSdk = 21
         targetSdk = 33
         versionCode = 2
-        versionName =  "1.1.24"
+        versionName = "1.1.25"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

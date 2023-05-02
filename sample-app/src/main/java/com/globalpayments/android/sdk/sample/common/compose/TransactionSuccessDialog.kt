@@ -16,10 +16,49 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.global.api.entities.Transaction
+import com.global.api.entities.TransactionSummary
+
+@Composable
+fun TransactionSuccessDialog(
+    transactionSummary: TransactionSummary,
+    onDismissRequest: () -> Unit,
+    dialogProperties: DialogProperties = DialogProperties()
+) {
+    TransactionSuccessDialog(
+        transactionId = transactionSummary.transactionId,
+        responseCode = transactionSummary.gatewayResponseCode,
+        timestamp = transactionSummary.transactionDate.toString("dd/MM/YYYY"),
+        responseMessage = transactionSummary.gatewayResponseMessage,
+        balanceAmount = transactionSummary.amount?.toString(),
+        onDismissRequest = onDismissRequest,
+        dialogProperties = dialogProperties
+    )
+}
 
 @Composable
 fun TransactionSuccessDialog(
     transaction: Transaction,
+    onDismissRequest: () -> Unit,
+    dialogProperties: DialogProperties = DialogProperties()
+) {
+    TransactionSuccessDialog(
+        transactionId = transaction.transactionId,
+        responseCode = transaction.responseCode,
+        timestamp = transaction.timestamp,
+        responseMessage = transaction.responseMessage,
+        balanceAmount = transaction.balanceAmount?.toString(),
+        onDismissRequest = onDismissRequest,
+        dialogProperties = dialogProperties
+    )
+}
+
+@Composable
+fun TransactionSuccessDialog(
+    transactionId: String?,
+    responseCode: String?,
+    timestamp: String?,
+    responseMessage: String?,
+    balanceAmount: String?,
     onDismissRequest: () -> Unit,
     dialogProperties: DialogProperties = DialogProperties()
 ) {
@@ -44,7 +83,7 @@ fun TransactionSuccessDialog(
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .fillMaxWidth(),
-                value = transaction.transactionId ?: "",
+                value = transactionId ?: "",
                 onValueChange = {},
                 label = { Text("Transaction ID") },
                 readOnly = true
@@ -53,7 +92,7 @@ fun TransactionSuccessDialog(
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .fillMaxWidth(),
-                value = transaction.responseCode ?: "",
+                value = responseCode ?: "",
                 onValueChange = {},
                 label = { Text("ResultCode") },
                 readOnly = true
@@ -62,7 +101,7 @@ fun TransactionSuccessDialog(
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .fillMaxWidth(),
-                value = transaction.timestamp ?: "",
+                value = timestamp ?: "",
                 label = { Text("Time created") },
                 onValueChange = {},
                 readOnly = true
@@ -71,7 +110,7 @@ fun TransactionSuccessDialog(
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .fillMaxWidth(),
-                value = transaction.responseMessage ?: "",
+                value = responseMessage ?: "",
                 onValueChange = {},
                 label = { Text("Status") },
                 readOnly = true
@@ -80,7 +119,7 @@ fun TransactionSuccessDialog(
                 modifier = Modifier
                     .padding(top = 10.dp)
                     .fillMaxWidth(),
-                value = transaction.balanceAmount?.toString() ?: "",
+                value = balanceAmount ?: "",
                 onValueChange = {},
                 label = { Text("Amount") },
                 readOnly = true

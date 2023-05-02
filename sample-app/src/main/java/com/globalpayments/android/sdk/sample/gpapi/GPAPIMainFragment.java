@@ -19,6 +19,7 @@ import com.globalpayments.android.sdk.sample.gpapi.disputes.DisputesFragment;
 import com.globalpayments.android.sdk.sample.gpapi.ebt.EbtFragment;
 import com.globalpayments.android.sdk.sample.gpapi.merchantonboarding.MerchantOnBoardingFragment;
 import com.globalpayments.android.sdk.sample.gpapi.netcetera.NetceteraFragment;
+import com.globalpayments.android.sdk.sample.gpapi.openbanking.OpenBankingFragment;
 import com.globalpayments.android.sdk.sample.gpapi.paylink.PaylinkFragment;
 import com.globalpayments.android.sdk.sample.gpapi.paymentmethod.PaymentMethodsFragment;
 import com.globalpayments.android.sdk.sample.gpapi.paypal.PaypalFragment;
@@ -53,6 +54,7 @@ public class GPAPIMainFragment extends BaseFragment {
         setButtonClickListener(R.id.ebt_button, new EbtFragment());
         setButtonClickListener(R.id.paylink_button, new PaylinkFragment());
         setButtonClickListener(R.id.bnpl_button, new BnplFragment());
+        setButtonClickListener(R.id.open_banking_button, new OpenBankingFragment());
     }
 
     private void setButtonClickListener(@IdRes int buttonId, Fragment fragment) {

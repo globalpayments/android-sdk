@@ -352,4 +352,6 @@
     <string name="bank_account">Bank account</string>
     <string name="payment_statistics">Payment Statistics</string>
     <string name="bnpl">Buy now pay later</string>
+    <string name="placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque non scelerisque sapien. Etiam nisi sem, tempus at ligula a, porta lacinia tortor. Quisque suscipit tortor id tellus lobortis suscipit.</string>
+    <string name="open_banking">Open Banking</string>
 </resources>

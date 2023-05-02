@@ -11,7 +11,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 1
-        versionName  "1.1.24"
+        versionName "1.1.25"
     }
 
     compileOptions {
@@ -59,6 +59,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling"
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("androidx.compose.material:material")
+    implementation("androidx.compose.material:material-icons-extended")
 
     // globalpayments-android-sdk
     implementation project(':globalpayments-android-sdk')
