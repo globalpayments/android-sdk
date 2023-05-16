@@ -1,8 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi.netcetera
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.global.api.ServicesContainer
+import androidx.lifecycle.viewModelScope
 import com.global.api.entities.MobileData
 import com.global.api.entities.StoredCredential
 import com.global.api.entities.ThreeDSecure
@@ -11,16 +10,22 @@ import com.global.api.entities.enums.AuthenticationSource
 import com.global.api.entities.enums.SdkInterface
 import com.global.api.entities.enums.SdkUiType
 import com.global.api.entities.enums.Secure3dVersion
-import com.global.api.gateways.GpApiConnector
+import com.global.api.entities.enums.StoredCredentialInitiator
+import com.global.api.entities.enums.StoredCredentialReason
+import com.global.api.entities.enums.StoredCredentialSequence
+import com.global.api.entities.enums.StoredCredentialType
 import com.global.api.paymentMethods.CreditCardData
+import com.global.api.services.GpApiService
 import com.global.api.services.Secure3dService
 import com.global.api.utils.JsonDoc
 import com.globalpayments.android.sdk.sample.common.Constants
 import com.globalpayments.android.sdk.sample.common.base.BaseViewModel
-import com.globalpayments.android.sdk.task.TaskExecutor
-import com.globalpayments.android.sdk.task.TaskResult
+import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfiguration
+import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfigurationUtils.buildDefaultGpApiConfig
 import com.netcetera.threeds.sdk.api.transaction.AuthenticationRequestParameters
 import com.netcetera.threeds.sdk.api.utils.DsRidValues
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import java.math.BigDecimal
 
@@ -30,78 +35,46 @@ class NetceteraViewModel : BaseViewModel() {
     private var tokenizedCard = CreditCardData()
     private var cardBrand: String? = null
 
+    var makePaymentRecurring: Boolean = false
+
     val accessToken = MutableLiveData<String>()
     val startChallengeFlow = MutableLiveData<ThreeDSecure>()
     val paymentCompleted = MutableLiveData<Transaction>()
     val createNetceteraTransaction = MutableLiveData<ThreeDSecure>()
-    val dccRatesReceived = MutableLiveData<Transaction?>()
-
-    var shouldUseDccRate: Boolean = false
-
-    var amount: BigDecimal? = null
-
-    fun getDCCRate(creditCardData: CreditCardData) {
-        shouldUseDccRate = false
-        dccRatesReceived.postValue(null)
-        TaskExecutor.executeAsync(
-            taskToExecute = {
-                creditCardData.getDccRate()
-                    .withAmount(amount)
-                    .withCurrency(Currency)
-                    .execute(Constants.DEFAULT_GPAPI_CONFIG);
-            },
-            onFinished = {
-                when (it) {
-                    is TaskResult.Error -> {
-                        Log.d("NetceteraViewModel", "Failed to retrieve dcc rates")
-                    }
-                    is TaskResult.Success -> dccRatesReceived.postValue(it.data)
-                }
-            }
-        )
-    }
 
     fun getAccessToken() {
         showProgress()
-        TaskExecutor.executeAsync(
-            taskToExecute = {
-                (ServicesContainer.getInstance()
-                    .getGateway(Constants.DEFAULT_GPAPI_CONFIG) as? GpApiConnector)
-                    ?.accessToken
-                    ?.token
-                    ?: throw IllegalArgumentException("Something went wrong")
-            },
-            onFinished = {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val accessToken = GpApiService.generateTransactionKey(buildDefaultGpApiConfig(GPAPIConfiguration.createDefaultConfig())).accessToken
+                this@NetceteraViewModel.accessToken.postValue(accessToken)
+            } catch (exception: Exception) {
+                showError(exception)
+            } finally {
                 hideProgress()
-                when (it) {
-                    is TaskResult.Error -> showError(it.exception.message)
-                    is TaskResult.Success -> accessToken.postValue(it.data)
-                }
-
             }
-        )
+        }
     }
 
     //2. Send Cardholder data to server
     fun checkEnrollment(cardToken: String, cardType: String) {
         showProgress()
-        cardBrand = cardType
-        tokenizedCard = CreditCardData(cardToken)
-        TaskExecutor.executeAsync(
-            taskToExecute = {
-                Secure3dService
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                cardBrand = cardType
+                tokenizedCard = CreditCardData(cardToken)
+                val transaction = Secure3dService
                     .checkEnrollment(tokenizedCard)
                     .withCurrency(Currency)
-                    .withAmount(amount)
+                    .withAmount(BigDecimal(Amount))
                     .withAuthenticationSource(AuthenticationSource.MobileSDK)
                     .execute(Constants.DEFAULT_GPAPI_CONFIG)
-            }, onFinished = {
-                when (it) {
-                    is TaskResult.Error -> showError(it.exception.message)
-                    is TaskResult.Success -> do3Auth(it.data)
-                }
+                do3Auth(transaction)
+            } catch (exception: Exception) {
+                showError(exception)
+                hideProgress()
             }
-        )
+        }
     }
 
 
@@ -111,6 +84,7 @@ class NetceteraViewModel : BaseViewModel() {
             chargeMoney()
             return
         }
+        hideProgress()
         createNetceteraTransaction.postValue(secureEcom)
     }
 
@@ -119,15 +93,15 @@ class NetceteraViewModel : BaseViewModel() {
         secureEcom: ThreeDSecure,
         netceteraParams: AuthenticationRequestParameters
     ) {
-        TaskExecutor.executeAsync(
-            taskToExecute = {
+        showProgress()
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
                 // Initiate authentication
-                Secure3dService
+                val transaction = Secure3dService
                     .initiateAuthentication(tokenizedCard, secureEcom)
                     .withAuthenticationSource(AuthenticationSource.MobileSDK)
-                    .withAmount(amount)
+                    .withAmount(BigDecimal(Amount))
                     .withCurrency(Currency)
-                    .withStoredCredential(storedCredential)
                     .withOrderCreateDate(DateTime.now())
                     .withMobileData(MobileData().apply {
                         applicationReference = netceteraParams.sdkAppID
@@ -140,14 +114,14 @@ class NetceteraViewModel : BaseViewModel() {
                         setSdkUiTypes(*SdkUiType.values())
                     })
                     .execute(Constants.DEFAULT_GPAPI_CONFIG)
-            },
-            onFinished = {
-                when (it) {
-                    is TaskResult.Error -> showError(it.exception.message)
-                    is TaskResult.Success -> startChallengeFlow.postValue(it.data)
-                }
+
+                startChallengeFlow.postValue(transaction)
+            } catch (exception: Exception) {
+                showError(exception)
+            } finally {
+                hideProgress()
             }
-        )
+        }
     }
 
     fun getDsRidValuesForCard(): String? {
@@ -165,55 +139,66 @@ class NetceteraViewModel : BaseViewModel() {
 
     //23.
     fun doAuth(serverTransactionId: String) {
-        TaskExecutor.executeAsync(
-            taskToExecute = {
-                Secure3dService
+        showProgress()
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val transaction = Secure3dService
                     .getAuthenticationData()
                     .withServerTransactionId(serverTransactionId)
                     .execute(Secure3dVersion.TWO, Constants.DEFAULT_GPAPI_CONFIG)
-            },
-            onFinished = {
-                when (it) {
-                    is TaskResult.Error -> showError(it.exception.message)
-                    is TaskResult.Success -> {
-                        tokenizedCard.threeDSecure = it.data
-                        chargeMoney()
-                    }
-                }
+                tokenizedCard.threeDSecure = transaction
+                chargeMoney()
+            } catch (exception: Exception) {
+                showError(exception)
+                hideProgress()
             }
-        )
+        }
     }
 
     private fun chargeMoney() {
-        TaskExecutor.executeAsync(
-            taskToExecute = {
-                tokenizedCard
-                    .charge(amount)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val transaction = tokenizedCard
+                    .charge(BigDecimal(Amount))
                     .withCurrency(Currency)
-                    .let {
-                        if (shouldUseDccRate) {
-                            it.withDccRateData(dccRatesReceived.value?.dccRateData)
-                        } else {
-                            it
-                        }
-                    }
                     .execute(Constants.DEFAULT_GPAPI_CONFIG)
-            },
-            onFinished = {
-                when (it) {
-                    is TaskResult.Error -> showError(it.exception.message)
-                    is TaskResult.Success -> {
-                        paymentCompleted.postValue(it.data)
-                        hideProgress()
-                    }
+                if (makePaymentRecurring) {
+                    makePaymentRecurring(transaction)
+                } else {
+                    paymentCompleted.postValue(transaction)
+                    hideProgress()
                 }
+            } catch (exception: Exception) {
+                showError(exception)
+                hideProgress()
             }
-        )
+        }
+    }
 
-
+    private fun makePaymentRecurring(chargeResponse: Transaction) {
+        try {
+            storedCredential.apply {
+                initiator = StoredCredentialInitiator.CardHolder
+                type = StoredCredentialType.Recurring
+                sequence = StoredCredentialSequence.Subsequent
+                reason = StoredCredentialReason.Incremental
+            }
+            val transaction = tokenizedCard
+                .charge(BigDecimal(Amount))
+                .withCurrency(Currency)
+                .withStoredCredential(storedCredential)
+                .withCardBrandStorage(StoredCredentialInitiator.Merchant, chargeResponse.cardBrandTransactionId)
+                .execute(Constants.DEFAULT_GPAPI_CONFIG)
+            paymentCompleted.postValue(transaction)
+        } catch (exception: Exception) {
+            showError(exception)
+        } finally {
+            hideProgress()
+        }
     }
 
     companion object {
+        private const val Amount = "100"
         private const val Currency = "GBP"
         private const val ENROLLED = "ENROLLED"
     }

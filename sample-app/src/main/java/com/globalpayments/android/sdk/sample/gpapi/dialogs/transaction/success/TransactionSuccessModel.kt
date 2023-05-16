@@ -1,43 +1,31 @@
 package com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success
 
-import android.os.Parcel
 import android.os.Parcelable
+import com.global.api.entities.PayerDetails
+import com.global.api.entities.Transaction
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class TransactionSuccessModel(
     val id: String,
     val resultCode: String,
     val timeCreated: String,
     val status: String,
     val amount: String,
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-    )
+    val payerDetails: String = ""
+) : Parcelable
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(id)
-        parcel.writeString(resultCode)
-        parcel.writeString(timeCreated)
-        parcel.writeString(status)
-        parcel.writeString(amount)
-    }
+fun Transaction.asInternalModel() = TransactionSuccessModel(
+    id = transactionId,
+    resultCode = responseCode,
+    timeCreated = timestamp,
+    status = responseMessage,
+    amount = balanceAmount?.toString() ?: "",
+    payerDetails = payerDetails?.prettyPrint() ?: ""
+)
 
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<TransactionSuccessModel> {
-        override fun createFromParcel(parcel: Parcel): TransactionSuccessModel {
-            return TransactionSuccessModel(parcel)
-        }
-
-        override fun newArray(size: Int): Array<TransactionSuccessModel?> {
-            return arrayOfNulls(size)
-        }
-    }
-
+private fun PayerDetails.prettyPrint() = buildString {
+    if (firstName.isNotBlank()) append("$firstName ")
+    if (lastName.isNotBlank()) append("$lastName ")
+    if (email.isNotBlank()) append("/ $email")
 }

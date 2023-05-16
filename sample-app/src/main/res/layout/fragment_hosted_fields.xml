@@ -15,15 +15,74 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-
-    <EditText
-        android:id="@+id/amount"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter amount"
-        android:inputType="numberDecimal"
-        android:textColor="@color/colorBlack"
-        android:textSize="20sp" />
+        android:layout_marginHorizontal="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/ic_electrical_services" />
+
+            <View
+                android:layout_width="@dimen/size_1dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:background="@color/colorAccent" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|start"
+                android:orientation="vertical"
+                android:paddingVertical="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Electricity"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Due date: 10/10/2024"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="£100.00"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/button_pay"
@@ -31,12 +90,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginHorizontal="20dp"
+        android:background="@color/colorAccent"
         android:text="Pay"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:textSize="18sp" />
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/cb_recurring_payment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="32dp"
+        android:text="Make payment recurring" />
 
 </LinearLayout>

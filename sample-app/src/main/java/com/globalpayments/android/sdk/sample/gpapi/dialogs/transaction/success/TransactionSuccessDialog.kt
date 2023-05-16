@@ -60,6 +60,12 @@ class TransactionSuccessDialog : DialogFragment(R.layout.dialog_success_transact
                 setTextIsSelectable(true)
                 isVisible = model.amount.isNotBlank()
             }
+            findViewById<TextView>(R.id.payer_details).apply {
+                text = model.payerDetails
+                inputType = InputType.TYPE_NULL
+                setTextIsSelectable(true)
+                isVisible = model.payerDetails.isNotBlank()
+            }
             findViewById<View>(R.id.ok_button).setOnClickListener { dismiss() }
         }
     }

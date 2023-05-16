@@ -6,16 +6,16 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.global.api.ServicesContainer
-import com.global.api.entities.Transaction
 import com.global.api.entities.enums.MobilePaymentMethodType
 import com.global.api.entities.enums.TransactionModifier
-import com.global.api.gateways.GpApiConnector
 import com.global.api.paymentMethods.CreditCardData
-import com.globalpayments.android.sdk.TaskExecutor
+import com.global.api.services.GpApiService
 import com.globalpayments.android.sdk.sample.common.Constants
 import com.globalpayments.android.sdk.sample.common.Constants.DEFAULT_GPAPI_CONFIG
 import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.TransactionSuccessModel
+import com.globalpayments.android.sdk.sample.gpapi.dialogs.transaction.success.asInternalModel
+import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfiguration
+import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfigurationUtils.buildDefaultGpApiConfig
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.IsReadyToPayRequest
@@ -92,88 +92,66 @@ class DigitalWalletViewModel(application: Application) : AndroidViewModel(applic
 
     fun makeTransactionWithGooglePay(token: String, amount: BigDecimal) {
         _progressStatus.postValue(true)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val card = CreditCardData().apply {
+                    this.token = token
+                    this.mobileType = MobilePaymentMethodType.GOOGLEPAY
+                }
 
-        TaskExecutor.executeAsync(object : TaskExecutor.Task<Transaction?> {
-            @Throws(Exception::class)
-            override fun executeAsync(): Transaction {
-                return executeRequest(token, amount)
-            }
+                val transaction = card
+                    .charge(amount)
+                    .withCurrency(CURRENCY_CODE)
+                    .withModifier(TransactionModifier.EncryptedMobile)
+                    .withMaskedDataResponse(false)
+                    .execute(DEFAULT_GPAPI_CONFIG)
 
-            override fun onSuccess(transaction: Transaction?) {
-                _progressStatus.postValue(false)
-                transaction ?: return
-                _paymentSuccess.postValue(
-                    TransactionSuccessModel(
-                        id = transaction.transactionId,
-                        resultCode = transaction.responseCode,
-                        timeCreated = transaction.timestamp,
-                        status = transaction.responseMessage,
-                        amount = transaction.balanceAmount?.toString() ?: ""
-                    )
-                )
-            }
-
-            override fun onError(exception: Exception) {
-                _progressStatus.postValue(false)
+                _paymentSuccess.postValue(transaction.asInternalModel())
+            } catch (exception: Exception) {
                 _paymentError.postValue(exception.message ?: "Error processing transaction")
+            } finally {
+                _progressStatus.postValue(false)
             }
-        })
-    }
-
-    private fun executeRequest(token: String, amount: BigDecimal): Transaction {
-        val card = CreditCardData().apply {
-            this.token = token
-            this.mobileType = MobilePaymentMethodType.GOOGLEPAY
         }
-
-        return card
-            .charge(amount)
-            .withCurrency(CURRENCY_CODE)
-            .withModifier(TransactionModifier.EncryptedMobile)
-            .execute(DEFAULT_GPAPI_CONFIG)
     }
 
     fun getAccessToken() {
         viewModelScope.launch(Dispatchers.IO) {
+            _progressStatus.postValue(true)
             try {
-                val accessToken = (ServicesContainer.getInstance()
-                    .getGateway(Constants.DEFAULT_GPAPI_CONFIG) as? GpApiConnector)
-                    ?.accessToken
-                    ?.token
-                    ?: throw IllegalArgumentException("Something went wrong")
+                val accessToken = GpApiService.generateTransactionKey(buildDefaultGpApiConfig(GPAPIConfiguration.createDefaultConfig())).accessToken
                 this@DigitalWalletViewModel._accessToken.postValue(accessToken)
             } catch (exception: Exception) {
-                Log.e("ClickToPay", exception.message ?: "Error")
+                _paymentError.postValue(exception.message ?: "Error processing transaction")
+            } finally {
+                _progressStatus.postValue(false)
             }
         }
     }
 
     fun captureTransaction(cardToken: String, amount: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val card = CreditCardData().apply {
-                token = cardToken
-                mobileType = MobilePaymentMethodType.CLICK_TO_PAY;
-                cardHolderName = "James Mason#"
+            _progressStatus.postValue(true)
+            try {
+                val card = CreditCardData().apply {
+                    token = cardToken
+                    mobileType = MobilePaymentMethodType.CLICK_TO_PAY
+                    cardHolderName = "James Mason#"
+                }
+
+                val response =
+                    card
+                        .charge(BigDecimal(amount))
+                        .withCurrency("EUR")
+                        .withModifier(TransactionModifier.EncryptedMobile)
+                        .withMaskedDataResponse(false)
+                        .execute(Constants.DEFAULT_GPAPI_CONFIG)
+                _paymentSuccess.postValue(response.asInternalModel())
+            } catch (exception: Exception) {
+                _paymentError.postValue(exception.message ?: "Error processing transaction")
+            } finally {
+                _progressStatus.postValue(false)
             }
-
-            val response =
-                card
-                    .charge(BigDecimal(amount))
-                    .withCurrency("EUR")
-                    .withModifier(TransactionModifier.EncryptedMobile)
-                    .withMaskedDataResponse(true)
-                    .execute(Constants.DEFAULT_GPAPI_CONFIG);
-
-            val transactionSuccessModel = TransactionSuccessModel(
-                id = response.transactionId,
-                resultCode = response.responseCode,
-                timeCreated = response.timestamp,
-                status = response.responseMessage,
-                amount = response.balanceAmount?.toString() ?: ""
-            )
-            _paymentSuccess.postValue(transactionSuccessModel)
         }
     }
-
-
 }

@@ -4,7 +4,7 @@ import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.EditText
+import android.widget.CheckBox
 import androidx.lifecycle.ViewModelProvider
 import com.global.api.entities.ThreeDSecure
 import com.globalpayments.android.sdk.sample.R
@@ -21,7 +21,6 @@ import com.netcetera.threeds.sdk.api.transaction.challenge.ChallengeStatusReceiv
 import com.netcetera.threeds.sdk.api.transaction.challenge.events.CompletionEvent
 import com.netcetera.threeds.sdk.api.transaction.challenge.events.ProtocolErrorEvent
 import com.netcetera.threeds.sdk.api.transaction.challenge.events.RuntimeErrorEvent
-import java.math.BigDecimal
 
 
 class NetceteraFragment : BaseFragment() {
@@ -41,13 +40,16 @@ class NetceteraFragment : BaseFragment() {
         customToolbar.setOnBackButtonListener { close() }
 
         view.findViewById<View>(R.id.button_pay).setOnClickListener {
-            val amount = view.findViewById<EditText>(R.id.amount).text.toString()
-            if (amount.isBlank()) return@setOnClickListener
-            viewModel.amount = BigDecimal(amount)
             viewModel.getAccessToken()
         }
         progressBar = ProgressDialog(requireContext()).apply {
             this.setTitle("Payment in progress")
+        }
+    }
+
+    override fun initViews() {
+        requireView().findViewById<CheckBox>(R.id.cb_recurring_payment).setOnCheckedChangeListener { _, isChecked ->
+            viewModel.makePaymentRecurring = isChecked
         }
     }
 

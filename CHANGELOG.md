@@ -6,6 +6,13 @@
 
 ## Latest Version
 
+## v1.1.26 (05/16/2023)
+
+### Enhancements:
+
+* display payer details
+* add recurring payments on hosted field screen
+
 ## v1.1.25 (05/02/2023)
 
 ### Enhancements:
