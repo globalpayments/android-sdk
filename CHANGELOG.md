@@ -6,6 +6,14 @@
 
 ## Latest Version
 
+## v1.1.27 (08/01/2023)
+
+### Enhancements:
+
+* update gradle version
+* update java version
+* added new readmes
+
 ## v1.1.26 (05/16/2023)
 
 ### Enhancements:

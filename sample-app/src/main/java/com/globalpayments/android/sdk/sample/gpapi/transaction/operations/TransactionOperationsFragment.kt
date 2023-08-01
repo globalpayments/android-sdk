@@ -153,7 +153,7 @@ class TransactionOperationsFragment : BaseFragment(), TransactionOperationDialog
         fun createButton(
             title: String, onClicked: () -> Unit, isEnabled: Boolean = true, hint: String? = null
         ): Button {
-            return MaterialButton(requireContext(), null, R.attr.materialButtonOutlinedStyle).apply {
+            return MaterialButton(requireContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle).apply {
                 layoutParams = LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
                 text = title
                 setOnClickListener {
@@ -177,7 +177,7 @@ class TransactionOperationsFragment : BaseFragment(), TransactionOperationDialog
                 createButton(
                     title = "Increment w/10",
                     onClicked = transactionOperationsViewModel::increment,
-                    isEnabled = Channel.CardPresent.value == channel,
+                    isEnabled = Channel.CardPresent == channel,
                     hint = "Channel must be CardPresent"
                 )
             }

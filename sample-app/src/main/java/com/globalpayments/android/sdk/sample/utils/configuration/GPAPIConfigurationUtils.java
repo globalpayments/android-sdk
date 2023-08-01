@@ -72,7 +72,7 @@ public class GPAPIConfigurationUtils {
         gpApiConfig.setAccessTokenInfo(createAccessTokenInfo(gpapiConfiguration));
         gpApiConfig.setAppId(gpapiConfiguration.getAppId());
         gpApiConfig.setAppKey(gpapiConfiguration.getAppKey());
-        gpApiConfig.setChannel(gpapiConfiguration.getChannel().getValue());
+        gpApiConfig.setChannel(gpapiConfiguration.getChannel());
         gpApiConfig.setDynamicHeaders(androidHeader);
 
         gpApiConfig.setCountry(gpapiConfiguration.getSelectedCountry());

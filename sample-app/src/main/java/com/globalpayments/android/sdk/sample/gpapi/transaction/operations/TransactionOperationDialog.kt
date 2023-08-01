@@ -59,7 +59,7 @@ class TransactionOperationDialog : BaseDialogFragment() {
             multiFingerPrintUsageMode.isVisible = isChecked
         }
         val channel = (ServicesContainer.getInstance().getGateway(Constants.DEFAULT_GPAPI_CONFIG) as? GpApiConnector)?.gpApiConfig?.channel
-        val isCardPresent = Channel.CardNotPresent.value == channel
+        val isCardPresent = Channel.CardNotPresent == channel
         tvManualEntryMode.isVisible = isCardPresent
         manualEntryModeSpinner.isVisible = isCardPresent
         if (isCardPresent) {

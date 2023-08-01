@@ -3,15 +3,31 @@ apply plugin: 'kotlin-android'
 apply from: "publish.gradle"
 
 android {
-    compileSdkVersion 32
+    namespace "com.globalpayments.android.sdk"
+    compileSdk 32
 
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 1
-        versionName "1.1.26"
+        versionName "1.1.27"
 
         buildConfigField "String", 'JAVA_VERSION', "\"${java_version}\""
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(8))
+        }
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
     }
 }
 

@@ -3,6 +3,7 @@
 </a>
 
 # GlobalPayments Android SDK
+
 You can find more information on how to use this SDK and sign up for a free Global Payments sandbox account at https://developer.globalpay.com
 
 ## Requirements
@@ -29,34 +30,29 @@ dependencies {
 }
 ```
 
-## Documentation and Examples
+You can find the latest SDK documentation along with code examples and test cards on
+the [Global Payments Developer Portal](https://developer.globalpay.com).
 
-You can find the latest SDK documentation along with code examples and test cards on the [Global Payments Developer Portal](https://developer.globalpay.com).
+# Sample app
 
-#### Process a Payment Example
+A [sample app](sample-app) of how to integrate java-sdk directly into your mobile application.
 
-```Java
-/// Prepare required configuration
-GpApiConfig config = new GpApiConfig();
-config.setServiceUrl("Service Url"); //(Sandbox URL: "https://apis.sandbox.globalpay.com/ucp")
-config.setAppId("Your application ID");
-config.setAppKey("Your application key");
+## Requirements
 
-/// Add config to container
-ServicesContainer.configureService(config);
+- Android 5.0+ (API 21+)
+- Java 1.8
+- Kotlin 1.7.20
+- Credentials from the [Global Payments Developer Portal](https://developer.globalpay.com)
+- For the latest Netcetera SDK sandbox license and certificate please reach out to Global Payment support team.
 
-/// Prepare card
-CreditCardData card = new CreditCardData();
-card.setNumber("4111111111111111");
-card.setExpMonth(12);
-card.setExpYear(2025);
-card.setCvn("123");
+## Installation
 
-// Execute operation
-Transaction transaction = card.charge(new BigDecimal("19.99"))
-    .withCurrency("USD")
-    .execute();
-```
+- Clone the project
+- Import the project in Android Studio or Intellij
+- Update `configuration.properties` with the `appKey` and `appId` that you've created previously on
+  the [Global Payments Developer Portal](https://developer.globalpay.com)
+- To run Netcetera 3DS sample place the `license` and `acs.pem` files into the `assets` folder so that the Netcetera 3DS SDK can initialize
+- Select `sample-app` from configuration and run the app
 
 #### Test Card Data
 
@@ -95,20 +91,24 @@ Disputes Report | Disputes Operation
 ---
 
 # Merchant 3DS example
+
 A [sample app](merchant3ds) of how to integrate Netcetera SDK.
 
 ## Requirements
- - Android 5.0+ (API 21+)
- - Java 1.8
- - Kotlin 1.7.20
- - Backend from: https://github.com/globalpayments/java-sdk/tree/master/examples/iOS-Hybrid-App-Java-Server 
+
+- Android 5.0+ (API 21+)
+- Java 1.8
+- Kotlin 1.7.20
+- Backend from: https://github.com/globalpayments/java-sdk/tree/master/examples/iOS-Hybrid-App-Java-Server
 
 ## Installation
- - Clone the project
- - Import the project in Android Studio or Intellij
- - Update `configuration.properties` file with the url where the java backend is running
- - Select `merchant3ds` from configuration and run the app
- - For configuration of the java backend check [Merchant3DSSpringBackend](https://github.com/globalpayments/java-sdk/blob/master/examples/iOS-Hybrid-App-Java-Server/README.md)
+
+- Clone the project
+- Import the project in Android Studio or Intellij
+- Update `configuration.properties` file with the url where the java backend is running
+- Select `merchant3ds` from configuration and run the app
+- For configuration of the java backend
+  check [Merchant3DSSpringBackend](https://github.com/globalpayments/java-sdk/blob/master/examples/iOS-Hybrid-App-Java-Server/README.md)
 
 ## Documentation and Examples
 
@@ -126,6 +126,7 @@ Visa        | 4012001038488884 | 12        | 2025     | 123 | Challenge
 Visa        | 4263970000005262 | 12        | 2025     | 123 | Frictionless
 
 ### Sample App Demo Clips
+
 Netcetera Challenge | Decoupled flow
 --------------------|-----------------------------------
 ![](demo_clips/merchant3DS.gif) | ![](demo_clips/merchantDecoupled.gif)

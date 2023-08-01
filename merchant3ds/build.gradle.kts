@@ -30,7 +30,7 @@ android {
         minSdk = 21
         targetSdk = 33
         versionCode = 2
-        versionName = "1.1.26"
+        versionName = "1.1.27"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -42,8 +42,9 @@ android {
         buildConfigField("String", "SERVER_URL", "\"$serverUrl\"")
         buildConfigField("Boolean", "PREFER_DECOUPLED_FLOW", preferDecoupledFlow)
         buildConfigField("int", "AUTH_TIMEOUT", authTimeout)
-
     }
+
+    buildFeatures.buildConfig = true
 
 
     compileOptions {
@@ -53,11 +54,16 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(8))
+        }
+    }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.4.7"
     }
     packagingOptions {
         resources {
@@ -71,19 +77,19 @@ dependencies {
 
     implementation(files("libs/3ds-sdk.aar"))
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("androidx.fragment:fragment-ktx:1.5.3")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-    implementation("androidx.activity:activity-compose:1.6.0")
-    implementation(platform("androidx.compose:compose-bom:2023.01.00"))
+    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.fragment:fragment-ktx:1.6.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.activity:activity-compose:1.7.2")
+    implementation(platform("androidx.compose:compose-bom:2023.05.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("androidx.compose.material:material")
     implementation("com.google.accompanist:accompanist-navigation-animation:$accompanist")
     implementation("com.google.accompanist:accompanist-webview:$accompanist")
-    implementation("androidx.webkit:webkit:1.5.0")
+    implementation("androidx.webkit:webkit:1.7.0")
     implementation("io.coil-kt:coil-compose:2.2.2")
 
 
@@ -92,7 +98,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 
-    implementation("com.google.android.gms:play-services-base:18.1.0")
+    implementation("com.google.android.gms:play-services-base:18.2.0")
     implementation("org.slf4j:slf4j-simple:1.7.36")
     implementation("org.bouncycastle:bcprov-ext-jdk18on:1.71")
     implementation("org.bitbucket.b_c:jose4j:0.7.12")

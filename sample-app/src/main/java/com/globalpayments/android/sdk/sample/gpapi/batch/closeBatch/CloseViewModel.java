@@ -69,7 +69,7 @@ public class CloseViewModel extends BaseAndroidViewModel {
                 // These credentials have permissions for executing BATCH
                 .setAppId(gpapiConfiguration.getAppId())
                 .setAppKey(gpapiConfiguration.getAppKey())
-                .setChannel(gpapiConfiguration.getChannel().getValue());
+                .setChannel(gpapiConfiguration.getChannel());
 
         config.setEnableLogging(true);
 

@@ -3,8 +3,18 @@ package com.globalpayments.android.sdk.sample.gpapi.transaction.operations
 import androidx.lifecycle.MutableLiveData
 import com.global.api.ServicesContainer
 import com.global.api.builders.AuthorizationBuilder
-import com.global.api.entities.*
-import com.global.api.entities.enums.*
+import com.global.api.entities.Customer
+import com.global.api.entities.LodgingData
+import com.global.api.entities.LodgingItems
+import com.global.api.entities.ThreeDSecure
+import com.global.api.entities.Transaction
+import com.global.api.entities.enums.Channel
+import com.global.api.entities.enums.FraudFilterMode
+import com.global.api.entities.enums.FraudFilterResult
+import com.global.api.entities.enums.LodgingItemType
+import com.global.api.entities.enums.ManualEntryMethod
+import com.global.api.entities.enums.PaymentMethodProgram
+import com.global.api.entities.enums.ReasonCode
 import com.global.api.gateways.GpApiConnector
 import com.global.api.paymentMethods.CreditCardData
 import com.global.api.utils.DateUtils
@@ -65,7 +75,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
     private fun manualEntryMethodOption(transactionOperationModel: TransactionOperationModel): CreditCardData {
         val channel = (ServicesContainer.getInstance().getGateway(Constants.DEFAULT_GPAPI_CONFIG) as? GpApiConnector)?.gpApiConfig?.channel
         val manualEntryMethodUsageMode = transactionOperationModel.manualEntryMethodUsageMode
-        if (Channel.CardNotPresent.value == channel) {
+        if (Channel.CardNotPresent == channel) {
             when (manualEntryMethodUsageMode) {
                 ManualEntryMethodUsageMode.None -> {
                     card.number = transactionOperationModel.cardNumber
@@ -73,6 +83,7 @@ class TransactionOperationsViewModel : BaseViewModel() {
                     card.expYear = transactionOperationModel.expiryYear
                     card.cvn = transactionOperationModel.cvnCvv
                 }
+
                 ManualEntryMethodUsageMode.Moto -> {
                     card.number = transactionOperationModel.cardNumber
                     card.expMonth = transactionOperationModel.expiryMonth
