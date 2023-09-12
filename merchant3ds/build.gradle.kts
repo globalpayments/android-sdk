@@ -22,15 +22,15 @@ val preferDecoupledFlow: String = configProperties.getProperty("preferDecoupledF
 val authTimeout: String = configProperties.getProperty("authTimeout")
 
 android {
-    namespace = "com.globalpatments.android.sdk.merchant3ds"
-    compileSdk = 33
+    namespace = "com.globalpayments.android.sdk.merchant3ds"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.globalpatments.android.sdk.merchant3ds"
+        applicationId = "com.globalpayments.android.sdk.merchant3ds"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 2
-        versionName = "1.1.27"
+        versionName = "1.1.28"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -63,7 +63,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.7"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packagingOptions {
         resources {
@@ -73,38 +73,38 @@ android {
 }
 
 dependencies {
-    val accompanist = "0.26.5-rc"
+    val accompanist = "0.32.0"
 
     implementation(files("libs/3ds-sdk.aar"))
 
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.fragment:fragment-ktx:1.6.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.2")
-    implementation(platform("androidx.compose:compose-bom:2023.05.01"))
+    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("androidx.compose.material:material")
-    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanist")
+    implementation("androidx.navigation:navigation-compose:2.7.1")
     implementation("com.google.accompanist:accompanist-webview:$accompanist")
     implementation("androidx.webkit:webkit:1.7.0")
-    implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
 
     implementation("com.google.android.gms:play-services-base:18.2.0")
     implementation("org.slf4j:slf4j-simple:1.7.36")
     implementation("org.bouncycastle:bcprov-ext-jdk18on:1.71")
     implementation("org.bitbucket.b_c:jose4j:0.7.12")
 
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("com.google.dagger:hilt-android:2.47")
+    kapt("com.google.dagger:hilt-android-compiler:2.47")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     testImplementation("junit:junit:4.13.2")

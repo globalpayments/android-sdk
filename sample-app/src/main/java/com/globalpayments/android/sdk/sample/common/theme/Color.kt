@@ -10,4 +10,6 @@ val Teal200 = Color(0xFF03DAC5)
 val Blue500 = Color(0xFF00467f)
 val Blue700 = Color(0xFF006bc3)
 
+val Background = Color.White
+
 

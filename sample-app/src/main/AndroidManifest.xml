@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity">
         <activity
-            android:name=".gpapi.GPAPIActivity"
+            android:name=".gpapi.SampleActivity"
             android:exported="true"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"

@@ -6,6 +6,12 @@
 
 ## Latest Version
 
+## v1.1.28 (09/11/2023)
+
+### Enhancements:
+
+* redesign app
+
 ## v1.1.27 (08/01/2023)
 
 ### Enhancements:

@@ -4,7 +4,8 @@
 
 # GlobalPayments Android SDK
 
-You can find more information on how to use this SDK and sign up for a free Global Payments sandbox account at https://developer.globalpay.com
+You can find more information on how to use this SDK and sign up for a free Global Payments sandbox
+account at https://developer.globalpay.com
 
 ## Requirements
 
@@ -43,7 +44,8 @@ A [sample app](sample-app) of how to integrate java-sdk directly into your mobil
 - Java 1.8
 - Kotlin 1.7.20
 - Credentials from the [Global Payments Developer Portal](https://developer.globalpay.com)
-- For the latest Netcetera SDK sandbox license and certificate please reach out to Global Payment support team.
+- For the latest Netcetera SDK sandbox license and certificate please reach out to Global Payment
+  support team.
 
 ## Installation
 
@@ -51,42 +53,39 @@ A [sample app](sample-app) of how to integrate java-sdk directly into your mobil
 - Import the project in Android Studio or Intellij
 - Update `configuration.properties` with the `appKey` and `appId` that you've created previously on
   the [Global Payments Developer Portal](https://developer.globalpay.com)
-- To run Netcetera 3DS sample place the `license` and `acs.pem` files into the `assets` folder so that the Netcetera 3DS SDK can initialize
+- To run Netcetera 3DS sample place the `license` and `acs.pem` files into the `assets` folder so
+  that the Netcetera 3DS SDK can initialize
 - Select `sample-app` from configuration and run the app
 
 #### Test Card Data
 
-Name        | Number           | Exp Month | Exp Year | CVN
------------ | ---------------- | --------- | -------- | ----
-Visa        | 4263970000005262 | 12        | 2025     | 123
-MasterCard  | 2223000010005780 | 12        | 2019     | 900
-MasterCard  | 5425230000004415 | 12        | 2025     | 123
-Discover    | 6011000000000087 | 12        | 2025     | 123
-Amex        | 374101000000608  | 12        | 2025     | 1234
-JCB         | 3566000000000000 | 12        | 2025     | 123
-Diners Club | 36256000000725   | 12        | 2025     | 123
+ Name        | Number           | Exp Month | Exp Year | CVN  
+-------------|------------------|-----------|----------|------
+ Visa        | 4263970000005262 | 12        | 2025     | 123  
+ MasterCard  | 2223000010005780 | 12        | 2019     | 900  
+ MasterCard  | 5425230000004415 | 12        | 2025     | 123  
+ Discover    | 6011000000000087 | 12        | 2025     | 123  
+ Amex        | 374101000000608  | 12        | 2025     | 1234 
+ JCB         | 3566000000000000 | 12        | 2025     | 123  
+ Diners Club | 36256000000725   | 12        | 2025     | 123  
 
 ## Sample App Demo Clips
 
-Transaction Report | Transaction Operation
--------------------| ---------------------
-![](demo_clips/transaction_report.gif) | ![](demo_clips/transaction_operation.gif)
+#### Main screen
 
-#### Verification
+![](demo_clips/main_screen.gif)
 
-![](demo_clips/verification.gif)
+#### Create Access Token
 
-Payment Method Operation | Payment Method Report
--------------------------| ---------------------
-![](demo_clips/payment_method_operation.gif) | ![](demo_clips/payment_method_report.gif)
+![](demo_clips/access_token.gif)
 
-#### Deposits Report
+| Hosted Fields                     | Google Pay                     |
+|-----------------------------------|--------------------------------|
+| ![](demo_clips/hosted_fields.gif) | ![](demo_clips/google_pay.gif) |
 
-![](demo_clips/deposits.gif)
-
-Disputes Report | Disputes Operation
-----------------| ---------------------
-![](demo_clips/disputes_report.gif) | ![](demo_clips/disputes_operation.gif)
+| Transactions Report                  | Stored Payments                     |
+|--------------------------------------|-------------------------------------|
+| ![](demo_clips/get_transactions.gif) | ![](demo_clips/stored_payments.gif) |
 
 ---
 
@@ -99,7 +98,8 @@ A [sample app](merchant3ds) of how to integrate Netcetera SDK.
 - Android 5.0+ (API 21+)
 - Java 1.8
 - Kotlin 1.7.20
-- Backend from: https://github.com/globalpayments/java-sdk/tree/master/examples/iOS-Hybrid-App-Java-Server
+- Backend
+  from: https://github.com/globalpayments/java-sdk/tree/master/examples/iOS-Hybrid-App-Java-Server
 
 ## Installation
 
@@ -112,21 +112,23 @@ A [sample app](merchant3ds) of how to integrate Netcetera SDK.
 
 ## Documentation and Examples
 
-You can find documentation for Netcetera SDK on [Netcetera website](https://3dss.netcetera.com/3dssdk/doc/2.4.0/)
+You can find documentation for Netcetera SDK
+on [Netcetera website](https://3dss.netcetera.com/3dssdk/doc/2.4.0/)
 
 #### App configuration
 
-Edit the [configuration file](merchant3ds/configuration.properties) with the appropriate values from the backend example
+Edit the [configuration file](merchant3ds/configuration.properties) with the appropriate values from
+the backend example
 
 #### Test Card Data
 
-Name        | Number           | Exp Month | Exp Year | CVN | Type
------------ | ---------------- | --------- | -------- | ---- | ---
-Visa        | 4012001038488884 | 12        | 2025     | 123 | Challenge
-Visa        | 4263970000005262 | 12        | 2025     | 123 | Frictionless
+ Name | Number           | Exp Month | Exp Year | CVN | Type         
+------|------------------|-----------|----------|-----|--------------
+ Visa | 4012001038488884 | 12        | 2025     | 123 | Challenge    
+ Visa | 4263970000005262 | 12        | 2025     | 123 | Frictionless 
 
 ### Sample App Demo Clips
 
-Netcetera Challenge | Decoupled flow
---------------------|-----------------------------------
-![](demo_clips/merchant3DS.gif) | ![](demo_clips/merchantDecoupled.gif)
+ Netcetera Challenge             | Decoupled flow                        
+---------------------------------|---------------------------------------
+ ![](demo_clips/merchant3DS.gif) | ![](demo_clips/merchantDecoupled.gif) 

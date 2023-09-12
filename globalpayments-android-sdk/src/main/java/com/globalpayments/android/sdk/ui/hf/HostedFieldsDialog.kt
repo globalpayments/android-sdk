@@ -57,7 +57,7 @@ class HostedFieldsDialog : AppCompatDialogFragment() {
             setTitle("Loading")
         }
 
-        val accessToken = arguments?.getString(AccessToken)
+        val accessToken = arguments?.getString(AccessTokenKey)
             ?: throw IllegalArgumentException("We need an access token")
 
         val assetLoader = WebViewAssetLoader.Builder()
@@ -88,9 +88,9 @@ class HostedFieldsDialog : AppCompatDialogFragment() {
         private const val JSBridgeName = "JSBridge"
         private const val HtmlLocalAddress = "https://example.com/assets/index.html"
 
-        private const val AccessToken = "access_token"
+        private const val AccessTokenKey = "access_token_key"
         fun newInstance(accessToken: String): HostedFieldsDialog {
-            val args = bundleOf(AccessToken to accessToken)
+            val args = bundleOf(AccessTokenKey to accessToken)
             val fragment = HostedFieldsDialog()
             fragment.arguments = args
             return fragment

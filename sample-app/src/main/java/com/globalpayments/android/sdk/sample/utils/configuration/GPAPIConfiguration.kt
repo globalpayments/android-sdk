@@ -10,10 +10,10 @@ data class GPAPIConfiguration(
     val transactionProcessingAccountName: String? = null,
     val tokenizationAccountName: String? = null,
     val transactionProcessingAccountId: String? = null,
-    val dataAccountId :String? = null,
-    val disputeManagementAccountId :String? = null,
-    val tokenizationAccountId :String? = null,
-    val riskAssessmentAccountId :String? = null,
+    val dataAccountId: String? = null,
+    val disputeManagementAccountId: String? = null,
+    val tokenizationAccountId: String? = null,
+    val riskAssessmentAccountId: String? = null,
     val appId: String? = null,
     val appKey: String? = null,
     val serviceUrl: String? = null,
@@ -28,7 +28,7 @@ data class GPAPIConfiguration(
 ) {
     companion object {
         @JvmStatic
-        fun createDefaultConfig(): GPAPIConfiguration {
+        fun fromBuildConfig(): GPAPIConfiguration {
             return GPAPIConfiguration(
                 BuildConfig.MERCHANT_ID,
                 BuildConfig.TRANSACTION_PROCESSING_ACCOUNT_NAME,

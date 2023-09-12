@@ -39,17 +39,13 @@ public class FileUtils {
         }
 
         deleteFile(file);
-        OutputStream outputStream = null;
 
-        try {
-            outputStream = new FileOutputStream(file);
+        try (OutputStream outputStream = new FileOutputStream(file)) {
             outputStream.write(byteArray);
             outputStream.flush();
             isWriteSuccessful = true;
         } catch (IOException e) {
             Log.d(TAG, "Write byte array to file failed: " + e);
-        } finally {
-            closeCloseables(outputStream);
         }
 
         return isWriteSuccessful;
