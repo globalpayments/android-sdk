@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,13 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.theme.Background
+import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 import com.globalpayments.android.sdk.sample.gpapi.components.GPTab
 import com.globalpayments.android.sdk.sample.gpapi.screens.reporting.disputes.list.DisputesListScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.reporting.disputes.single.DisputesSingleScreen
@@ -44,12 +41,10 @@ fun DisputesReportingScreen() {
             .padding(horizontal = 25.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
+
+        GPScreenTitle(
             modifier = Modifier,
-            text = stringResource(id = R.string.get_disputes),
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            color = Color(0xFF003C71)
+            title = stringResource(id = R.string.get_disputes),
         )
 
         GPTab(

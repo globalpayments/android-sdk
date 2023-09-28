@@ -10,7 +10,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,7 +23,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +33,7 @@ import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.theme.Background
 import com.globalpayments.android.sdk.sample.gpapi.components.GPDropdown
 import com.globalpayments.android.sdk.sample.gpapi.components.GPInputField
+import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSnippetResponse
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSubmitButton
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSwitch
@@ -50,12 +49,10 @@ fun StoredPaymentsScreen(storedPaymentsViewModel: StoredPaymentsViewModel = view
             .padding(horizontal = 25.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
+
+        GPScreenTitle(
             modifier = Modifier,
-            text = stringResource(id = R.string.stored_payments_methods),
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            color = Color(0xFF003C71)
+            title = stringResource(id = R.string.stored_payments_methods),
         )
 
         Divider(

@@ -4,7 +4,6 @@ buildscript {
     repositories {
         google()
         jcenter()
-//        mavenLocal()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.1'
@@ -18,14 +17,15 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-//        mavenLocal()
     }
 
-    tasks.withType(Javadoc) {
-        excludes = ['**/*.kt'] // < ---- Exclude all kotlin files from javadoc file.
+    tasks.withType(Javadoc).tap {
+        configureEach {
+            excludes = ['**/*.kt'] // < ---- Exclude all kotlin files from javadoc file.
+        }
     }
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }

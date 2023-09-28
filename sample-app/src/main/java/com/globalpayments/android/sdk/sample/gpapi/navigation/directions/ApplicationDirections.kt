@@ -98,6 +98,11 @@ object DisputesReportingDirection : NavigationDirection {
     override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
 }
 
+object AccountsReportingDirection : NavigationDirection {
+    override val arguments: Bundle? = null
+    override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
+}
+
 object StoredPaymentsMethodsDirection : NavigationDirection {
     override val arguments: Bundle? = null
     override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
@@ -114,6 +119,11 @@ object DisputesDirection : NavigationDirection {
 }
 
 object BatchesDirection : NavigationDirection {
+    override val arguments: Bundle? = null
+    override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
+}
+
+object EditMerchantAccount : NavigationDirection {
     override val arguments: Bundle? = null
     override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
 }

@@ -406,4 +406,5 @@
     <string name="unified_payments_api">Unified Payments API</string>
     <string name="unified_payments_api_long_description">Process payments through our API.</string>
     <string name="card_cvv">CVV</string>
+    <string name="accounts">Accounts</string>
 </resources>

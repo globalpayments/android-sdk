@@ -6,23 +6,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.theme.Background
 import com.globalpayments.android.sdk.sample.gpapi.components.GPButton
+import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 import com.globalpayments.android.sdk.sample.gpapi.navigation.NavigationManager
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.BatchesDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.DisputesDirection
+import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.EditMerchantAccount
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.StoredPaymentsMethodsDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.VerificationsDirection
 import kotlinx.coroutines.launch
@@ -40,13 +37,10 @@ fun ExpandIntegrationMenuScreen() {
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
+
+        GPScreenTitle(
             modifier = Modifier.padding(top = 20.dp),
-            text = stringResource(id = R.string.expand_your_integration),
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            color = Color(0xFF003C71),
-            fontWeight = FontWeight.Medium
+            title = stringResource(id = R.string.expand_your_integration),
         )
 
         GPButton(
@@ -68,10 +62,16 @@ fun ExpandIntegrationMenuScreen() {
             onClick = { coroutineScope.launch { NavigationManager.navigate(DisputesDirection) } }
         )
         GPButton(
-            modifier = Modifier.padding(top = 20.dp, bottom = 30.dp),
+            modifier = Modifier.padding(top = 20.dp),
             title = "Batches",
             description = "Close a batch.",
             onClick = { coroutineScope.launch { NavigationManager.navigate(BatchesDirection) } }
+        )
+        GPButton(
+            modifier = Modifier.padding(top = 20.dp, bottom = 30.dp),
+            title = "Edit Account",
+            description = "Edit merchant's account configuration",
+            onClick = { coroutineScope.launch { NavigationManager.navigate(EditMerchantAccount) } }
         )
     }
 }

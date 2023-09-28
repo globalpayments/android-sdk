@@ -6,20 +6,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.theme.Background
 import com.globalpayments.android.sdk.sample.gpapi.components.GPButton
+import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 import com.globalpayments.android.sdk.sample.gpapi.navigation.NavigationManager
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.AchDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.BNPLDirection
@@ -44,13 +40,10 @@ fun ProcessAPaymentMenuScreen() {
             .padding(horizontal = 25.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
+
+        GPScreenTitle(
             modifier = Modifier.padding(top = 20.dp),
-            text = stringResource(id = R.string.process_a_payment),
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            color = Color(0xFF003C71),
-            fontWeight = FontWeight.Medium
+            title = stringResource(id = R.string.process_a_payment),
         )
 
         Column(
@@ -85,7 +78,7 @@ fun ProcessAPaymentMenuScreen() {
             )
             GPButton(
                 modifier = Modifier.padding(top = 20.dp),
-                title = "PayByLink",
+                title = "Pay By Link",
                 description = "Process payments via PayByLink",
                 onClick = { coroutineScope.launch { NavigationManager.navigate(PayLinkDirection) } }
             )
@@ -104,13 +97,13 @@ fun ProcessAPaymentMenuScreen() {
             GPButton(
                 modifier = Modifier.padding(top = 20.dp),
                 title = "Buy Now Pay Later",
-                description = "",
+                description = "Provide a flexible payment option that can increase purchases.",
                 onClick = { coroutineScope.launch { NavigationManager.navigate(BNPLDirection) } }
             )
             GPButton(
                 modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
                 title = "Click to Pay",
-                description = "",
+                description = "Present a digital wallet of stored cards for easier checkout.",
                 onClick = { coroutineScope.launch { NavigationManager.navigate(CTPDirection) } }
             )
         }

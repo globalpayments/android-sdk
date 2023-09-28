@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +32,7 @@ import com.globalpayments.android.sdk.sample.common.theme.Background
 import com.globalpayments.android.sdk.sample.gpapi.components.GPActionButton
 import com.globalpayments.android.sdk.sample.gpapi.components.GPAddressDialog
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSampleResponse
+import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSnippetResponse
 import com.globalpayments.android.sdk.sample.gpapi.utils.rememberLifecycleEvent
 
@@ -65,14 +64,9 @@ fun BnplScreen(bnplViewModel: BnplViewModel = viewModel()) {
             .padding(horizontal = 10.dp),
         horizontalAlignment = CenterHorizontally
     ) {
-
-        Text(
+        GPScreenTitle(
             modifier = Modifier,
-            text = stringResource(id = R.string.bnpl),
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            color = Color(0xFF003C71),
-            fontWeight = FontWeight.Medium
+            title = stringResource(id = R.string.bnpl),
         )
 
         Divider(

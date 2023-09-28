@@ -1,23 +1,21 @@
-package com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.batches
+package com.globalpayments.android.sdk.sample.gpapi.screens.reporting.account.single
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
+import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -27,27 +25,54 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.globalpayments.android.sdk.sample.R
-import com.globalpayments.android.sdk.sample.common.theme.Background
+import com.globalpayments.android.sdk.sample.gpapi.components.GPActionButton
 import com.globalpayments.android.sdk.sample.gpapi.components.GPInputField
-import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
+import com.globalpayments.android.sdk.sample.gpapi.components.GPSampleResponse
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSnippetResponse
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSubmitButton
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun BatchesScreen(batchesVM: BatchesScreenViewModel = viewModel()) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Background)
-            .padding(horizontal = 25.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+fun AccountsSingleScreen(
+    modifier: Modifier = Modifier,
+    vm: AccountsSingleViewModel = viewModel()
+) {
 
-        GPScreenTitle(
-            modifier = Modifier,
-            title = stringResource(id = R.string.batches),
-        )
+    Column(modifier = modifier.fillMaxWidth()) {
+
+        val inputHandler = LocalSoftwareKeyboardController.current
+        val screenModel by vm.screenModel.collectAsState()
+
+        val sampleResponse = screenModel.gpSampleResponseModel
+
+        if (sampleResponse == null) {
+            GPInputField(
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .fillMaxWidth(),
+                title = "Account ID",
+                value = screenModel.accountId,
+                onValueChanged = vm::onAccountIdChanged,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
+                keyboardActions = KeyboardActions(onGo = { vm.getAccount();inputHandler?.hide() })
+            )
+
+            GPSubmitButton(
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .fillMaxWidth(),
+                title = "Get Account",
+                onClick = vm::getAccount
+            )
+        } else {
+            GPSampleResponse(
+                modifier = Modifier.padding(top = 20.dp),
+                model = sampleResponse
+            )
+            GPActionButton(title = "Reset") {
+                vm.resetScreen()
+            }
+        }
 
         Divider(
             modifier = Modifier
@@ -61,27 +86,6 @@ fun BatchesScreen(batchesVM: BatchesScreenViewModel = viewModel()) {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-
-            val screenModel by batchesVM.screenModel.collectAsState()
-            val softInput = LocalSoftwareKeyboardController.current
-
-            GPInputField(
-                modifier = Modifier.padding(top = 12.dp),
-                title = R.string.id,
-                value = screenModel.id,
-                onValueChanged = batchesVM::onIdChanged,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
-            )
-
-            GPSubmitButton(
-                modifier = Modifier.padding(top = 12.dp),
-                title = stringResource(id = R.string.close_batch),
-                onClick = {
-                    softInput?.hide()
-                    batchesVM.onSubmitClicked()
-                }
-            )
-
             GPSnippetResponse(
                 modifier = Modifier.padding(top = 20.dp),
                 codeSampleLocation = buildAnnotatedString {
@@ -91,7 +95,7 @@ fun BatchesScreen(batchesVM: BatchesScreenViewModel = viewModel()) {
                             fontSize = 14.sp
                         )
                     ) {
-                        append("Find the code below in this files: sample/gpapi/screens/batches/")
+                        append("Find the code below in this files: sample/gpapi/screens/reporting/account/single/")
                     }
                     withStyle(
                         SpanStyle(
@@ -100,11 +104,12 @@ fun BatchesScreen(batchesVM: BatchesScreenViewModel = viewModel()) {
                             fontWeight = FontWeight.Bold
                         )
                     ) {
-                        append("BatchesScreenViewModel.kt")
+                        append("AccountsSingleViewModel.kt")
                     }
                 },
-                codeSampleSnippet = R.drawable.snippet_batches,
-                model = screenModel.model
+
+                codeSampleSnippet = R.drawable.snippet_accounts_single,
+                model = screenModel.gpSnippetResponseModel
             )
         }
     }

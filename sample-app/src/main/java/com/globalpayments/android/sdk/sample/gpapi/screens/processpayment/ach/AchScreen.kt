@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.theme.Background
+import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSnippetResponse
 
 @Composable
@@ -40,6 +41,11 @@ fun AchScreen(vm: AchViewModel = viewModel()) {
             .padding(horizontal = 25.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        GPScreenTitle(
+            modifier = Modifier,
+            title = stringResource(id = R.string.configuration)
+        )
         Text(
             modifier = Modifier,
             text = stringResource(id = R.string.ach),

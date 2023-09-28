@@ -10,7 +10,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 34
         versionCode 1
-        versionName "1.1.28"
+        versionName "1.1.29"
 
         buildConfigField "String", 'JAVA_VERSION', "\"${java_version}\""
     }
@@ -43,7 +43,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.fragment:fragment-ktx:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
-    implementation("androidx.webkit:webkit:1.7.0")
+    implementation("androidx.webkit:webkit:1.8.0")
 
     // Production
     api "com.heartlandpaymentsystems:globalpayments-sdk:$java_version"

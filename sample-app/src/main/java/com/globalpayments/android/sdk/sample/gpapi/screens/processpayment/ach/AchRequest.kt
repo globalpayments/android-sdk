@@ -25,6 +25,7 @@ import com.globalpayments.android.sdk.sample.gpapi.components.GPActionButton
 import com.globalpayments.android.sdk.sample.gpapi.components.GPDropdown
 import com.globalpayments.android.sdk.sample.gpapi.components.GPInputField
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSelectableField
+import com.globalpayments.android.sdk.sample.gpapi.components.GPSubmitButton
 import com.globalpayments.android.sdk.sample.gpapi.utils.PaymentAmountVisualTransformation
 import com.globalpayments.android.sdk.sample.gpapi.utils.showDatePicker
 
@@ -262,7 +263,7 @@ fun AchRequest(
     //endregion
 
 
-    GPActionButton(
+    GPSubmitButton(
         modifier = Modifier
             .padding(top = 20.dp)
             .fillMaxWidth(),

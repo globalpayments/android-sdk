@@ -60,7 +60,11 @@ fun GPResponse(
                 .padding(4.dp)
                 .background(Color.White, RoundedCornerShape(4.dp))
         ) {
-            Column(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier
+                    .padding(vertical = 7.dp)
+                    .fillMaxWidth()
+            ) {
                 if (fields.size < maxFieldsToDisplay) {
                     FieldsDisplay(fieldsToDisplay = fields)
                 } else {

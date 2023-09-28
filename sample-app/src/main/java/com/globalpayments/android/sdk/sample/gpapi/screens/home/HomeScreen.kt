@@ -13,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.theme.Background
 import com.globalpayments.android.sdk.sample.gpapi.components.GPButton
+import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
@@ -33,13 +33,10 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
             .padding(horizontal = 25.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
+
+        GPScreenTitle(
             modifier = Modifier.padding(top = 20.dp),
-            text = stringResource(id = R.string.home_screen_title),
-            textAlign = TextAlign.Center,
-            fontSize = 24.sp,
-            color = Color(0xFF003C71),
-            fontWeight = FontWeight.Medium
+            title = stringResource(id = R.string.home_screen_title),
         )
 
         Text(

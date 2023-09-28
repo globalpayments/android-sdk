@@ -1,12 +1,13 @@
 package com.globalpayments.android.sdk.utils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import static com.globalpayments.android.sdk.utils.Strings.EMPTY;
 import static com.globalpayments.android.sdk.utils.Utils.isNullOrBlank;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class DateUtils {
     public static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
@@ -43,5 +44,12 @@ public class DateUtils {
 
     public static boolean isValidDate(String dateFormat, String dateString) {
         return parseDate(dateFormat, dateString) != null;
+    }
+
+    public static Date addDays(Date date, int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days);
+        return cal.getTime();
     }
 }

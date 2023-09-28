@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.AccountsReportingDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.AchDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.ActionsReportingDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.BNPLDirection
@@ -19,6 +20,7 @@ import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.Deposit
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.DisputesDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.DisputesReportingDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.EbtDirection
+import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.EditMerchantAccount
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.ExpandYourIntegrationDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.GooglePayDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.HomeDirection
@@ -35,6 +37,7 @@ import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.Verific
 import com.globalpayments.android.sdk.sample.gpapi.screens.accesstoken.CreateAccessTokenScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.config.ConfigScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.ExpandIntegrationMenuScreen
+import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.accounts.EditMerchantAccountsScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.batches.BatchesScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.disputes.DisputesScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.storedpayments.StoredPaymentsScreen
@@ -51,6 +54,7 @@ import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.paybyl
 import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.paypal.PayPalScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.unifiedpaymentsapi.UnifiedPaymentAPIScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.reporting.ReportingMenuScreen
+import com.globalpayments.android.sdk.sample.gpapi.screens.reporting.account.AccountsScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.reporting.actions.ActionsScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.reporting.deposits.DepositsScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.reporting.disputes.DisputesReportingScreen
@@ -82,9 +86,11 @@ fun SampleAppNavHost(
         composable(GooglePayDirection::class.toString()) { GooglePayScreen() }
         composable(TransactionsReportingDirection::class.toString()) { TransactionsScreen() }
         composable(DepositsReportingDirection::class.toString()) { DepositsScreen() }
+        composable(AccountsReportingDirection::class.toString()) { AccountsScreen() }
         composable(StoredPaymentsMethodsDirection::class.toString()) { StoredPaymentsScreen() }
         composable(VerificationsDirection::class.toString()) { VerificationsScreen() }
         composable(BatchesDirection::class.toString()) { BatchesScreen() }
+        composable(EditMerchantAccount::class.toString()) { EditMerchantAccountsScreen() }
         composable(DisputesDirection::class.toString()) { DisputesScreen() }
         composable(PaymentMethodsReportingDirection::class.toString()) { PaymentMethodsScreen() }
         composable(ActionsReportingDirection::class.toString()) { ActionsScreen() }

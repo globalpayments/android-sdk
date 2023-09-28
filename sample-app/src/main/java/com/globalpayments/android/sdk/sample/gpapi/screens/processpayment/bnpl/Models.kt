@@ -12,6 +12,7 @@ import com.global.api.entities.enums.CustomerDocumentType
 import com.global.api.entities.enums.PhoneNumberType
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSampleResponseModel
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSnippetResponseModel
+import com.globalpayments.android.sdk.sample.gpapi.utils.createEmptyAddress
 
 data class BnplScreenModel(
     val screenState: ScreenState = ScreenState.Request,
@@ -56,18 +57,6 @@ sealed interface ScreenState {
     data object CaptureRefund : ScreenState
     data object Refund : ScreenState
     data object Reset : ScreenState
-}
-
-private fun createEmptyAddress(): Address {
-    return Address().apply {
-        streetAddress1 = "10 Glenlake Pkwy NE"
-        streetAddress2 = "Complex 741"
-        streetAddress3 = "no"
-        city = "Birmingham"
-        postalCode = "50001"
-        countryCode = "US"
-        state = "IL"
-    }
 }
 
 private fun createEmptyCustomer(): Customer {

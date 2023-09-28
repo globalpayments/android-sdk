@@ -42,7 +42,7 @@ fun GPSubmitButton(
             modifier = Modifier
                 .padding(vertical = 7.5.dp)
                 .align(CenterVertically),
-            text = title,
+            text = title.uppercase(),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             color = Color.White

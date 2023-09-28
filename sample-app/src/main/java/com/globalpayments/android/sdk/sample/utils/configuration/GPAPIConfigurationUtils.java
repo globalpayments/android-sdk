@@ -12,6 +12,7 @@ import com.global.api.entities.gpApi.entities.AccessTokenInfo;
 import com.global.api.gateways.GpApiConnector;
 import com.global.api.serviceConfigs.GpApiConfig;
 import com.globalpayments.android.sdk.sample.BuildConfig;
+import com.globalpayments.android.sdk.utils.AndroidSampleLogger;
 
 import java.util.HashMap;
 
@@ -94,7 +95,7 @@ public class GPAPIConfigurationUtils {
 
         gpApiConfig.setIntervalToExpire(gpapiConfiguration.getTokenIntervalToExpire());
         gpApiConfig.setEnvironment(gpapiConfiguration.getEnvironment());
-        gpApiConfig.setEnableLogging(true);
+        gpApiConfig.setRequestLogger(new AndroidSampleLogger());
 
         return gpApiConfig;
     }

@@ -6,6 +6,14 @@
 
 ## Latest Version
 
+## v1.1.29 (09/27/2023)
+
+### Enhancements:
+
+* Manage merchant accounts for partner solution - https://developer.globalpay.com/api/accounts
+
+## Latest Version
+
 ## v1.1.28 (09/11/2023)
 
 ### Enhancements:

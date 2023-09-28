@@ -18,6 +18,8 @@ import com.netcetera.threeds.sdk.api.ui.logic.UiCustomization
 import com.netcetera.threeds.sdk.api.utils.DsRidValues
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.util.Locale
@@ -27,18 +29,21 @@ import kotlin.coroutines.suspendCoroutine
 
 object NetceteraInstanceHolder {
 
+    private val initMutex = Mutex()
     private var isServiceInitialized: Boolean = false
     private val threeDS2Service: ThreeDS2Service by lazy { ThreeDS2ServiceInstance.get() }
 
     suspend fun init3DSService(context: Context) = withContext(Dispatchers.IO) {
-        if (isServiceInitialized) return@withContext
-        threeDS2Service.initialize(
-            context,
-            getThreeDS2ConfigParams(context),
-            Locale.getDefault().language,
-            getThreeDS2UICustomization()
-        )
-        isServiceInitialized = true
+        initMutex.withLock {
+            if (isServiceInitialized) return@withContext
+            threeDS2Service.initialize(
+                context,
+                getThreeDS2ConfigParams(context),
+                Locale.getDefault().language,
+                getThreeDS2UICustomization()
+            )
+            isServiceInitialized = true
+        }
     }
 
     suspend fun createTransaction(cardBrand: String, messageVersion: String): Transaction = withContext(Dispatchers.IO) {

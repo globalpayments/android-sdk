@@ -1,4 +1,4 @@
-package com.globalpayments.android.sdk.sample.gpapi.screens.reporting.deposits
+package com.globalpayments.android.sdk.sample.gpapi.screens.reporting.account
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
@@ -22,17 +22,17 @@ import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.theme.Background
 import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 import com.globalpayments.android.sdk.sample.gpapi.components.GPTab
-import com.globalpayments.android.sdk.sample.gpapi.screens.reporting.deposits.list.DepositsListScreen
-import com.globalpayments.android.sdk.sample.gpapi.screens.reporting.deposits.single.DepositsSingleScreen
+import com.globalpayments.android.sdk.sample.gpapi.screens.reporting.account.list.AccountsListScreen
+import com.globalpayments.android.sdk.sample.gpapi.screens.reporting.account.single.AccountsSingleScreen
 
-enum class DepositsScreenTab {
+enum class AccountsScreenTab {
     Single, List
 }
 
 @Composable
-fun DepositsScreen() {
+fun AccountsScreen() {
 
-    var currentTab: DepositsScreenTab by remember { mutableStateOf(DepositsScreenTab.Single) }
+    var currentTab: AccountsScreenTab by remember { mutableStateOf(AccountsScreenTab.Single) }
 
     Column(
         modifier = Modifier
@@ -44,12 +44,12 @@ fun DepositsScreen() {
 
         GPScreenTitle(
             modifier = Modifier,
-            title = stringResource(id = R.string.get_deposits),
+            title = stringResource(id = R.string.accounts),
         )
 
         GPTab(
             modifier = Modifier.padding(top = 25.dp),
-            tabs = DepositsScreenTab.entries,
+            tabs = AccountsScreenTab.entries,
             currentTab
         ) { currentTab = it }
 
@@ -65,11 +65,11 @@ fun DepositsScreen() {
                     slideInHorizontally(animationSpec = tween()) { fullWidth -> -fullWidth } togetherWith slideOutHorizontally(animationSpec = tween()) { fullWidth -> 2 * fullWidth }
                 }
             },
-            label = "DepositsPages"
+            label = "ActionsPages"
         ) { targetPage ->
             when (targetPage) {
-                DepositsScreenTab.Single -> DepositsSingleScreen(modifier = Modifier.fillMaxSize())
-                DepositsScreenTab.List -> DepositsListScreen(modifier = Modifier.fillMaxSize())
+                AccountsScreenTab.Single -> AccountsSingleScreen(modifier = Modifier.fillMaxSize())
+                AccountsScreenTab.List -> AccountsListScreen(modifier = Modifier.fillMaxSize())
             }
         }
     }

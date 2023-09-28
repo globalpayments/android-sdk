@@ -93,7 +93,9 @@ fun GPSnippetResponse(
                         )
                     } else {
                         Text(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .padding(bottom = 15.dp)
+                                .fillMaxWidth(),
                             text = "Make a request to see the response",
                             textAlign = TextAlign.Center
                         )

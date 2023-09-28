@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,14 +31,15 @@ fun GPCheckbox(
             modifier = Modifier,
             checked = checked,
             onCheckedChange = onCheckChanged,
-            colors = CheckboxDefaults.colors(checkedColor = checkBoxColor, uncheckedColor = checkBoxColor, checkmarkColor = Color.White)
+            colors = CheckboxDefaults.colors(checkedColor = checkBoxColor, uncheckedColor = checkBoxColor, checkmarkColor = Color.White),
         )
 
-        Text(
+        AutoResizeText(
             modifier = Modifier,
             text = title,
-            fontSize = 10.sp,
-            color = Color(0xFF2E3038)
+            color = Color(0xFF2E3038),
+            fontSizeRange = FontSizeRange(min = 10.sp, max = 13.sp),
+            maxLines = 1
         )
     }
 }

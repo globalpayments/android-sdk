@@ -27,7 +27,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,8 +36,10 @@ import com.globalpayments.android.sdk.sample.common.theme.Background
 import com.globalpayments.android.sdk.sample.gpapi.components.GPActionButton
 import com.globalpayments.android.sdk.sample.gpapi.components.GPInputField
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSampleResponse
+import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSelectableField
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSnippetResponse
+import com.globalpayments.android.sdk.sample.gpapi.components.GPSubmitButton
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSwitch
 import com.globalpayments.android.sdk.sample.gpapi.utils.PaymentAmountVisualTransformation
 import com.globalpayments.android.sdk.sample.gpapi.utils.showDatePicker
@@ -66,13 +67,9 @@ fun UnifiedPaymentAPIScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(
+        GPScreenTitle(
             modifier = Modifier,
-            text = stringResource(id = R.string.unified_payments_api),
-            textAlign = TextAlign.Center,
-            fontSize = 18.sp,
-            color = Color(0xFF003C71),
-            fontWeight = FontWeight.Medium
+            title = stringResource(id = R.string.unified_payments_api),
         )
 
         Text(
@@ -155,7 +152,7 @@ fun UnifiedPaymentAPIScreen(
                 )
 
 
-                GPActionButton(
+                GPSubmitButton(
                     modifier = Modifier
                         .padding(top = 20.dp)
                         .fillMaxWidth(),
