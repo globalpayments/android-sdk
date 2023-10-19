@@ -1,4 +1,4 @@
-package com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.accounts
+package com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.merchants.edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

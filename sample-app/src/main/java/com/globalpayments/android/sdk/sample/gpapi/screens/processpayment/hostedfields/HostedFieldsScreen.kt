@@ -54,7 +54,7 @@ import com.google.accompanist.web.rememberWebViewState
 @Composable
 fun HostedFieldsScreen(
     context: Context = LocalContext.current,
-    hfViewModel: HostedFieldsViewModel = viewModel(initializer = { HostedFieldsViewModel(context) })
+    hfViewModel: HostedFieldsViewModel = viewModel()
 ) {
 
     val screenModel by hfViewModel.screenModel.collectAsState()
@@ -111,7 +111,6 @@ fun HostedFieldsScreen(
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Decimal),
                         visualTransformation = PaymentAmountVisualTransformation("$")
                     )
-                    val context = LocalContext.current
                     val assetLoader = WebViewAssetLoader.Builder().setDomain("example.com")
                         .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(context)).build()
                     val state = rememberWebViewState(url = "https://example.com/assets/index.html")

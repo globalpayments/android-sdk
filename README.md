@@ -42,7 +42,7 @@ A [sample app](sample-app) of how to integrate java-sdk directly into your mobil
 
 - Android 5.0+ (API 21+)
 - Java 1.8
-- Kotlin 1.7.20
+- Kotlin 1.9.10
 - Credentials from the [Global Payments Developer Portal](https://developer.globalpay.com)
 - For the latest Netcetera SDK sandbox license and certificate please reach out to Global Payment
   support team.
@@ -97,7 +97,7 @@ A [sample app](merchant3ds) of how to integrate Netcetera SDK.
 
 - Android 5.0+ (API 21+)
 - Java 1.8
-- Kotlin 1.7.20
+- Kotlin 1.9.10
 - Backend
   from: https://github.com/globalpayments/java-sdk/tree/master/examples/iOS-Hybrid-App-Java-Server
 

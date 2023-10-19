@@ -123,7 +123,7 @@ object BatchesDirection : NavigationDirection {
     override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
 }
 
-object EditMerchantAccount : NavigationDirection {
+object MerchantsDirection : NavigationDirection {
     override val arguments: Bundle? = null
     override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
 }

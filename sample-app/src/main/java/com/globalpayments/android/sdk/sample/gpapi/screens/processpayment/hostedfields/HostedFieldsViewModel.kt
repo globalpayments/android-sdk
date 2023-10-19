@@ -1,8 +1,8 @@
 package com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.hostedfields
 
 import android.app.Activity
-import android.content.Context
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.global.api.entities.MobileData
 import com.global.api.entities.StoredCredential
@@ -23,6 +23,7 @@ import com.globalpayments.android.sdk.sample.gpapi.netcetera.NetceteraInstanceHo
 import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.unifiedpaymentsapi.NetceteraParams
 import com.globalpayments.android.sdk.sample.gpapi.utils.formatAsPaymentAmount
 import com.globalpayments.android.sdk.sample.gpapi.utils.mapNotNullFields
+import com.globalpayments.android.sdk.sample.utils.AppPreferences
 import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfiguration
 import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfigurationUtils.buildDefaultGpApiConfig
 import com.netcetera.threeds.sdk.api.transaction.AuthenticationRequestParameters
@@ -35,14 +36,15 @@ import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 import java.math.BigDecimal
 
-class HostedFieldsViewModel(context: Context) : ViewModel() {
+class HostedFieldsViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val sharedAppPreferences = AppPreferences(application)
     val screenModel: MutableStateFlow<HostedFieldsScreenModel> = MutableStateFlow(HostedFieldsScreenModel())
 
     init {
         createAccessToken()
         viewModelScope.launch(Dispatchers.IO) {
-            NetceteraInstanceHolder.init3DSService(context)
+            NetceteraInstanceHolder.init3DSService(application)
         }
     }
 
@@ -50,7 +52,7 @@ class HostedFieldsViewModel(context: Context) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val accessToken = GpApiService
-                    .generateTransactionKey(buildDefaultGpApiConfig(GPAPIConfiguration.fromBuildConfig()))
+                    .generateTransactionKey(buildDefaultGpApiConfig(sharedAppPreferences.gpAPIConfiguration ?: GPAPIConfiguration.fromBuildConfig()))
                     .accessToken
                 screenModel.update { it.copy(accessToken = accessToken) }
             } catch (exception: Exception) {

@@ -1,7 +1,8 @@
 package com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.ctp
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.global.api.entities.Transaction
 import com.global.api.entities.enums.MobilePaymentMethodType
@@ -12,6 +13,7 @@ import com.globalpayments.android.sdk.sample.common.Constants
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSampleResponseModel
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSnippetResponseModel
 import com.globalpayments.android.sdk.sample.gpapi.utils.mapNotNullFields
+import com.globalpayments.android.sdk.sample.utils.AppPreferences
 import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfiguration
 import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfigurationUtils
 import kotlinx.coroutines.Dispatchers
@@ -21,8 +23,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigDecimal
 
-class CtpViewModel : ViewModel() {
+class CtpViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val sharedAppPreferences = AppPreferences(application)
     val screenModel = MutableStateFlow(CTPModel())
 
     fun onAmountChanged(value: String) = screenModel.update { it.copy(amount = value) }
@@ -32,7 +35,11 @@ class CtpViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val accessToken = GpApiService
-                    .generateTransactionKey(GPAPIConfigurationUtils.buildDefaultGpApiConfig(GPAPIConfiguration.fromBuildConfig()))
+                    .generateTransactionKey(
+                        GPAPIConfigurationUtils.buildDefaultGpApiConfig(
+                            sharedAppPreferences.gpAPIConfiguration ?: GPAPIConfiguration.fromBuildConfig()
+                        )
+                    )
                     .accessToken
                 screenModel.update { it.copy(accessToken = accessToken) }
             } catch (exception: Exception) {

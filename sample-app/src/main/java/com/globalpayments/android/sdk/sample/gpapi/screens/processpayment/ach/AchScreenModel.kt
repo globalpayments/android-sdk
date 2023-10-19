@@ -28,6 +28,10 @@ data class AchScreenModel(
     val billingAddressPostalCode: String = "",
     val billingAddressCountry: String = "",
 
+    val splitTransaction: Boolean = false,
+    val splitAmount: String = "",
+    val splitMerchantId: String = "",
+
     val gpSampleResponseModel: GPSampleResponseModel? = null,
     val gpSnippetResponseModel: GPSnippetResponseModel = GPSnippetResponseModel()
 )

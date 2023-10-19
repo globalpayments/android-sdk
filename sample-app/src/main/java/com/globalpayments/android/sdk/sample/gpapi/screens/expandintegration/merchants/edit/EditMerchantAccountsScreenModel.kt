@@ -1,4 +1,4 @@
-package com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.accounts
+package com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.merchants.edit
 
 import com.global.api.entities.Address
 import com.globalpayments.android.sdk.model.PaymentCardModel

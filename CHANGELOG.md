@@ -6,6 +6,13 @@
 
 ## Latest Version
 
+## v1.1.30 (10/18/2023)
+
+### Enhancements:
+
+* Transfer Funds - https://developer.globalpay.com/api/transfers
+* Project Gradle structure
+
 ## v1.1.29 (09/27/2023)
 
 ### Enhancements:

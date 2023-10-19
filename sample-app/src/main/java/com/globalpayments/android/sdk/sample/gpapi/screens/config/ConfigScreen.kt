@@ -1,6 +1,5 @@
 package com.globalpayments.android.sdk.sample.gpapi.screens.config
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,10 +33,7 @@ import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSubmitButton
 
 @Composable
-fun ConfigScreen(
-    context: Context = LocalContext.current,
-    vm: ConfigViewModel = viewModel(initializer = { ConfigViewModel(context) })
-) {
+fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
 
     val screenModel by vm.screenModel.collectAsState()
 

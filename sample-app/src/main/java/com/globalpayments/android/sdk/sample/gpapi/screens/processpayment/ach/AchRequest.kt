@@ -26,6 +26,7 @@ import com.globalpayments.android.sdk.sample.gpapi.components.GPDropdown
 import com.globalpayments.android.sdk.sample.gpapi.components.GPInputField
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSelectableField
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSubmitButton
+import com.globalpayments.android.sdk.sample.gpapi.components.GPSwitch
 import com.globalpayments.android.sdk.sample.gpapi.utils.PaymentAmountVisualTransformation
 import com.globalpayments.android.sdk.sample.gpapi.utils.showDatePicker
 
@@ -46,6 +47,33 @@ fun AchRequest(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Decimal),
         visualTransformation = PaymentAmountVisualTransformation("$")
     )
+
+    GPSwitch(
+        modifier = Modifier.padding(top = 17.dp),
+        title = "Split",
+        isChecked = screenModel.splitTransaction,
+        onCheckedChanged = achViewModel::onSplitCheckedChange
+    )
+
+    if (screenModel.splitTransaction) {
+
+        GPInputField(
+            modifier = Modifier.padding(top = 17.dp),
+            title = "Split Amount",
+            value = screenModel.splitAmount,
+            onValueChanged = achViewModel::onSplitAmountChanged,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Decimal),
+            visualTransformation = PaymentAmountVisualTransformation("$")
+        )
+
+        GPInputField(
+            modifier = Modifier.padding(top = 17.dp),
+            title = "MerchantId for Split",
+            value = screenModel.splitMerchantId,
+            onValueChanged = achViewModel::onSplitMerchantIdChanged,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        )
+    }
 
     //region BankDetails
     Text(

@@ -1,7 +1,7 @@
 package com.globalpayments.android.sdk.sample.gpapi.screens.config
 
-import android.content.Context
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.global.api.entities.enums.Channel
 import com.global.api.entities.enums.Environment
@@ -15,9 +15,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ConfigViewModel(context: Context) : ViewModel() {
+class ConfigViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val sharedPreferences = AppPreferences(context)
+    private val sharedPreferences = AppPreferences(application)
     val screenModel = MutableStateFlow(ConfigScreenModel())
 
     fun appIdChanged(value: String) = screenModel.update { it.copy(appId = value) }

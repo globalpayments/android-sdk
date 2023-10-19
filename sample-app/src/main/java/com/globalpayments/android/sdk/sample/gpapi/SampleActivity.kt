@@ -39,6 +39,7 @@ import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.ConfigD
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.DirectionBack
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.HomeDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.navigate
+import com.globalpayments.android.sdk.sample.utils.AppPreferences
 import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfiguration.Companion.fromBuildConfig
 import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfigurationUtils
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +48,7 @@ import kotlinx.coroutines.launch
 
 class SampleActivity : FragmentActivity() {
 
+    private val sharedPreferences by lazy { AppPreferences(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -54,7 +56,9 @@ class SampleActivity : FragmentActivity() {
             SampleAppScreen()
         }
         lifecycleScope.launch(Dispatchers.IO) {
-            GPAPIConfigurationUtils.initializeDefaultGPAPIConfiguration(fromBuildConfig())
+            GPAPIConfigurationUtils.initializeDefaultGPAPIConfiguration(
+                sharedPreferences.gpAPIConfiguration ?: fromBuildConfig()
+            )
         }
     }
 }
@@ -84,7 +88,6 @@ fun SampleAppScreen() {
         modifier = Modifier.fillMaxSize(),
         drawerGesturesEnabled = false,
         topBar = {
-
             val currentNavEntry by navController.currentBackStackEntryAsState()
             CenterAlignedTopAppBar(
                 title = {

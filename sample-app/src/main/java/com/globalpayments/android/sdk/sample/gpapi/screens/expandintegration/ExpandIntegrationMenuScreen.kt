@@ -19,7 +19,7 @@ import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 import com.globalpayments.android.sdk.sample.gpapi.navigation.NavigationManager
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.BatchesDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.DisputesDirection
-import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.EditMerchantAccount
+import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.MerchantsDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.StoredPaymentsMethodsDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.VerificationsDirection
 import kotlinx.coroutines.launch
@@ -71,7 +71,7 @@ fun ExpandIntegrationMenuScreen() {
             modifier = Modifier.padding(top = 20.dp, bottom = 30.dp),
             title = "Edit Account",
             description = "Edit merchant's account configuration",
-            onClick = { coroutineScope.launch { NavigationManager.navigate(EditMerchantAccount) } }
+            onClick = { coroutineScope.launch { NavigationManager.navigate(MerchantsDirection) } }
         )
     }
 }

@@ -1,71 +1,27 @@
-import java.io.DataInputStream
-import java.util.Properties
-
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id("globalpayments.android.application")
+    id("globalpayments.android.application.compose")
+    id("globalpayments.android.hilt")
+    id("globalpayments.merchant3ds.config")
     kotlin("kapt")
-    id("com.google.dagger.hilt.android")
-    kotlin("plugin.serialization") version "1.7.20"
+    id("kotlinx-serialization")
 }
-
-val configProperties = Properties()
-if (project.file("local.properties").exists()) {
-    configProperties.load(DataInputStream(project.file("local.properties").inputStream()))
-} else {
-    configProperties.load(DataInputStream(project.file("configuration.properties").inputStream()))
-}
-val appId: String = configProperties.getProperty("appId")
-val appKey: String = configProperties.getProperty("appKey")
-val serverUrl: String = configProperties.getProperty("serverUrl")
-val preferDecoupledFlow: String = configProperties.getProperty("preferDecoupledFlow")
-val authTimeout: String = configProperties.getProperty("authTimeout")
-
 android {
     namespace = "com.globalpayments.android.sdk.merchant3ds"
-    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.globalpayments.android.sdk.merchant3ds"
-        minSdk = 21
-        targetSdk = 34
         versionCode = 2
-        versionName = "1.1.29"
+        versionName = libs.versions.globalPayments.android.get()
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        buildConfigField("String", "APP_ID", "\"$appId\"")
-        buildConfigField("String", "APP_KEY", "\"$appKey\"")
-        buildConfigField("String", "SERVER_URL", "\"$serverUrl\"")
-        buildConfigField("Boolean", "PREFER_DECOUPLED_FLOW", preferDecoupledFlow)
-        buildConfigField("int", "AUTH_TIMEOUT", authTimeout)
     }
 
     buildFeatures.buildConfig = true
 
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-    java {
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(8))
-        }
-    }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
-    }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -73,45 +29,36 @@ android {
 }
 
 dependencies {
-    val accompanist = "0.32.0"
-
     implementation(files("libs/3ds-sdk.aar"))
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.fragment:fragment-ktx:1.6.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.7.2")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-    implementation("androidx.compose.material:material")
-    implementation("androidx.navigation:navigation-compose:2.7.2")
-    implementation("com.google.accompanist:accompanist-webview:$accompanist")
-    implementation("androidx.webkit:webkit:1.8.0")
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.fragment)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.webkit)
 
+    implementation(libs.accompanist.webview)
 
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    implementation(libs.coil.compose)
 
-    implementation("com.google.android.gms:play-services-base:18.2.0")
-    implementation("org.slf4j:slf4j-simple:1.7.36")
-    implementation("org.bouncycastle:bcprov-ext-jdk18on:1.71")
-    implementation("org.bitbucket.b_c:jose4j:0.7.12")
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.okhttp.interceptor)
+    implementation(libs.retrofit.kotlinx.serialization.json)
+    implementation(libs.kotlinx.serialization.json)
 
-    implementation("com.google.dagger:hilt-android:2.47")
-    kapt("com.google.dagger:hilt-android-compiler:2.47")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation(libs.play.services.base)
+    implementation(libs.slf4j.simple)
+    implementation(libs.bouncyCastle)
+    implementation(libs.jose4j)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 }
 
 kapt {
