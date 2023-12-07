@@ -67,5 +67,4 @@ dependencies {
     implementation(libs.slf4j.simple)
     implementation(libs.bouncyCastle)
     implementation(libs.jose4j)
-
 }

@@ -20,11 +20,13 @@ import androidx.compose.ui.unit.dp
 import com.globalpayments.android.sdk.sample.common.theme.Background
 import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 import com.globalpayments.android.sdk.sample.gpapi.components.GPTab
+import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.merchants.add.AddFundsScreen
+import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.merchants.document.MerchantUploadDocumentScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.merchants.edit.EditMerchantAccountsScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.merchants.transfer.TransferFundsScreen
 
 enum class MerchantsScreenTab {
-    Edit, Transfer
+    Add, Edit, Transfer, Document
 }
 
 @Composable
@@ -66,6 +68,8 @@ fun MerchantsScreen() {
             when (targetPage) {
                 MerchantsScreenTab.Edit -> EditMerchantAccountsScreen()
                 MerchantsScreenTab.Transfer -> TransferFundsScreen()
+                MerchantsScreenTab.Add -> AddFundsScreen()
+                MerchantsScreenTab.Document -> MerchantUploadDocumentScreen()
             }
         }
     }

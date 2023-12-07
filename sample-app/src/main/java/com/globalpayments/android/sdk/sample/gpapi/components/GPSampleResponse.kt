@@ -64,7 +64,14 @@ fun GPSampleResponse(
                         .fillMaxWidth()
                 ) {
                     Text(text = name, modifier = Modifier.weight(1f), color = Color(0xFF5A5E6D), fontSize = 13.sp)
-                    SelectionContainer { Text(text = field, modifier = Modifier.weight(1f), color = Color(0xFF2E3038), fontSize = 13.sp) }
+                    SelectionContainer(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = field,
+                            modifier = Modifier.weight(1f),
+                            color = Color(0xFF2E3038),
+                            fontSize = 13.sp
+                        )
+                    }
                 }
             }
         }

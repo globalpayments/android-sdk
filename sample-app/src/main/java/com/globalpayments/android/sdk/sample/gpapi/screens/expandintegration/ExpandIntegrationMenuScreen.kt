@@ -69,7 +69,7 @@ fun ExpandIntegrationMenuScreen() {
         )
         GPButton(
             modifier = Modifier.padding(top = 20.dp, bottom = 30.dp),
-            title = "Edit Account",
+            title = "Merchants",
             description = "Edit merchant's account configuration",
             onClick = { coroutineScope.launch { NavigationManager.navigate(MerchantsDirection) } }
         )
