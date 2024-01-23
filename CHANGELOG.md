@@ -6,6 +6,12 @@
 
 ## Latest Version
 
+## v1.1.32 (01/22/24)
+
+### Enhancements:
+
+* [GP-API]: Process large volumes of transactions in one file - https://developer.globalpay.com/docs/file-processing
+
 ## v1.1.31 (12/07/23)
 
 ### Enhancements:

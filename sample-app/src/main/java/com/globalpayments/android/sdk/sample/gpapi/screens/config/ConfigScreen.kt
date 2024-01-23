@@ -256,6 +256,13 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     title = R.string.service_url_configuration,
                     value = screenModel.serviceUrl,
                     onValueChanged = vm::serviceUrlChanged,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
+                GPInputField(
+                    modifier = Modifier.padding(top = 10.dp),
+                    title = "Status Url",
+                    value = screenModel.statusUrl,
+                    onValueChanged = vm::statusUrlChanged,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
                 )
 

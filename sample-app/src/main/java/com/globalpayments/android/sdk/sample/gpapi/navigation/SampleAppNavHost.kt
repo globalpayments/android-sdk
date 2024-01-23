@@ -21,6 +21,7 @@ import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.Dispute
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.DisputesReportingDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.EbtDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.ExpandYourIntegrationDirection
+import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.FileProcessingDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.GooglePayDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.HomeDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.HostedFieldsDirection
@@ -39,6 +40,7 @@ import com.globalpayments.android.sdk.sample.gpapi.screens.config.ConfigScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.ExpandIntegrationMenuScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.batches.BatchesScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.disputes.DisputesScreen
+import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.fileprocessing.FileProcessingScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.merchants.MerchantsScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.storedpayments.StoredPaymentsScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.expandintegration.verifications.VerificationsScreen
@@ -91,6 +93,7 @@ fun SampleAppNavHost(
         composable(VerificationsDirection::class.toString()) { VerificationsScreen() }
         composable(BatchesDirection::class.toString()) { BatchesScreen() }
         composable(MerchantsDirection::class.toString()) { MerchantsScreen() }
+        composable(FileProcessingDirection::class.toString()) { FileProcessingScreen() }
         composable(DisputesDirection::class.toString()) { DisputesScreen() }
         composable(PaymentMethodsReportingDirection::class.toString()) { PaymentMethodsScreen() }
         composable(ActionsReportingDirection::class.toString()) { ActionsScreen() }

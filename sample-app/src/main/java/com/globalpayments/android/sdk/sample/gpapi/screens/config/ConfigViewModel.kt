@@ -32,6 +32,7 @@ class ConfigViewModel(application: Application) : AndroidViewModel(application) 
     fun challengeNotificationUrlChanged(value: String) = screenModel.update { it.copy(challengeNotificationUrl = value) }
     fun methodNotificationUrlChanged(value: String) = screenModel.update { it.copy(methodNotificationUrl = value) }
     fun serviceUrlChanged(value: String) = screenModel.update { it.copy(serviceUrl = value) }
+    fun statusUrlChanged(value: String) = screenModel.update { it.copy(statusUrl = value) }
     fun transactionProcessingAccountIdChanged(value: String) = screenModel.update { it.copy(transactionProcessingAccountId = value) }
     fun transactionProcessingAccountNameChanged(value: String) = screenModel.update { it.copy(transactionProcessingAccountName = value) }
     fun tokenizationAccountIdChanged(value: String) = screenModel.update { it.copy(tokenizationAccountId = value) }
@@ -81,7 +82,8 @@ class ConfigViewModel(application: Application) : AndroidViewModel(application) 
             channel = channel,
             tokenIntervalToExpire = tokenIntervalToExpire,
             environment = environment,
-            selectedCountry = country.takeIf(String::isNotBlank)
+            selectedCountry = country.takeIf(String::isNotBlank),
+            statusUrl = statusUrl.takeIf(String::isNotBlank)
         )
     }
 

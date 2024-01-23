@@ -26,6 +26,7 @@ internal fun Project.configureSampleApp(
         buildConfigField("String", "APP_KEY", "\"${configProperties.getProperty("appKey")}\"")
         buildConfigField("String", "SERVICE_URL", "\"${configProperties.getProperty("serviceUrl")}\"")
         buildConfigField("String", "CHALLENGE_NOTIFICATION_URL", "\"${configProperties.getProperty("challengeNotificationUrl")}\"")
+        buildConfigField("String", "STATUS_URL", "\"${configProperties.getProperty("statusUrl")}\"")
         buildConfigField("String", "METHOD_NOTIFICATION_URL", "\"${configProperties.getProperty("methodNotificationUrl")}\"")
         buildConfigField("String", "API_VERSION", "\"${configProperties.getProperty("apiVersion")}\"")
         buildConfigField("Integer", "TOKEN_SECONDS_TO_EXPIRE", configProperties.getProperty("tokenSecondsToExpire"))

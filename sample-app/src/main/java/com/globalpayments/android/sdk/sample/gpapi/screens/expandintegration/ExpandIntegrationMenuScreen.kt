@@ -19,6 +19,7 @@ import com.globalpayments.android.sdk.sample.gpapi.components.GPScreenTitle
 import com.globalpayments.android.sdk.sample.gpapi.navigation.NavigationManager
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.BatchesDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.DisputesDirection
+import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.FileProcessingDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.MerchantsDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.StoredPaymentsMethodsDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.VerificationsDirection
@@ -68,10 +69,16 @@ fun ExpandIntegrationMenuScreen() {
             onClick = { coroutineScope.launch { NavigationManager.navigate(BatchesDirection) } }
         )
         GPButton(
-            modifier = Modifier.padding(top = 20.dp, bottom = 30.dp),
+            modifier = Modifier.padding(top = 20.dp),
             title = "Merchants",
             description = "Edit merchant's account configuration",
             onClick = { coroutineScope.launch { NavigationManager.navigate(MerchantsDirection) } }
+        )
+        GPButton(
+            modifier = Modifier.padding(top = 20.dp, bottom = 30.dp),
+            title = "File Processing",
+            description = "Process large volumes of transactions in one file.",
+            onClick = { coroutineScope.launch { NavigationManager.navigate(FileProcessingDirection) } }
         )
     }
 }

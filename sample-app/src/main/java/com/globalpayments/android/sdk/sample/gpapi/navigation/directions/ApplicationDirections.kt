@@ -128,6 +128,11 @@ object MerchantsDirection : NavigationDirection {
     override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
 }
 
+object FileProcessingDirection : NavigationDirection {
+    override val arguments: Bundle? = null
+    override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
+}
+
 object ConfigDirection : NavigationDirection {
     override val arguments: Bundle? = null
     override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }

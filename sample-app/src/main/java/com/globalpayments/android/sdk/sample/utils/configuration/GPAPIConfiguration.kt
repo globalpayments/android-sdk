@@ -25,6 +25,7 @@ data class GPAPIConfiguration(
     val tokenIntervalToExpire: IntervalToExpire? = null,
     val environment: Environment? = null,
     val selectedCountry: String? = null,
+    val statusUrl:String? = null
 ) {
     companion object {
         @JvmStatic
@@ -60,7 +61,8 @@ data class GPAPIConfiguration(
                 } catch (e: Exception) {
                     Environment.TEST
                 },
-                BuildConfig.COUNTRY
+                BuildConfig.COUNTRY,
+                BuildConfig.STATUS_URL,
             )
         }
     }

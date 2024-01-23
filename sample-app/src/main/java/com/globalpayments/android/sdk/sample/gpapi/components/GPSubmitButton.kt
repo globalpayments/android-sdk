@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 fun GPSubmitButton(
     modifier: Modifier = Modifier,
     title: String,
+    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
 
@@ -35,7 +36,8 @@ fun GPSubmitButton(
             .fillMaxWidth(),
         onClick = onClick,
         colors = ButtonDefaults.elevatedButtonColors(containerColor = Color(0xFF0074C7), contentColor = Color.White),
-        shape = RoundedCornerShape(48.dp)
+        shape = RoundedCornerShape(48.dp),
+        enabled = enabled
     ) {
 
         Text(

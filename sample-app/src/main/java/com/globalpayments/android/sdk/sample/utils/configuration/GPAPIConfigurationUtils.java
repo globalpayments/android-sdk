@@ -87,6 +87,10 @@ public class GPAPIConfigurationUtils {
         if (isNotNullOrBlank(serviceUrl)) {
             gpApiConfig.setServiceUrl(serviceUrl);
         }
+        String statusUrl = gpapiConfiguration.getStatusUrl();
+        if (isNotNullOrBlank(statusUrl)) {
+            gpApiConfig.setStatusUrl(statusUrl);
+        }
 
         Integer tokenSecondsToExpire = gpapiConfiguration.getTokenSecondsToExpire();
         if (isNotNull(tokenSecondsToExpire) && tokenSecondsToExpire > 60) {

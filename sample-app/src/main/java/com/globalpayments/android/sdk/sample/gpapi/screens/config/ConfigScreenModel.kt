@@ -16,6 +16,7 @@ data class ConfigScreenModel(
     val tokenizationAccountId: String = "",
     val tokenizationAccountName: String = "",
     val serviceUrl: String = "",
+    val statusUrl: String = "",
     val challengeNotificationUrl: String = "",
     val methodNotificationUrl: String = "",
     val apiVersion: String = "",

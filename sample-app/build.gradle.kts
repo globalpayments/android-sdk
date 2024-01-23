@@ -33,6 +33,7 @@ android {
             excludes += "/META-INF/*"
         }
     }
+    useLibrary("org.apache.http.legacy")
 }
 
 dependencies {
