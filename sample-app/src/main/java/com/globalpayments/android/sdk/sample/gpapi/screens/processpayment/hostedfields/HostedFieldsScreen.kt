@@ -200,7 +200,7 @@ private class LocalContentWebViewClient(
 class JSBridge(
     private val onLoading: () -> Unit = {},
     private val onError: (Exception) -> Unit = {},
-    private val onSuccess: (String, String) -> Unit = { _, _ -> }
+    private val onSuccess: (String) -> Unit = { _ -> }
 ) {
     @JavascriptInterface
     fun onLoadingStarted() {
@@ -214,8 +214,8 @@ class JSBridge(
     }
 
     @JavascriptInterface
-    fun onTokenizationSuccess(token: String, cardType: String) {
-        Log.d("JSNative", "$token:$cardType")
-        onSuccess.invoke(token, cardType)
+    fun onTokenizationSuccess(token: String) {
+        Log.d("JSNative", token)
+        onSuccess.invoke(token)
     }
 }

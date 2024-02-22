@@ -6,18 +6,27 @@
 
 ## Latest Version
 
+## v1.1.33 (02/19/24)
+
+### Enhancements:
+
+* Code cleanup
+
 ## v1.1.32 (01/22/24)
 
 ### Enhancements:
 
-* [GP-API]: Process large volumes of transactions in one file - https://developer.globalpay.com/docs/file-processing
+* [GP-API]: Process large volumes of transactions in one
+  file - https://developer.globalpay.com/docs/file-processing
 
 ## v1.1.31 (12/07/23)
 
 ### Enhancements:
 
-* [GP-API]: Credit Or Debit a Funds Management Account (FMA) - https://developer.globalpay.com/api/funds
-* [GP-API]: Upload Merchant Documentation - https://developer.globalpay.com/api/merchants#/Upload%20Merchant%20Documentation/UploadMerchantDocumentation
+* [GP-API]: Credit Or Debit a Funds Management Account (
+  FMA) - https://developer.globalpay.com/api/funds
+* [GP-API]: Upload Merchant
+  Documentation - https://developer.globalpay.com/api/merchants#/Upload%20Merchant%20Documentation/UploadMerchantDocumentation
 
 ## v1.1.30 (10/18/23)
 

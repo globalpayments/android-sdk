@@ -4,41 +4,26 @@ import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.global.api.entities.MobileData
-import com.global.api.entities.StoredCredential
-import com.global.api.entities.ThreeDSecure
 import com.global.api.entities.Transaction
-import com.global.api.entities.enums.AuthenticationSource
-import com.global.api.entities.enums.SdkInterface
-import com.global.api.entities.enums.SdkUiType
-import com.global.api.entities.enums.Secure3dVersion
-import com.global.api.entities.enums.StoredCredentialInitiator
-import com.global.api.entities.enums.StoredCredentialReason
-import com.global.api.entities.enums.StoredCredentialSequence
-import com.global.api.entities.enums.StoredCredentialType
 import com.global.api.paymentMethods.CreditCardData
-import com.global.api.services.Secure3dService
-import com.global.api.utils.CardUtils
-import com.global.api.utils.JsonDoc
-import com.globalpayments.android.sdk.sample.common.Constants
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSampleResponseModel
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSnippetResponseModel
 import com.globalpayments.android.sdk.sample.gpapi.netcetera.NetceteraInstanceHolder
 import com.globalpayments.android.sdk.sample.gpapi.utils.mapNotNullFields
-import com.netcetera.threeds.sdk.api.transaction.AuthenticationRequestParameters
+import com.globalpayments.android.sdk.sample.repository.Secure3DSRepository
 import com.netcetera.threeds.sdk.api.transaction.challenge.ChallengeParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.joda.time.DateTime
 import java.math.BigDecimal
 import java.util.Calendar
 import java.util.Date
 
 class UnifiedPaymentAPIViewModel(context: Context) : ViewModel() {
 
+    private val secure3DSRepository = Secure3DSRepository()
     private val calendar: Calendar by lazy { Calendar.getInstance() }
 
     val screenModel: MutableStateFlow<UnifiedPaymentAPIModel> = MutableStateFlow(UnifiedPaymentAPIModel())
@@ -73,51 +58,36 @@ class UnifiedPaymentAPIViewModel(context: Context) : ViewModel() {
     private suspend fun makePayment(model: UnifiedPaymentAPIModel) {
         val amount = model.amount.toBigDecimalOrNull() ?: return
         try {
-            val cardToken = getCardToken()
+            val cardToken = secure3DSRepository.tokenizeCard(
+                model.cardNumber,
+                model.cardMonth.toInt(),
+                model.cardYear.toInt(),
+                model.cardHolderName
+            )
             val tokenizedCard = CreditCardData(cardToken)
 
-            val cardEnrollmentCheck = checkCardEnrollment(tokenizedCard, amount)
-            val isCardEnrolledFor3DS = cardEnrollmentCheck.enrolledStatus == ENROLLED
+            val cardEnrollmentCheck = secure3DSRepository.checkCardEnrollment(cardToken, amount, Currency)
 
-            if (!isCardEnrolledFor3DS) {
-                chargeMoney(tokenizedCard, amount)
+            if (!cardEnrollmentCheck.isCardEnrolled) {
+                chargeMoney(cardToken, amount)
                 return
             }
 
-            val cardBrand = CardUtils.mapCardType(model.cardNumber)
-            val transaction = NetceteraInstanceHolder.createTransaction(cardBrand, cardEnrollmentCheck.messageVersion)
+            val transaction = NetceteraInstanceHolder.createTransaction(cardEnrollmentCheck.cardBrand, cardEnrollmentCheck.messageVersion)
 
             val netceteraAuthenticationParams = transaction.authenticationRequestParameters
-            val authenticationResponse = initiateAuthentication(tokenizedCard, amount, cardEnrollmentCheck, netceteraAuthenticationParams)
-
-            if (authenticationResponse.status != CHALLENGE_REQUIRED) {
-                val authenticationData = getAuthenticationData(authenticationResponse.serverTransactionId)
-                tokenizedCard.threeDSecure = authenticationData
-                chargeMoney(tokenizedCard, amount)
+            val authenticationResponse = secure3DSRepository.initiateAuthentication(cardToken, amount, netceteraAuthenticationParams, Currency)
+            if (!authenticationResponse.isChallengeRequired) {
+                chargeMoney(cardToken, amount, authenticationResponse.serverTransactionId)
                 return
             }
 
-            val netceteraParams = NetceteraParams(transaction, authenticationResponse, tokenizedCard, amount)
+            val netceteraParams = NetceteraParams(transaction, authenticationResponse, cardToken, amount)
             screenModel.update { it.copy(netceteraTransactionParams = netceteraParams) }
 
         } catch (exception: Exception) {
             onError(exception)
         }
-    }
-
-    private suspend fun makePaymentRecurring(chargeResponse: Transaction, tokenizedCard: CreditCardData) = withContext(Dispatchers.IO) {
-        val storedCredential = StoredCredential().apply {
-            initiator = StoredCredentialInitiator.CardHolder
-            type = StoredCredentialType.Recurring
-            sequence = StoredCredentialSequence.Subsequent
-            reason = StoredCredentialReason.Incremental
-        }
-        tokenizedCard
-            .charge(BigDecimal(screenModel.value.amount))
-            .withCurrency(Currency)
-            .withStoredCredential(storedCredential)
-            .withCardBrandStorage(StoredCredentialInitiator.Merchant, chargeResponse.cardBrandTransactionId)
-            .execute(Constants.DEFAULT_GPAPI_CONFIG)
     }
 
     fun doChallenge(
@@ -126,18 +96,15 @@ class UnifiedPaymentAPIViewModel(context: Context) : ViewModel() {
     ) {
         viewModelScope.launch {
             try {
-                val (transaction, threeDSecure, tokenizedCard, amount) = netceteraParams
+                val (transaction, initAuthenticationResponse, tokenizedCard, amount) = netceteraParams
                 val challengeParams = ChallengeParameters().apply {
-                    acsRefNumber = threeDSecure.acsReferenceNumber
-                    acsSignedContent = threeDSecure.payerAuthenticationRequest
-                    acsTransactionID = threeDSecure.acsTransactionId
-                    set3DSServerTransactionID(threeDSecure.providerServerTransRef)
+                    acsRefNumber = initAuthenticationResponse.acsReferenceNumber
+                    acsSignedContent = initAuthenticationResponse.payerAuthenticationRequest
+                    acsTransactionID = initAuthenticationResponse.acsTransactionId
+                    set3DSServerTransactionID(initAuthenticationResponse.providerServerTransRef)
                 }
                 with(NetceteraInstanceHolder) { transaction.startChallenge(activity, challengeParams) }
-
-                val authenticationData = getAuthenticationData(threeDSecure.serverTransactionId)
-                tokenizedCard.threeDSecure = authenticationData
-                chargeMoney(tokenizedCard, amount)
+                chargeMoney(tokenizedCard, amount, initAuthenticationResponse.serverTransactionId)
 
             } catch (exception: Exception) {
                 onError(exception)
@@ -146,16 +113,19 @@ class UnifiedPaymentAPIViewModel(context: Context) : ViewModel() {
     }
 
     private suspend fun chargeMoney(
-        tokenizedCard: CreditCardData,
+        cardToken: String,
         amount: BigDecimal,
+        serverTransactionId: String? = null
     ) = withContext(Dispatchers.IO) {
 
-        var response = tokenizedCard
-            .charge(amount)
-            .withCurrency(Currency)
-            .execute(Constants.DEFAULT_GPAPI_CONFIG)
+        var response = secure3DSRepository.chargeMoney(cardToken, amount, Currency, serverTransactionId)
         if (screenModel.value.makePaymentRecurring) {
-            response = makePaymentRecurring(response, tokenizedCard)
+            response = secure3DSRepository.makePaymentRecurring(
+                cardToken,
+                response.cardBrandTransactionId,
+                amount,
+                Currency
+            )
         }
 
         val resultToShow = response.mapNotNullFields()
@@ -174,39 +144,6 @@ class UnifiedPaymentAPIViewModel(context: Context) : ViewModel() {
         }
     }
 
-    private suspend fun initiateAuthentication(
-        tokenizedCard: CreditCardData,
-        amount: BigDecimal,
-        secureEcom: ThreeDSecure,
-        netceteraParams: AuthenticationRequestParameters
-    ): ThreeDSecure = withContext(Dispatchers.IO) {
-        Secure3dService
-            .initiateAuthentication(tokenizedCard, secureEcom)
-            .withAuthenticationSource(AuthenticationSource.MobileSDK)
-            .withAmount(amount)
-            .withCurrency(Currency)
-            .withStoredCredential(StoredCredential())
-            .withOrderCreateDate(DateTime.now())
-            .withMobileData(MobileData().apply {
-                applicationReference = netceteraParams.sdkAppID
-                sdkTransReference = netceteraParams.sdkTransactionID
-                referenceNumber = netceteraParams.sdkReferenceNumber
-                sdkInterface = SdkInterface.Both
-                encodedData = netceteraParams.deviceData
-                maximumTimeout = 15
-                ephemeralPublicKey = JsonDoc.parse(netceteraParams.sdkEphemeralPublicKey)
-                setSdkUiTypes(*SdkUiType.entries.toTypedArray())
-            })
-            .execute(Constants.DEFAULT_GPAPI_CONFIG)
-    }
-
-    private suspend fun getAuthenticationData(serverTransactionId: String): ThreeDSecure = withContext(Dispatchers.IO) {
-        Secure3dService
-            .getAuthenticationData()
-            .withServerTransactionId(serverTransactionId)
-            .execute(Secure3dVersion.TWO, Constants.DEFAULT_GPAPI_CONFIG)
-    }
-
     private fun onError(exception: Exception) {
         screenModel.update {
             val gpSnippetResponseModel =
@@ -217,30 +154,6 @@ class UnifiedPaymentAPIViewModel(context: Context) : ViewModel() {
                 netceteraTransactionParams = null
             )
         }
-    }
-
-    private suspend fun getCardToken(): String = withContext(Dispatchers.IO) {
-        val model = screenModel.value
-        val card = CreditCardData().apply {
-            number = model.cardNumber
-            expMonth = model.cardMonth.toInt()
-            expYear = model.cardYear.toInt()
-            cardHolderName = model.cardHolderName
-            isCardPresent = true
-        }
-        card.tokenize(true, Constants.DEFAULT_GPAPI_CONFIG)
-    }
-
-    private suspend fun checkCardEnrollment(
-        tokenizedCard: CreditCardData,
-        amount: BigDecimal
-    ): ThreeDSecure = withContext(Dispatchers.IO) {
-        Secure3dService
-            .checkEnrollment(tokenizedCard)
-            .withCurrency(Currency)
-            .withAmount(amount)
-            .withAuthenticationSource(AuthenticationSource.MobileSDK)
-            .execute(Constants.DEFAULT_GPAPI_CONFIG)
     }
 
     fun resetScreen() {

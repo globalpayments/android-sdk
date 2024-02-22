@@ -1,9 +1,8 @@
 package com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.unifiedpaymentsapi
 
-import com.global.api.entities.ThreeDSecure
-import com.global.api.paymentMethods.CreditCardData
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSampleResponseModel
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSnippetResponseModel
+import com.globalpayments.android.sdk.sample.repository.models.InitAuthenticationResponse
 import com.netcetera.threeds.sdk.api.transaction.Transaction
 import java.math.BigDecimal
 
@@ -25,7 +24,7 @@ data class UnifiedPaymentAPIModel(
 
 data class NetceteraParams(
     val netceteraTransaction: Transaction,
-    val threeDSecure: ThreeDSecure,
-    val tokenizedCard: CreditCardData,
+    val initAuthResponse: InitAuthenticationResponse,
+    val cardToken: String,
     val amount: BigDecimal
 )

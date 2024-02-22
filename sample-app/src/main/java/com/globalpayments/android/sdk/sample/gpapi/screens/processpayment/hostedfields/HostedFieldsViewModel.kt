@@ -4,56 +4,41 @@ import android.app.Activity
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.global.api.entities.MobileData
-import com.global.api.entities.StoredCredential
-import com.global.api.entities.ThreeDSecure
 import com.global.api.entities.Transaction
-import com.global.api.entities.enums.AuthenticationSource
-import com.global.api.entities.enums.SdkInterface
-import com.global.api.entities.enums.SdkUiType
-import com.global.api.entities.enums.Secure3dVersion
-import com.global.api.paymentMethods.CreditCardData
-import com.global.api.services.GpApiService
-import com.global.api.services.Secure3dService
-import com.global.api.utils.JsonDoc
-import com.globalpayments.android.sdk.sample.common.Constants
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSampleResponseModel
 import com.globalpayments.android.sdk.sample.gpapi.components.GPSnippetResponseModel
 import com.globalpayments.android.sdk.sample.gpapi.netcetera.NetceteraInstanceHolder
 import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.unifiedpaymentsapi.NetceteraParams
 import com.globalpayments.android.sdk.sample.gpapi.utils.formatAsPaymentAmount
 import com.globalpayments.android.sdk.sample.gpapi.utils.mapNotNullFields
-import com.globalpayments.android.sdk.sample.utils.AppPreferences
-import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfiguration
-import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfigurationUtils.buildDefaultGpApiConfig
-import com.netcetera.threeds.sdk.api.transaction.AuthenticationRequestParameters
+import com.globalpayments.android.sdk.sample.repository.AccessTokenRepository
+import com.globalpayments.android.sdk.sample.repository.Secure3DSRepository
 import com.netcetera.threeds.sdk.api.transaction.challenge.ChallengeParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.joda.time.DateTime
 import java.math.BigDecimal
 
 class HostedFieldsViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val sharedAppPreferences = AppPreferences(application)
+    private val accessTokenRepository = AccessTokenRepository(application)
+    private val secure3DSRepository = Secure3DSRepository()
+
     val screenModel: MutableStateFlow<HostedFieldsScreenModel> = MutableStateFlow(HostedFieldsScreenModel())
 
     init {
-        createAccessToken()
+        getAccessToken()
         viewModelScope.launch(Dispatchers.IO) {
             NetceteraInstanceHolder.init3DSService(application)
         }
     }
 
-    private fun createAccessToken() {
+    private fun getAccessToken() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val accessToken = GpApiService
-                    .generateTransactionKey(buildDefaultGpApiConfig(sharedAppPreferences.gpAPIConfiguration ?: GPAPIConfiguration.fromBuildConfig()))
-                    .accessToken
+                val accessToken = accessTokenRepository.getAccessToken()
                 screenModel.update { it.copy(accessToken = accessToken) }
             } catch (exception: Exception) {
                 onError(exception)
@@ -67,34 +52,35 @@ class HostedFieldsViewModel(application: Application) : AndroidViewModel(applica
 
     fun reset() {
         screenModel.update { HostedFieldsScreenModel() }
-        createAccessToken()
+        getAccessToken()
     }
 
-    fun onCardTokenReceived(token: String, cardBrand: String) {
+    fun onCardTokenReceived(token: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val tokenizedCard = CreditCardData(token)
                 val amount = BigDecimal(screenModel.value.paymentAmount)
-                val cardEnrollmentCheck = checkCardEnrollment(tokenizedCard, amount)
-                val isCardEnrolledFor3DS = cardEnrollmentCheck.enrolledStatus == ENROLLED
+                val cardEnrollmentCheck = secure3DSRepository.checkCardEnrollment(token, amount, Currency)
 
-                if (!isCardEnrolledFor3DS) {
-                    chargeMoney(tokenizedCard, amount)
+                if (!cardEnrollmentCheck.isCardEnrolled) {
+                    chargeMoney(token, amount)
                     return@launch
                 }
+                val cardBrand = cardEnrollmentCheck.cardBrand
                 val transaction = NetceteraInstanceHolder.createTransaction(cardBrand, cardEnrollmentCheck.messageVersion)
 
                 val netceteraAuthenticationParams = transaction.authenticationRequestParameters
-                val authenticationResponse = initiateAuthentication(tokenizedCard, amount, cardEnrollmentCheck, netceteraAuthenticationParams)
+                val authenticationResponse = secure3DSRepository.initiateAuthentication(token, amount, netceteraAuthenticationParams, Currency)
 
-                if (authenticationResponse.status != CHALLENGE_REQUIRED) {
-                    val authenticationData = getAuthenticationData(authenticationResponse.serverTransactionId)
-                    tokenizedCard.threeDSecure = authenticationData
-                    chargeMoney(tokenizedCard, amount)
+                if (!authenticationResponse.isChallengeRequired) {
+                    chargeMoney(
+                        token,
+                        amount,
+                        authenticationResponse.serverTransactionId,
+                    )
                     return@launch
                 }
 
-                val netceteraParams = NetceteraParams(transaction, authenticationResponse, tokenizedCard, amount)
+                val netceteraParams = NetceteraParams(transaction, authenticationResponse, token, amount)
                 screenModel.update { it.copy(netceteraTransactionParams = netceteraParams) }
 
             } catch (exception: Exception) {
@@ -103,34 +89,13 @@ class HostedFieldsViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    private suspend fun getAuthenticationData(serverTransactionId: String): ThreeDSecure = withContext(Dispatchers.IO) {
-        Secure3dService
-            .getAuthenticationData()
-            .withServerTransactionId(serverTransactionId)
-            .execute(Secure3dVersion.TWO, Constants.DEFAULT_GPAPI_CONFIG)
-    }
-
-    private suspend fun checkCardEnrollment(
-        tokenizedCard: CreditCardData,
-        amount: BigDecimal
-    ): ThreeDSecure = withContext(Dispatchers.IO) {
-        Secure3dService
-            .checkEnrollment(tokenizedCard)
-            .withCurrency(Currency)
-            .withAmount(amount)
-            .withAuthenticationSource(AuthenticationSource.MobileSDK)
-            .execute(Constants.DEFAULT_GPAPI_CONFIG)
-    }
-
     private suspend fun chargeMoney(
-        tokenizedCard: CreditCardData,
+        tokenizedCard: String,
         amount: BigDecimal,
+        serverTransactionId: String? = null
     ) = withContext(Dispatchers.IO) {
 
-        val response = tokenizedCard
-            .charge(amount)
-            .withCurrency(Currency)
-            .execute(Constants.DEFAULT_GPAPI_CONFIG)
+        val response = secure3DSRepository.chargeMoney(tokenizedCard, amount, Currency, serverTransactionId)
 
         val resultToShow = response.mapNotNullFields()
         val sampleResponse = GPSampleResponseModel(
@@ -148,51 +113,21 @@ class HostedFieldsViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-
-    private suspend fun initiateAuthentication(
-        tokenizedCard: CreditCardData,
-        amount: BigDecimal,
-        secureEcom: ThreeDSecure,
-        netceteraParams: AuthenticationRequestParameters
-    ): ThreeDSecure = withContext(Dispatchers.IO) {
-        Secure3dService
-            .initiateAuthentication(tokenizedCard, secureEcom)
-            .withAuthenticationSource(AuthenticationSource.MobileSDK)
-            .withAmount(amount)
-            .withCurrency(Currency)
-            .withStoredCredential(StoredCredential())
-            .withOrderCreateDate(DateTime.now())
-            .withMobileData(MobileData().apply {
-                applicationReference = netceteraParams.sdkAppID
-                sdkTransReference = netceteraParams.sdkTransactionID
-                referenceNumber = netceteraParams.sdkReferenceNumber
-                sdkInterface = SdkInterface.Both
-                encodedData = netceteraParams.deviceData
-                maximumTimeout = 15
-                ephemeralPublicKey = JsonDoc.parse(netceteraParams.sdkEphemeralPublicKey)
-                setSdkUiTypes(*SdkUiType.entries.toTypedArray())
-            })
-            .execute(Constants.DEFAULT_GPAPI_CONFIG)
-    }
-
     fun doChallenge(
         activity: Activity,
         netceteraParams: NetceteraParams
     ) {
         viewModelScope.launch {
             try {
-                val (transaction, threeDSecure, tokenizedCard, amount) = netceteraParams
+                val (transaction, initAuthenticationResponse, tokenizedCard, amount) = netceteraParams
                 val challengeParams = ChallengeParameters().apply {
-                    acsRefNumber = threeDSecure.acsReferenceNumber
-                    acsSignedContent = threeDSecure.payerAuthenticationRequest
-                    acsTransactionID = threeDSecure.acsTransactionId
-                    set3DSServerTransactionID(threeDSecure.providerServerTransRef)
+                    acsRefNumber = initAuthenticationResponse.acsReferenceNumber
+                    acsSignedContent = initAuthenticationResponse.payerAuthenticationRequest
+                    acsTransactionID = initAuthenticationResponse.acsTransactionId
+                    set3DSServerTransactionID(initAuthenticationResponse.providerServerTransRef)
                 }
                 with(NetceteraInstanceHolder) { transaction.startChallenge(activity, challengeParams) }
-
-                val authenticationData = getAuthenticationData(threeDSecure.serverTransactionId)
-                tokenizedCard.threeDSecure = authenticationData
-                chargeMoney(tokenizedCard, amount)
+                chargeMoney(tokenizedCard, amount, initAuthenticationResponse.serverTransactionId)
 
             } catch (exception: Exception) {
                 onError(exception)
@@ -209,7 +144,5 @@ class HostedFieldsViewModel(application: Application) : AndroidViewModel(applica
 
     companion object {
         private const val Currency = "USD"
-        private const val ENROLLED = "ENROLLED"
-        private const val CHALLENGE_REQUIRED = "CHALLENGE_REQUIRED"
     }
 }

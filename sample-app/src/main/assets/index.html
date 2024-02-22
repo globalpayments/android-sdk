@@ -223,7 +223,7 @@
 
       cardForm.on("token-success", async (resp) => {
          console.log("received token", JSON.stringify(resp))
-         JSBridge.onTokenizationSuccess(resp.paymentReference, resp.details.cardType)
+         JSBridge.onTokenizationSuccess(resp.paymentReference)
       });
 
       cardForm.on("token-error", (resp) => {
