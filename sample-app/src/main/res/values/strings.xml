@@ -49,6 +49,7 @@
     <string name="transaction_status">Transaction Status:</string>
     <string name="deposit_reference">Deposit Reference:</string>
     <string name="merchant_id">Merchant ID:</string>
+    <string name="api_key">API Key:</string>
     <string name="system_hierarchy">System Hierarchy:</string>
     <string name="start_date">Start Date:</string>
     <string name="end_date">End Date:</string>

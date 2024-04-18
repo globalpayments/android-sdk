@@ -34,5 +34,6 @@ internal fun Project.configureSampleApp(
         buildConfigField("String", "COUNTRY", "\"${configProperties.getProperty("country")}\"")
         buildConfigField("String", "CHANNEL", "\"${configProperties.getProperty("channel")}\"")
         buildConfigField("String", "ENVIRONMENT", "\"${configProperties.getProperty("environment")}\"")
+        buildConfigField("String", "API_KEY", "\"${configProperties.getProperty("apiKey")}\"")
     }
 }

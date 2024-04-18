@@ -4,7 +4,11 @@
 
 # Changelog
 
-## Latest Version
+## Latest Version - v1.1.34 (04/18/24)
+
+### Enhancements:
+
+* Updates to use Netcetera SDK v2.4+
 
 ## v1.1.33 (02/19/24)
 
@@ -40,8 +44,6 @@
 ### Enhancements:
 
 * Manage merchant accounts for partner solution - https://developer.globalpay.com/api/accounts
-
-## Latest Version
 
 ## v1.1.28 (09/11/23)
 

@@ -43,7 +43,7 @@ class ProductScreenViewModel @Inject constructor(
                 AccessTokenRequest(
                     appId = BuildConfig.APP_ID,
                     appKey = BuildConfig.APP_KEY,
-                    permissions = emptyList()
+                    permissions = arrayOf("PMT_POST_Create_Single", "ACC_GET_Single")
                 )
             ).accessToken
             navigationManager.navigate(HostedFieldDirection(token))

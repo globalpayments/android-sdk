@@ -25,4 +25,5 @@ data class ConfigScreenModel(
     val country: String = "",
     val channel: Channel = Channel.CardNotPresent,
     val environment: Environment = Environment.TEST,
+    val apiKey: String = "",
 )

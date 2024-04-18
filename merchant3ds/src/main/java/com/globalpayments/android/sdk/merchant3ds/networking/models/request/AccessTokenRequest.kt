@@ -4,5 +4,5 @@ package com.globalpayments.android.sdk.merchant3ds.networking.models.request
 data class AccessTokenRequest(
     val appId: String,
     val appKey: String,
-    val permissions: List<String>
+    val permissions: Array<String>
 )

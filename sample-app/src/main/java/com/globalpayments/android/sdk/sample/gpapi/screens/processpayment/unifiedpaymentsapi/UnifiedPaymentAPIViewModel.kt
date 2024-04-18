@@ -11,6 +11,8 @@ import com.globalpayments.android.sdk.sample.gpapi.components.GPSnippetResponseM
 import com.globalpayments.android.sdk.sample.gpapi.netcetera.NetceteraInstanceHolder
 import com.globalpayments.android.sdk.sample.gpapi.utils.mapNotNullFields
 import com.globalpayments.android.sdk.sample.repository.Secure3DSRepository
+import com.globalpayments.android.sdk.sample.utils.AppPreferences
+import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfiguration
 import com.netcetera.threeds.sdk.api.transaction.challenge.ChallengeParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,12 +27,15 @@ class UnifiedPaymentAPIViewModel(context: Context) : ViewModel() {
 
     private val secure3DSRepository = Secure3DSRepository()
     private val calendar: Calendar by lazy { Calendar.getInstance() }
+    private val sharedAppPreferences = AppPreferences(context)
 
     val screenModel: MutableStateFlow<UnifiedPaymentAPIModel> = MutableStateFlow(UnifiedPaymentAPIModel())
 
     init {
+        val currentConfig = sharedAppPreferences.gpAPIConfiguration ?: GPAPIConfiguration.fromBuildConfig()
+
         viewModelScope.launch(Dispatchers.IO) {
-            NetceteraInstanceHolder.init3DSService(context)
+            NetceteraInstanceHolder.init3DSService(context, currentConfig.apiKey ?: "")
         }
     }
 

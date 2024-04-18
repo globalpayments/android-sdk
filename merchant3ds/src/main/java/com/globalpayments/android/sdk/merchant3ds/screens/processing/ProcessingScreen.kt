@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.globalpayments.android.sdk.merchant3ds.BuildConfig
 import com.globalpayments.android.sdk.merchant3ds.R
 import com.globalpayments.android.sdk.merchant3ds.ui.findActivity
 import com.globalpayments.android.sdk.merchant3ds.ui.theme.Background
@@ -35,7 +36,7 @@ fun ProcessingScreen(viewModel: ProcessingViewModel = hiltViewModel()) {
 
     LaunchedEffect(screenState.transactionModel) {
         if (screenState.transactionModel.messageVersion.isNotBlank()) {
-            viewModel.init3DS(context)
+            viewModel.init3DS(context, BuildConfig.API_KEY)
         }
     }
 

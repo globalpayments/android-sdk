@@ -2,7 +2,6 @@ package com.globalpayments.android.sdk.sample.gpapi.netcetera
 
 import android.app.Activity
 import android.content.Context
-import android.content.res.AssetManager
 import com.netcetera.threeds.sdk.ThreeDS2ServiceInstance
 import com.netcetera.threeds.sdk.api.ThreeDS2Service
 import com.netcetera.threeds.sdk.api.configparameters.ConfigParameters
@@ -15,13 +14,13 @@ import com.netcetera.threeds.sdk.api.transaction.challenge.events.CompletionEven
 import com.netcetera.threeds.sdk.api.transaction.challenge.events.ProtocolErrorEvent
 import com.netcetera.threeds.sdk.api.transaction.challenge.events.RuntimeErrorEvent
 import com.netcetera.threeds.sdk.api.ui.logic.UiCustomization
+import com.netcetera.threeds.sdk.api.ui.logic.UiCustomization.UiCustomizationType
 import com.netcetera.threeds.sdk.api.utils.DsRidValues
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import java.io.BufferedReader
 import java.util.Locale
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -33,14 +32,14 @@ object NetceteraInstanceHolder {
     private var isServiceInitialized: Boolean = false
     private val threeDS2Service: ThreeDS2Service by lazy { ThreeDS2ServiceInstance.get() }
 
-    suspend fun init3DSService(context: Context) = withContext(Dispatchers.IO) {
+    suspend fun init3DSService(context: Context, apiKey: String) = withContext(Dispatchers.IO) {
         initMutex.withLock {
             if (isServiceInitialized) return@withContext
             threeDS2Service.initialize(
                 context,
-                getThreeDS2ConfigParams(context),
+                getThreeDS2ConfigParams(context, apiKey),
                 Locale.getDefault().language,
-                getThreeDS2UICustomization()
+                getThreeDS2UICustomizationMap()
             )
             isServiceInitialized = true
         }
@@ -78,21 +77,27 @@ object NetceteraInstanceHolder {
         }, 5)
     }
 
-    private fun getThreeDS2ConfigParams(context: Context): ConfigParameters {
+    private fun getThreeDS2ConfigParams(context: Context, apiKey: String): ConfigParameters {
         val assetManager = context.assets
-        return ConfigurationBuilder().license(assetManager.readLicense()).configureScheme(
-            SchemeConfiguration.visaSchemeConfiguration()
-                .encryptionPublicKeyFromAssetCertificate(assetManager, "acs.pem")
-                .rootPublicKeyFromAssetCertificate(assetManager, "acs.pem").build()
-        ).build()
+        return ConfigurationBuilder()
+            .apiKey(apiKey)
+            .configureScheme(
+                SchemeConfiguration.visaSchemeConfiguration()
+                    .encryptionPublicKeyFromAssetCertificate(assetManager, "acs.pem")
+                    .rootPublicKeyFromAssetCertificate(assetManager, "acs.pem").build()
+            ).build()
+    }
+
+    private fun getThreeDS2UICustomizationMap(): Map<UiCustomizationType, UiCustomization> {
+        return hashMapOf<UiCustomizationType, UiCustomization>().apply {
+            put(UiCustomizationType.DEFAULT, getThreeDS2UICustomization())
+            put(UiCustomizationType.DARK, getThreeDS2UICustomization())
+        }
     }
 
     private fun getThreeDS2UICustomization(): UiCustomization {
         return UiCustomization()
     }
-
-    private fun AssetManager.readLicense() =
-        this.open("license").bufferedReader().use(BufferedReader::readText)
 
     private fun String.asDsRidValue(): String? = when (this.lowercase()) {
         "visa" -> DsRidValues.VISA

@@ -17,5 +17,6 @@ internal fun Project.configureMerchant3DSApp(commonExtension: CommonExtension<*,
         buildConfigField("String", "SERVER_URL", "\"${configProperties.getProperty("serverUrl")}\"")
         buildConfigField("Boolean", "PREFER_DECOUPLED_FLOW", configProperties.getProperty("preferDecoupledFlow"))
         buildConfigField("int", "AUTH_TIMEOUT", configProperties.getProperty("authTimeout"))
+        buildConfigField("String", "API_KEY", "\"${configProperties.getProperty("apiKey")}\"")
     }
 }

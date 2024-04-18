@@ -13,6 +13,8 @@ import com.globalpayments.android.sdk.sample.gpapi.utils.formatAsPaymentAmount
 import com.globalpayments.android.sdk.sample.gpapi.utils.mapNotNullFields
 import com.globalpayments.android.sdk.sample.repository.AccessTokenRepository
 import com.globalpayments.android.sdk.sample.repository.Secure3DSRepository
+import com.globalpayments.android.sdk.sample.utils.AppPreferences
+import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfiguration
 import com.netcetera.threeds.sdk.api.transaction.challenge.ChallengeParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,13 +27,16 @@ class HostedFieldsViewModel(application: Application) : AndroidViewModel(applica
 
     private val accessTokenRepository = AccessTokenRepository(application)
     private val secure3DSRepository = Secure3DSRepository()
+    private val sharedAppPreferences = AppPreferences(application)
 
     val screenModel: MutableStateFlow<HostedFieldsScreenModel> = MutableStateFlow(HostedFieldsScreenModel())
 
     init {
+        val currentConfig = sharedAppPreferences.gpAPIConfiguration ?: GPAPIConfiguration.fromBuildConfig()
+
         getAccessToken()
         viewModelScope.launch(Dispatchers.IO) {
-            NetceteraInstanceHolder.init3DSService(application)
+            NetceteraInstanceHolder.init3DSService(application, currentConfig.apiKey ?: "")
         }
     }
 

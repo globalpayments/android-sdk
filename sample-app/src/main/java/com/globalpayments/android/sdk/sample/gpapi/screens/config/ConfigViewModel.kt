@@ -23,6 +23,7 @@ class ConfigViewModel(application: Application) : AndroidViewModel(application) 
     fun appIdChanged(value: String) = screenModel.update { it.copy(appId = value) }
     fun appKeyChanged(value: String) = screenModel.update { it.copy(appKey = value) }
     fun merchantIdChanged(value: String) = screenModel.update { it.copy(merchantId = value) }
+    fun apiKeyChanged(value: String) = screenModel.update { it.copy(apiKey = value) }
     fun secondsToExpireChanged(value: String) = screenModel.update { it.copy(tokenSecondsToExpire = value) }
     fun environmentChanged(value: Environment) = screenModel.update { it.copy(environment = value) }
     fun intervalToExpireChanged(value: IntervalToExpire) = screenModel.update { it.copy(tokenIntervalToExpire = value) }
@@ -83,7 +84,8 @@ class ConfigViewModel(application: Application) : AndroidViewModel(application) 
             tokenIntervalToExpire = tokenIntervalToExpire,
             environment = environment,
             selectedCountry = country.takeIf(String::isNotBlank),
-            statusUrl = statusUrl.takeIf(String::isNotBlank)
+            statusUrl = statusUrl.takeIf(String::isNotBlank),
+            apiKey = apiKey.takeIf(String::isNotBlank),
         )
     }
 
@@ -107,7 +109,8 @@ class ConfigViewModel(application: Application) : AndroidViewModel(application) 
             tokenIntervalToExpire = tokenIntervalToExpire ?: IntervalToExpire.DAY,
             country = selectedCountry ?: "",
             channel = channel ?: Channel.CardNotPresent,
-            environment = environment ?: Environment.TEST
+            environment = environment ?: Environment.TEST,
+            apiKey = apiKey ?: "",
         )
     }
 }

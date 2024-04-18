@@ -86,6 +86,13 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     onValueChanged = vm::merchantIdChanged,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
+                GPInputField(
+                    modifier = Modifier.padding(top = 10.dp),
+                    title = R.string.api_key,
+                    value = screenModel.apiKey,
+                    onValueChanged = vm::apiKeyChanged,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
 
                 Row(
                     modifier = Modifier
@@ -182,7 +189,7 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                             .weight(1f),
                         title = R.string.interval_to_expire,
                         selectedValue = screenModel.tokenIntervalToExpire,
-                        values = IntervalToExpire.values().toList(),
+                        values = IntervalToExpire.entries,
                         onValueSelected = vm::intervalToExpireChanged
                     )
                 }
@@ -198,7 +205,7 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                             .weight(1f),
                         title = R.string.environment,
                         selectedValue = screenModel.environment,
-                        values = Environment.values().toList(),
+                        values = Environment.entries,
                         onValueSelected = vm::environmentChanged
                     )
                     GPDropdown(
@@ -207,7 +214,7 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                             .weight(1f),
                         title = R.string.channel,
                         selectedValue = screenModel.channel,
-                        values = Channel.values().toList(),
+                        values = Channel.entries,
                         onValueSelected = vm::channelChanged
                     )
                 }

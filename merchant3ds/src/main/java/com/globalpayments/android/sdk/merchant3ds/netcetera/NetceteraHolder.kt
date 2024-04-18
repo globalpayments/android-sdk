@@ -15,6 +15,7 @@ import com.netcetera.threeds.sdk.api.transaction.challenge.events.CompletionEven
 import com.netcetera.threeds.sdk.api.transaction.challenge.events.ProtocolErrorEvent
 import com.netcetera.threeds.sdk.api.transaction.challenge.events.RuntimeErrorEvent
 import com.netcetera.threeds.sdk.api.ui.logic.UiCustomization
+import com.netcetera.threeds.sdk.api.ui.logic.UiCustomization.UiCustomizationType
 import com.netcetera.threeds.sdk.api.utils.DsRidValues
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -35,15 +36,15 @@ class NetceteraHolder @Inject constructor() {
     private val threeDS2Service: ThreeDS2Service = ThreeDS2ServiceInstance.get()
 
 
-    suspend fun init3DS(context: Context) = withContext(Dispatchers.IO) {
+    suspend fun init3DS(context: Context, apiKey: String) = withContext(Dispatchers.IO) {
         if (isInitialized) return@withContext
-        isInitialized = true
         threeDS2Service.initialize(
             context,
-            getThreeDS2ConfigParams(context),
+            getThreeDS2ConfigParams(context, apiKey),
             Locale.getDefault().language,
-            getThreeDS2UICustomization()
+            getThreeDS2UICustomizationMap()
         )
+        isInitialized = true
     }
 
     fun createTransaction(cardBrand: String, messageVersion: String): Transaction {
@@ -108,13 +109,22 @@ class NetceteraHolder @Inject constructor() {
     }
 
 
-    private fun getThreeDS2ConfigParams(context: Context): ConfigParameters {
+    private fun getThreeDS2ConfigParams(context: Context, apiKey: String): ConfigParameters {
         val assetManager = context.assets
-        return ConfigurationBuilder().license(assetManager.readLicense()).configureScheme(
+        return ConfigurationBuilder()
+            .apiKey(apiKey)
+            .configureScheme(
             SchemeConfiguration.visaSchemeConfiguration()
                 .encryptionPublicKeyFromAssetCertificate(assetManager, "acs2022.pem")
                 .rootPublicKeyFromAssetCertificate(assetManager, "acs2022.pem").build()
         ).build()
+    }
+
+    private fun getThreeDS2UICustomizationMap(): Map<UiCustomizationType, UiCustomization> {
+        return hashMapOf<UiCustomizationType, UiCustomization>().apply {
+            put(UiCustomizationType.DEFAULT, getThreeDS2UICustomization())
+            put(UiCustomizationType.DARK, getThreeDS2UICustomization())
+        }
     }
 
     private fun getThreeDS2UICustomization(): UiCustomization {

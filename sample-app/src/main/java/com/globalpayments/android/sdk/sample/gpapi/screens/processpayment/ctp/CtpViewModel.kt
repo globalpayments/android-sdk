@@ -38,9 +38,10 @@ class CtpViewModel(application: Application) : AndroidViewModel(application) {
                     .generateTransactionKey(
                         GPAPIConfigurationUtils.buildDefaultGpApiConfig(
                             sharedAppPreferences.gpAPIConfiguration ?: GPAPIConfiguration.fromBuildConfig()
-                        )
-                    )
-                    .accessToken
+                        ).apply {
+                            permissions = arrayOf("PMT_POST_Create_Single", "ACC_GET_Single")
+                        }
+                    ).accessToken
                 screenModel.update { it.copy(accessToken = accessToken) }
             } catch (exception: Exception) {
                 onErrorReceived(exception)
@@ -82,7 +83,7 @@ class CtpViewModel(application: Application) : AndroidViewModel(application) {
     private suspend fun captureCTP(cardToken: String, amount: String) = withContext(Dispatchers.IO) {
         val card = CreditCardData().apply {
             token = cardToken
-            mobileType = MobilePaymentMethodType.CLICK_TO_PAY;
+            mobileType = MobilePaymentMethodType.CLICK_TO_PAY
             cardHolderName = "James Mason#"
         }
         return@withContext card

@@ -10,7 +10,7 @@ Global Payments uses the Netcetera SDK for 3DS
 
 - Netcetera 3DS sdk - in the form of an `.aar` android library you can get this from the Global
   Payments Support Team
-- license - both sandbox and production can be retrieved from Global Payments support team
+- API key - can be retrieved from Global Payments support team
 - acs certificate - in the form of `.pem` can be retrieved from Global Payments support team
 
 ## Installation
@@ -22,7 +22,7 @@ Global Payments uses the Netcetera SDK for 3DS
   implementation files("libs/3ds-sdk.aar")
 ```
 
-- place the license and certificate files in the `assets` directory of your app
+- place certificate file in the `assets` directory of your app
 
 ## Integration
 
@@ -32,20 +32,20 @@ The GP calls can be done either from the app or from your server integration.
   background thread
 
 ```kotlin
-fun initiateNetceteraSDK(context: Context) {
+fun initiateNetceteraSDK(context: Context, apiKey: String) {
   ThreeDS2ServiceInstance.get().initialize(
     context,
-    getThreeDS2ConfigParams(context),
+    getThreeDS2ConfigParams(context, apiKey),
     Locale.getDefault().language,
-    getThreeDS2UICustomization()
+    getThreeDS2UICustomizationMap()
   )
 }
 
 
-fun getThreeDS2ConfigParams(context: Context): ConfigParameters {
+fun getThreeDS2ConfigParams(context: Context, apiKey: String): ConfigParameters {
   val assetManager = context.assets
   return ConfigurationBuilder()
-    .license(assetManager.readLicense())
+    .apiKey(apiKey)
     .configureScheme(
       SchemeConfiguration.visaSchemeConfiguration()
         .encryptionPublicKeyFromAssetCertificate(assetManager, "acs.pem")
@@ -55,12 +55,16 @@ fun getThreeDS2ConfigParams(context: Context): ConfigParameters {
     .build()
 }
 
+fun getThreeDS2UICustomizationMap(): Map<UiCustomizationType, UiCustomization> {
+  return hashMapOf<UiCustomizationType, UiCustomization>().apply {
+    put(UiCustomizationType.DEFAULT, getThreeDS2UICustomization())
+    put(UiCustomizationType.DARK, getThreeDS2UICustomization())
+  }
+}
+
 fun getThreeDS2UICustomization(): UiCustomization {
   return UiCustomization()
 }
-
-fun AssetManager.readLicense() =
-  this.open("license").bufferedReader().use(BufferedReader::readText)
 ```
 
 - check if the credit card is enrolled in the 3ds process

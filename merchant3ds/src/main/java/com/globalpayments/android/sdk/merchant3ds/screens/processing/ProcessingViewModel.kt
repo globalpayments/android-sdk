@@ -95,11 +95,11 @@ class ProcessingViewModel @Inject constructor(
     }
 
 
-    fun init3DS(context: Context) = viewModelScope.launch(Dispatchers.IO) {
+    fun init3DS(context: Context, apiKey: String) = viewModelScope.launch(Dispatchers.IO) {
         try {
             val messageVersion = state.transactionModel.messageVersion.takeIf(String::isNotBlank) ?: return@launch
             state = state.copy(transactionModel = state.transactionModel.copy(messageVersion = ""))
-            netceteraHolder.init3DS(context)
+            netceteraHolder.init3DS(context, apiKey)
             transaction = netceteraHolder.createTransaction(cardType, messageVersion)
             val netceteraParams = transaction?.authenticationRequestParameters ?: throw TryAnotherCardException()
             authenticateTransaction(netceteraParams)
