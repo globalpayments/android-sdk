@@ -21,6 +21,7 @@ import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.AchDire
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.BNPLDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.CTPDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.EbtDirection
+import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.GPEcom3DSDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.GooglePayDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.HostedFieldsDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.PayLinkDirection
@@ -101,10 +102,16 @@ fun ProcessAPaymentMenuScreen() {
                 onClick = { coroutineScope.launch { NavigationManager.navigate(BNPLDirection) } }
             )
             GPButton(
-                modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
+                modifier = Modifier.padding(top = 20.dp),
                 title = "Click to Pay",
                 description = "Present a digital wallet of stored cards for easier checkout.",
                 onClick = { coroutineScope.launch { NavigationManager.navigate(CTPDirection) } }
+            )
+            GPButton(
+                modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
+                title = "GP-ECOM 3DS",
+                description = "Process payments through GP-ECOM, with 3DS.",
+                onClick = { coroutineScope.launch { NavigationManager.navigate(GPEcom3DSDirection) } }
             )
         }
     }

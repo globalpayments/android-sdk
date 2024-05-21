@@ -49,7 +49,7 @@
     <string name="transaction_status">Transaction Status:</string>
     <string name="deposit_reference">Deposit Reference:</string>
     <string name="merchant_id">Merchant ID:</string>
-    <string name="api_key">API Key:</string>
+    <string name="api_key">API Key (Netcetera):</string>
     <string name="system_hierarchy">System Hierarchy:</string>
     <string name="start_date">Start Date:</string>
     <string name="end_date">End Date:</string>
@@ -408,4 +408,18 @@
     <string name="unified_payments_api_long_description">Process payments through our API.</string>
     <string name="card_cvv">CVV</string>
     <string name="accounts">Accounts</string>
+    <string name="perm_label">GP Sample Application custom permission</string>
+    <string name="perm_description">GP Sample Application custom permission</string>
+
+    <string name="ecom_threeds">GP-ECOM with 3DS</string>
+    <string name="ecom_threeds_long_description">Use GP-ECOM with 3DS</string>
+    <string name="account_id">Account ID</string>
+    <string name="rebate_password">Rebate Password</string>
+    <string name="refund_password">Refund Password</string>
+    <string name="shared_secret">Shared Secret</string>
+    <string name="merchant_contact_url_configuration">MERCHANT CONTACT URL</string>
+    <string name="secure_3d_version">Secure 3D version</string>
+    <string name="sha_hash_type">SHA Hash Type</string>
+    <string name="status_url">STATUS URL</string>
+    <string name="gp_ecom_configuration">GP ECOM Configuration</string>
 </resources>

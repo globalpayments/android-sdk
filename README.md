@@ -56,6 +56,8 @@ A [sample app](sample-app) of how to integrate java-sdk directly into your mobil
 - To run Netcetera 3DS sample place the `acs.pem` files into the `assets` folder and update
   `configuration.properties` with the `apiKey` so that the Netcetera 3DS SDK can initialize
 - Select `sample-app` from configuration and run the app
+- If you want to use the `sample-app` with GP-Ecom and Netcetera 3DS SDK make sure to set the
+  `useEcom=true` in the `configuration.properties` and set the appropriate fields for GP-Ecom
 
 #### Test Card Data
 

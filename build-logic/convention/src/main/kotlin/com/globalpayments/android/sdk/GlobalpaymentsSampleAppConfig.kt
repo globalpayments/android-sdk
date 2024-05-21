@@ -5,7 +5,7 @@ import org.gradle.api.Project
 import org.jetbrains.kotlin.konan.properties.Properties
 
 internal fun Project.configureSampleApp(
-    commonExtension: CommonExtension<*, *, *, *, *>
+    commonExtension: CommonExtension<*, *, *, *, *, *>
 ) {
     val configProperties = Properties()
     if (file("local.properties").exists()) {
@@ -35,5 +35,13 @@ internal fun Project.configureSampleApp(
         buildConfigField("String", "CHANNEL", "\"${configProperties.getProperty("channel")}\"")
         buildConfigField("String", "ENVIRONMENT", "\"${configProperties.getProperty("environment")}\"")
         buildConfigField("String", "API_KEY", "\"${configProperties.getProperty("apiKey")}\"")
+        buildConfigField("String", "ACCOUNT_ID", "\"${configProperties.getProperty("accountId")}\"")
+        buildConfigField("String", "REBATE_PASSWORD", "\"${configProperties.getProperty("rebatePassword")}\"")
+        buildConfigField("String", "REFUND_PASSWORD", "\"${configProperties.getProperty("refundPassword")}\"")
+        buildConfigField("String", "SHARED_SECRET", "\"${configProperties.getProperty("sharedSecret")}\"")
+        buildConfigField("String", "MERCHANT_CONTACT_URL", "\"${configProperties.getProperty("merchantContactUrl")}\"")
+        buildConfigField("String", "SECURE_3D_VERSION", "\"${configProperties.getProperty("secure3DVersion")}\"")
+        buildConfigField("String", "SHA_HASH_TYPE", "\"${configProperties.getProperty("shaHashType")}\"")
+        buildConfigField("Boolean", "USE_GPECOM", configProperties.getProperty("useGPEcom"))
     }
 }

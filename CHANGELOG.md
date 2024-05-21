@@ -4,7 +4,13 @@
 
 # Changelog
 
-## Latest Version - v1.1.34 (04/18/24)
+## Latest Version - v1.1.35 (05/21/24)
+
+### Enhancements:
+
+* Add Netcetera SDK support for GpEcom
+
+## v1.1.34 (04/18/24)
 
 ### Enhancements:
 

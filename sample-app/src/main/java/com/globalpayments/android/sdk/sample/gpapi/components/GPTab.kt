@@ -67,7 +67,7 @@ fun <T> GPTab(
 fun Modifier.tabIndicatorOffset(
     currentTabPosition: TabPosition,
     horizontalPadding: Dp,
-): Modifier = composed(
+): Modifier = this.then(composed(
     inspectorInfo = debugInspectorInfo {
         name = "tabIndicatorOffset"
         value = currentTabPosition
@@ -75,11 +75,13 @@ fun Modifier.tabIndicatorOffset(
 ) {
     val currentTabWidth by animateDpAsState(
         targetValue = currentTabPosition.width,
-        animationSpec = tween(durationMillis = 250, easing = FastOutSlowInEasing)
+        animationSpec = tween(durationMillis = 250, easing = FastOutSlowInEasing),
+        label = "currentTabWidth"
     )
     val indicatorOffset by animateDpAsState(
         targetValue = currentTabPosition.left,
-        animationSpec = tween(durationMillis = 250, easing = FastOutSlowInEasing)
+        animationSpec = tween(durationMillis = 250, easing = FastOutSlowInEasing),
+        label = "indicatorOffset"
     )
     padding(start = horizontalPadding)
         .padding(vertical = 3.dp)
@@ -87,7 +89,7 @@ fun Modifier.tabIndicatorOffset(
         .wrapContentSize(Alignment.BottomStart)
         .offset(x = indicatorOffset)
         .width(currentTabWidth - horizontalPadding * 2)
-}
+})
 
 @Composable
 fun GPTabIndicator(

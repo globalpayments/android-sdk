@@ -25,6 +25,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.global.api.entities.enums.Channel
 import com.global.api.entities.enums.Environment
 import com.global.api.entities.enums.IntervalToExpire
+import com.global.api.entities.enums.Secure3dVersion
+import com.global.api.entities.enums.ShaHashType
+import com.globalpayments.android.sdk.sample.BuildConfig
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.common.theme.Background
 import com.globalpayments.android.sdk.sample.gpapi.components.GPDropdown
@@ -44,10 +47,14 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
             .padding(horizontal = 25.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         GPScreenTitle(
             modifier = Modifier,
-            title = stringResource(id = R.string.configuration)
+            title = stringResource(
+                id = if (BuildConfig.USE_GPECOM)
+                    R.string.gp_ecom_configuration
+                else
+                    R.string.gp_api_configuration
+            )
         )
 
         Divider(
@@ -64,7 +71,7 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     .verticalScroll(rememberScrollState())
                     .padding(bottom = 100.dp),
             ) {
-
+                if (!BuildConfig.USE_GPECOM)
                 GPInputField(
                     modifier = Modifier.padding(top = 17.dp),
                     title = R.string.app_id,
@@ -72,6 +79,8 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     onValueChanged = vm::appIdChanged,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
+
+                if (!BuildConfig.USE_GPECOM)
                 GPInputField(
                     modifier = Modifier.padding(top = 10.dp),
                     title = R.string.app_key,
@@ -79,6 +88,7 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     onValueChanged = vm::appKeyChanged,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
+
                 GPInputField(
                     modifier = Modifier.padding(top = 10.dp),
                     title = R.string.merchant_id,
@@ -86,6 +96,16 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     onValueChanged = vm::merchantIdChanged,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
+
+                if (BuildConfig.USE_GPECOM)
+                GPInputField(
+                    modifier = Modifier.padding(top = 10.dp),
+                    title = R.string.account_id,
+                    value = screenModel.accountId,
+                    onValueChanged = vm::accountIdChanged,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
+
                 GPInputField(
                     modifier = Modifier.padding(top = 10.dp),
                     title = R.string.api_key,
@@ -94,56 +114,43 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
 
-                Row(
-                    modifier = Modifier
-                        .padding(top = 10.dp)
-                        .fillMaxWidth()
-                ) {
-                    GPInputField(
-                        modifier = Modifier
-                            .padding(end = 6.dp)
-                            .weight(1f),
-                        title = "Transaction Processing Account Id",
-                        value = screenModel.transactionProcessingAccountId,
-                        onValueChanged = vm::transactionProcessingAccountIdChanged,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-                    )
-                    GPInputField(
-                        modifier = Modifier
-                            .padding(start = 6.dp)
-                            .weight(1f),
-                        title = R.string.transaction_processing_account_name,
-                        value = screenModel.transactionProcessingAccountName,
-                        onValueChanged = vm::transactionProcessingAccountNameChanged,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-                    )
-                }
+                if (!BuildConfig.USE_GPECOM)
+                GPInputField(
+                    modifier = Modifier.padding(top = 10.dp),
+                    title = "Transaction Processing Account Id",
+                    value = screenModel.transactionProcessingAccountId,
+                    onValueChanged = vm::transactionProcessingAccountIdChanged,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
 
-                Row(
-                    modifier = Modifier
-                        .padding(top = 10.dp)
-                        .fillMaxWidth()
-                ) {
-                    GPInputField(
-                        modifier = Modifier
-                            .padding(end = 6.dp)
-                            .weight(1f),
-                        title = "Tokenization Account Id",
-                        value = screenModel.tokenizationAccountId,
-                        onValueChanged = vm::tokenizationAccountIdChanged,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-                    )
-                    GPInputField(
-                        modifier = Modifier
-                            .padding(start = 6.dp)
-                            .weight(1f),
-                        title = "Tokenization Account Name",
-                        value = screenModel.tokenizationAccountName,
-                        onValueChanged = vm::tokenizationAccountNameChanged,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-                    )
-                }
+                if (!BuildConfig.USE_GPECOM)
+                GPInputField(
+                    modifier = Modifier.padding(top = 10.dp),
+                    title = R.string.transaction_processing_account_name,
+                    value = screenModel.transactionProcessingAccountName,
+                    onValueChanged = vm::transactionProcessingAccountNameChanged,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
 
+                if (!BuildConfig.USE_GPECOM)
+                GPInputField(
+                    modifier = Modifier.padding(top = 10.dp),
+                    title = "Tokenization Account Id",
+                    value = screenModel.tokenizationAccountId,
+                    onValueChanged = vm::tokenizationAccountIdChanged,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
+
+                if (!BuildConfig.USE_GPECOM)
+                GPInputField(
+                    modifier = Modifier.padding(top = 10.dp),
+                    title = "Tokenization Account Name",
+                    value = screenModel.tokenizationAccountName,
+                    onValueChanged = vm::tokenizationAccountNameChanged,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
+
+                if (!BuildConfig.USE_GPECOM)
                 GPInputField(
                     modifier = Modifier.padding(top = 10.dp),
                     title = "Risk Assessment Account Id",
@@ -152,6 +159,7 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
 
+                if (!BuildConfig.USE_GPECOM)
                 GPInputField(
                     modifier = Modifier.padding(top = 10.dp),
                     title = "Data Account Id",
@@ -160,6 +168,7 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
 
+                if (!BuildConfig.USE_GPECOM)
                 GPInputField(
                     modifier = Modifier.padding(top = 10.dp),
                     title = "Dispute Management Account Id",
@@ -168,12 +177,39 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
 
+                if (BuildConfig.USE_GPECOM)
+                GPInputField(
+                    modifier = Modifier.padding(top = 10.dp),
+                    title = R.string.rebate_password,
+                    value = screenModel.rebatePassword,
+                    onValueChanged = vm::rebatePasswordChanged,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
+
+                if (BuildConfig.USE_GPECOM)
+                GPInputField(
+                    modifier = Modifier.padding(top = 10.dp),
+                    title = R.string.refund_password,
+                    value = screenModel.refundPassword,
+                    onValueChanged = vm::refundPasswordChanged,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
+
+                if (BuildConfig.USE_GPECOM)
+                GPInputField(
+                    modifier = Modifier.padding(top = 10.dp),
+                    title = R.string.shared_secret,
+                    value = screenModel.sharedSecret,
+                    onValueChanged = vm::sharedSecretChanged,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
+
+                if (!BuildConfig.USE_GPECOM)
                 Row(
                     modifier = Modifier
                         .padding(top = 10.dp)
                         .fillMaxWidth()
                 ) {
-
                     GPInputField(
                         modifier = Modifier
                             .padding(end = 6.dp)
@@ -183,6 +219,7 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                         onValueChanged = vm::secondsToExpireChanged,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next, keyboardType = KeyboardType.Decimal)
                     )
+
                     GPDropdown(
                         modifier = Modifier
                             .padding(start = 6.dp)
@@ -208,6 +245,7 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                         values = Environment.entries,
                         onValueSelected = vm::environmentChanged
                     )
+
                     GPDropdown(
                         modifier = Modifier
                             .padding(start = 6.dp)
@@ -219,6 +257,7 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     )
                 }
 
+                if (!BuildConfig.USE_GPECOM)
                 Row(
                     modifier = Modifier
                         .padding(top = 10.dp)
@@ -233,6 +272,7 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                         onValueChanged = vm::countryChanged,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                     )
+
                     GPInputField(
                         modifier = Modifier
                             .padding(start = 6.dp)
@@ -244,6 +284,33 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     )
                 }
 
+                if (BuildConfig.USE_GPECOM)
+                Row(
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .fillMaxWidth()
+                ) {
+                    GPDropdown(
+                        modifier = Modifier
+                            .padding(end = 6.dp)
+                            .weight(1f),
+                        title = R.string.secure_3d_version,
+                        selectedValue = screenModel.secure3DVersion,
+                        values = Secure3dVersion.entries,
+                        onValueSelected = vm::secure3DVersionChanged
+                    )
+
+                    GPDropdown(
+                        modifier = Modifier
+                            .padding(start = 6.dp)
+                            .weight(1f),
+                        title = R.string.sha_hash_type,
+                        selectedValue = screenModel.shaHashType,
+                        values = ShaHashType.entries,
+                        onValueSelected = vm::shaHashTypeChanged
+                    )
+                }
+
                 GPInputField(
                     modifier = Modifier.padding(top = 10.dp),
                     title = R.string.challenge_url_configuration,
@@ -251,6 +318,7 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     onValueChanged = vm::challengeNotificationUrlChanged,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
+
                 GPInputField(
                     modifier = Modifier.padding(top = 10.dp),
                     title = R.string.method_url_configuration,
@@ -258,6 +326,17 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     onValueChanged = vm::methodNotificationUrlChanged,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
+
+                if (BuildConfig.USE_GPECOM)
+                GPInputField(
+                    modifier = Modifier.padding(top = 10.dp),
+                    title = R.string.merchant_contact_url_configuration,
+                    value = screenModel.merchantContactUrl,
+                    onValueChanged = vm::merchantContactUrlChanged,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                )
+
+                if (!BuildConfig.USE_GPECOM)
                 GPInputField(
                     modifier = Modifier.padding(top = 10.dp),
                     title = R.string.service_url_configuration,
@@ -265,14 +344,15 @@ fun ConfigScreen(vm: ConfigViewModel = viewModel()) {
                     onValueChanged = vm::serviceUrlChanged,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
+
+                if (!BuildConfig.USE_GPECOM)
                 GPInputField(
                     modifier = Modifier.padding(top = 10.dp),
-                    title = "Status Url",
+                    title = stringResource(R.string.status_url),
                     value = screenModel.statusUrl,
                     onValueChanged = vm::statusUrlChanged,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
                 )
-
             }
 
             GPSubmitButton(

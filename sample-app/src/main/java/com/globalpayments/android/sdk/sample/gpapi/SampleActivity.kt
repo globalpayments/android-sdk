@@ -32,6 +32,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.globalpayments.android.sdk.sample.BuildConfig
 import com.globalpayments.android.sdk.sample.R
 import com.globalpayments.android.sdk.sample.gpapi.navigation.NavigationManager
 import com.globalpayments.android.sdk.sample.gpapi.navigation.SampleAppNavHost
@@ -40,8 +41,10 @@ import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.Directi
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.HomeDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.navigate
 import com.globalpayments.android.sdk.sample.utils.AppPreferences
-import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfiguration.Companion.fromBuildConfig
+import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfiguration
 import com.globalpayments.android.sdk.sample.utils.configuration.GPAPIConfigurationUtils
+import com.globalpayments.android.sdk.sample.utils.configuration.GPEcomConfiguration
+import com.globalpayments.android.sdk.sample.utils.configuration.GPEcomConfigurationUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -56,9 +59,14 @@ class SampleActivity : FragmentActivity() {
             SampleAppScreen()
         }
         lifecycleScope.launch(Dispatchers.IO) {
-            GPAPIConfigurationUtils.initializeDefaultGPAPIConfiguration(
-                sharedPreferences.gpAPIConfiguration ?: fromBuildConfig()
-            )
+            if (BuildConfig.USE_GPECOM)
+                GPEcomConfigurationUtils.initializeDefaultGPEcomConfiguration(
+                    sharedPreferences.gpEcomConfiguration ?: GPEcomConfiguration.fromBuildConfig()
+                )
+            else
+                GPAPIConfigurationUtils.initializeDefaultGPAPIConfiguration(
+                    sharedPreferences.gpAPIConfiguration ?: GPAPIConfiguration.fromBuildConfig()
+                )
         }
     }
 }

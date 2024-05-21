@@ -33,6 +33,11 @@ object HostedFieldsDirection : NavigationDirection {
     override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
 }
 
+object GPEcom3DSDirection : NavigationDirection {
+    override val arguments: Bundle? = null
+    override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
+}
+
 object UnifiedPaymentsAPIDirection : NavigationDirection {
     override val arguments: Bundle? = null
     override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }

@@ -2,9 +2,9 @@
     <img src="https://developer.globalpay.com/static/media/logo.dab7811d.svg" alt="Global Payments logo" title="Global Payments" align="right" width="225" />
 </a>
 
-# Netcetera 3DS SDK integration
+# Netcetera 3DS SDK GP-ECOM integration
 
-Global Payments uses the Netcetera SDK for 3DS
+Global Payments Ecom cam be configured to use the Netcetera SDK for 3DS
 
 ## Requirements
 
@@ -26,7 +26,7 @@ Global Payments uses the Netcetera SDK for 3DS
 
 ## Integration
 
-The GP calls can be done either from the app or from your server integration.
+The GP Ecom calls can be done from the app.
 
 - instantiate the Netcetera SDK; because this is a heavy CPU operation we recommend to do it on a
   background thread
@@ -67,51 +67,82 @@ fun getThreeDS2UICustomization(): UiCustomization {
 }
 ```
 
-- check if the credit card is enrolled in the 3ds process
+- capture card data
 
 ```kotlin
-val card = CreditCardData()
+val card = CreditCardData().apply {
+    this.number = model.cardNumber
+    this.expMonth = model.cardMonth.toInt()
+    this.expYear = model.cardYear.toInt()
+    this.cardHolderName = model.cardHolderName
+    this.isCardPresent = true
+}
+```
+
+- add the card as a payment method, using the card data, to the customer
+
+```kotlin
+val addPaymentMethod = customer.addPaymentMethod(paymentId, card).create()
+```
+
+- create a recurring payment method
+
+```kotlin
+val recurringPaymentMethod = RecurringPaymentMethod(customer.key, paymentId)
+
+```
+
+- check if the credit card from the recurring payment method is enrolled in the 3ds process
+
+```kotlin
 val secureEcom = Secure3dService
-    .checkEnrollment(card)
+    .checkEnrollment(recurringPaymentMethod)
     .withCurrency(Currency)
     .withAmount(BigDecimal(Amount))
     .withAuthenticationSource(AuthenticationSource.MobileSDK)
-    .execute(Constants.DEFAULT_GPAPI_CONFIG)
+    .execute()
 response.enrolledStatus == "ENROLLED"  
 ```
 
 - create a Netcetera transaction using the Netcetera SDK and the response from the previous GP
-  call   
-  You will need to map the card brand to the `DsRidValues`
+  call
+  You will need to determine the card brand from the card number and map it to the `DsRidValues`
 
 ```kotlin
 val netceteraTransaction = threeDS2Service.createTransaction(
-    getDsRidValuesForCard(card),
-    secureEcom.messageVersion
+    getDsRidValuesForCardNumber(card.number),
+    secureEcom.acsEndVersion
 )
 val netceteraParams = transaction?.authenticationRequestParameters
 ```
 
-- initiate the authentication on GP side using the netceteraParams created at the previous step
+- initiate the authentication on GP Ecom side using the netceteraParams created at the previous
+  step
 
 ```kotlin
 val threeDSecure = Secure3dService
-    .initiateAuthentication(card, secureEcom)
-    .withAuthenticationSource(AuthenticationSource.MobileSDK)
+    .initiateAuthentication(recurringPaymentMethod, secureEcom)
     .withAmount(BigDecimal())
     .withCurrency("Currency")
+    .withAuthenticationSource(AuthenticationSource.MobileSDK)
     .withOrderCreateDate(DateTime.now())
-    .withMobileData(MobileData().apply {
-        applicationReference = netceteraParams.sdkAppID
-        sdkTransReference = netceteraParams.sdkTransactionID
-        referenceNumber = netceteraParams.sdkReferenceNumber
-        sdkInterface = SdkInterface.Both
-        encodedData = netceteraParams.deviceData
-        maximumTimeout = 15
-        ephemeralPublicKey = JsonDoc.parse(netceteraParams.sdkEphemeralPublicKey)
-        setSdkUiTypes(*SdkUiType.values())
-    })
-    .execute(Constants.DEFAULT_GPAPI_CONFIG)
+    .withOrderId(secureEcom.orderId)
+    .withAddress(billingAddress, AddressType.Billing)
+    .withAddress(shippingAddress, AddressType.Shipping)
+    .withAddressMatchIndicator(false)
+    .withMethodUrlCompletion(MethodUrlCompletion.No)
+    .withMessageCategory(MessageCategory.PaymentAuthentication)
+    .withCustomerEmail(customerEmail)
+    .withApplicationId(netceteraParams.sdkAppID)
+    .withSdkInterface(SdkInterface.Both)
+    .withSdkUiTypes(*SdkUiType.entries.toTypedArray())
+    .withReferenceNumber(netceteraParams.sdkReferenceNumber)
+    .withSdkTransactionId(netceteraParams.sdkTransactionID)
+    .withEncodedData(netceteraParams.deviceData)
+    .withMaximumTimeout(5)
+    .withEphemeralPublicKey(netceteraParams.sdkEphemeralPublicKey)
+    .withChallengeRequestIndicator(ChallengeRequestIndicator.NoPreference)
+    .execute()
 ```
 
 - check if the challenge is required from the previous call
@@ -127,7 +158,7 @@ threeDSecure.status == "CHALLENGE_REQUIRED"
     acsRefNumber = threeDSecure.acsReferenceNumber
     acsSignedContent = threeDSecure.payerAuthenticationRequest
     acsTransactionID = threeDSecure.acsTransactionId
-    set3DSServerTransactionID(threeDSecure.providerServerTransRef)
+    set3DSServerTransactionID(threeDSecure.serverTransactionId)
 }
 ```
 
@@ -164,21 +195,11 @@ threeDSecure.status == "CHALLENGE_REQUIRED"
 completionEvent?.transactionStatus != "Y" //the challenge was completed successfully
 ```
 
-- authenticate transaction on the GP and then set the response on the card used for this transaction
-
-```kotlin
-val transaction = Secure3dService
-    .getAuthenticationData()
-    .withServerTransactionId(threeDSecure.serverTransactionId)
-    .execute(Secure3dVersion.TWO, Constants.DEFAULT_GPAPI_CONFIG)
-card.threeDSecure = transaction
-```
-
 - charge the card with the amount authorized
 
 ```kotlin
-val transaction = card
+val transaction = recurringPaymentMethod
     .charge(BigDecimal(Amount))
     .withCurrency(Currency)
-    .execute(Constants.DEFAULT_GPAPI_CONFIG)
+    .execute()
 ```

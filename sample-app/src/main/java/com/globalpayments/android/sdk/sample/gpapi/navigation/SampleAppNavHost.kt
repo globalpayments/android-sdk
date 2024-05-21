@@ -22,6 +22,7 @@ import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.Dispute
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.EbtDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.ExpandYourIntegrationDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.FileProcessingDirection
+import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.GPEcom3DSDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.GooglePayDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.HomeDirection
 import com.globalpayments.android.sdk.sample.gpapi.navigation.directions.HostedFieldsDirection
@@ -51,6 +52,7 @@ import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.bnpl.B
 import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.ctp.CtpScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.ebt.EbtScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.googlepay.GooglePayScreen
+import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.gpecom3ds.GPEcom3DSScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.hostedfields.HostedFieldsScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.paybylink.PayByLinkScreen
 import com.globalpayments.android.sdk.sample.gpapi.screens.processpayment.paypal.PayPalScreen
@@ -104,6 +106,7 @@ fun SampleAppNavHost(
         composable(EbtDirection::class.toString()) { EbtScreen() }
         composable(BNPLDirection::class.toString()) { BnplScreen() }
         composable(CTPDirection::class.toString()) { CtpScreen() }
+        composable(GPEcom3DSDirection::class.toString()) { GPEcom3DSScreen() }
     }
 
 }

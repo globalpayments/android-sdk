@@ -49,6 +49,12 @@ object NetceteraInstanceHolder {
         threeDS2Service.createTransaction(cardBrand.asDsRidValue(), messageVersion)
     }
 
+    suspend fun createTransactionFromCardNumber(cardNumber: String, messageVersion: String): Transaction = withContext(Dispatchers.IO) {
+        val dsRid = getDsRidValuesForCardFromCardNumber(cardNumber)
+        val transaction = threeDS2Service.createTransaction(dsRid, messageVersion)
+        return@withContext transaction
+    }
+
     suspend fun Transaction.startChallenge(
         activity: Activity,
         params: ChallengeParameters,
@@ -108,5 +114,26 @@ object NetceteraInstanceHolder {
         "jcb" -> DsRidValues.JCB
         "cb" -> DsRidValues.CB
         else -> null
+    }
+
+    private fun getDsRidValuesForCardFromCardNumber(cardNumber: String): String? {
+        val visaPattern = "^4[0-9]{12}(?:[0-9]{3})?$"
+        val masterCardPattern = "^(5[1-5][0-9]{14}|2[2-7][0-9]{14})$"
+        val amexPattern = "^3[47][0-9]{13}$"
+        val dinersPattern = "^3(?:0[0-5]|[68][0-9])[0-9]{11}$"
+        val unionPayPattern = "^(62[0-9]{14,17})$"
+        val jcbPattern = "^(?:2131|1800|35\\d{3})\\d{11}$"
+        val cbPattern = "^30[0-5][0-9]{11}$"
+
+        return when {
+            cardNumber.matches(visaPattern.toRegex()) -> DsRidValues.VISA
+            cardNumber.matches(masterCardPattern.toRegex()) -> DsRidValues.MASTERCARD
+            cardNumber.matches(amexPattern.toRegex()) -> DsRidValues.AMEX
+            cardNumber.matches(dinersPattern.toRegex()) -> DsRidValues.DINERS
+            cardNumber.matches(unionPayPattern.toRegex()) -> DsRidValues.UNION
+            cardNumber.matches(jcbPattern.toRegex()) -> DsRidValues.JCB
+            cardNumber.matches(cbPattern.toRegex()) -> DsRidValues.CB
+            else -> null
+        }
     }
 }

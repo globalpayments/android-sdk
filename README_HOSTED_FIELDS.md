@@ -22,21 +22,21 @@
 ```kotlin
 class JSBridge(private val context: Context) {
 
-        @JavascriptInterface
-        fun onLoadingStarted() {
-            //show progress
-        }
-
-        @JavascriptInterface
-        fun onTokenizationError(tag: String, error: String) {
-            //show error    
-        }
-
-        @JavascriptInterface
-        fun onTokenizationSuccess(token: String, cardType: String) {
-           //handle received token
-        }
+    @JavascriptInterface
+    fun onLoadingStarted() {
+        //show progress
     }
+
+    @JavascriptInterface
+    fun onTokenizationError(tag: String, error: String) {
+        //show error    
+    }
+
+    @JavascriptInterface
+    fun onTokenizationSuccess(token: String, cardType: String) {
+        //handle received token
+    }
+}
 ```
 
 - Tell the WebView from where to load our html. For mor information
@@ -44,31 +44,31 @@ class JSBridge(private val context: Context) {
 
 ```kotlin
  class LocalContentWebViewClient(
-        private val assetLoader: WebViewAssetLoader,
-        private val accessToken: String,
-    ) :
-        WebViewClientCompat() {
-        override fun shouldInterceptRequest(
-            view: WebView,
-            request: WebResourceRequest
-        ): WebResourceResponse? {
-            return assetLoader.shouldInterceptRequest(request.url)
-        }
-
-        override fun onPageFinished(view: WebView, url: String?) {
-            super.onPageFinished(view, url)
-            view.evaluateJavascript("initGlobalPayments('$accessToken')", null)
-        }
+    private val assetLoader: WebViewAssetLoader,
+    private val accessToken: String,
+) :
+    WebViewClientCompat() {
+    override fun shouldInterceptRequest(
+        view: WebView,
+        request: WebResourceRequest
+    ): WebResourceResponse {
+        return assetLoader.shouldInterceptRequest(request.url)
     }
+
+    override fun onPageFinished(view: WebView, url: String?) {
+        super.onPageFinished(view, url)
+        view.evaluateJavascript("initGlobalPayments('$accessToken')", null)
+    }
+}
 ```
 
 - Configure the WebView to load our html file
 
 ```kotlin
 val assetLoader = WebViewAssetLoader.Builder()
-            .setDomain("example.com")
-            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(requireContext()))
-            .build()
+    .setDomain("example.com")
+    .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(requireContext()))
+    .build()
 
 webView.apply {
     settings.javaScriptEnabled = true

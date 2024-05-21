@@ -1,10 +1,15 @@
 package com.globalpayments.android.sdk.sample.repository
 
+import com.global.api.entities.Address
 import com.global.api.entities.MobileData
 import com.global.api.entities.StoredCredential
 import com.global.api.entities.ThreeDSecure
 import com.global.api.entities.Transaction
+import com.global.api.entities.enums.AddressType
 import com.global.api.entities.enums.AuthenticationSource
+import com.global.api.entities.enums.ChallengeRequestIndicator
+import com.global.api.entities.enums.MessageCategory
+import com.global.api.entities.enums.MethodUrlCompletion
 import com.global.api.entities.enums.SdkInterface
 import com.global.api.entities.enums.SdkUiType
 import com.global.api.entities.enums.Secure3dVersion
@@ -13,6 +18,7 @@ import com.global.api.entities.enums.StoredCredentialReason
 import com.global.api.entities.enums.StoredCredentialSequence
 import com.global.api.entities.enums.StoredCredentialType
 import com.global.api.paymentMethods.CreditCardData
+import com.global.api.paymentMethods.RecurringPaymentMethod
 import com.global.api.services.Secure3dService
 import com.global.api.utils.JsonDoc
 import com.globalpayments.android.sdk.sample.common.Constants
@@ -109,6 +115,40 @@ class Secure3DSRepository {
         )
     }
 
+    suspend fun initiateAuthentication(
+        secureEcom: ThreeDSecure,
+        paymentMethod: RecurringPaymentMethod,
+        amount: BigDecimal,
+        billingAddress: Address,
+        shippingAddress: Address,
+        netceteraParams: AuthenticationRequestParameters,
+        currency: String,
+        customerEmail: String,
+    ): ThreeDSecure = withContext(Dispatchers.IO) {
+        return@withContext Secure3dService.initiateAuthentication(paymentMethod, secureEcom)
+            .withAmount(amount)
+            .withCurrency(currency)
+            .withAuthenticationSource(AuthenticationSource.MobileSDK)
+            .withOrderCreateDate(DateTime.now())
+            .withOrderId(secureEcom.orderId)
+            .withAddress(billingAddress, AddressType.Billing)
+            .withAddress(shippingAddress, AddressType.Shipping)
+            .withAddressMatchIndicator(false)
+            .withMethodUrlCompletion(MethodUrlCompletion.No)
+            .withMessageCategory(MessageCategory.PaymentAuthentication)
+            .withCustomerEmail(customerEmail)
+            .withApplicationId(netceteraParams.sdkAppID)
+            .withSdkInterface(SdkInterface.Both)
+            .withSdkUiTypes(*SdkUiType.entries.toTypedArray())
+            .withReferenceNumber(netceteraParams.sdkReferenceNumber)
+            .withSdkTransactionId(netceteraParams.sdkTransactionID)
+            .withEncodedData(netceteraParams.deviceData)
+            .withMaximumTimeout(5)
+            .withEphemeralPublicKey(netceteraParams.sdkEphemeralPublicKey)
+            .withChallengeRequestIndicator(ChallengeRequestIndicator.NoPreference)
+            .execute()
+    }
+
     suspend fun chargeMoney(
         cardToken: String,
         amount: BigDecimal,
@@ -123,6 +163,17 @@ class Secure3DSRepository {
             .charge(amount)
             .withCurrency(currency)
             .execute(Constants.DEFAULT_GPAPI_CONFIG)
+    }
+
+    suspend fun chargeMoney(
+        paymentMethod: RecurringPaymentMethod,
+        amount: BigDecimal,
+        currency: String,
+    ): Transaction = withContext(Dispatchers.IO) {
+        paymentMethod
+            .charge(amount)
+            .withCurrency(currency)
+            .execute()
     }
 
     suspend fun makePaymentRecurring(
@@ -146,13 +197,32 @@ class Secure3DSRepository {
             .execute(Constants.DEFAULT_GPAPI_CONFIG)
     }
 
+    suspend fun makePaymentRecurring(
+        paymentMethod: RecurringPaymentMethod,
+        cardBrandTransactionId: String,
+        amount: BigDecimal,
+        currency: String
+    ): Transaction = withContext(Dispatchers.IO) {
+        val storedCredential = StoredCredential().apply {
+            initiator = StoredCredentialInitiator.CardHolder
+            type = StoredCredentialType.Recurring
+            sequence = StoredCredentialSequence.Subsequent
+            reason = StoredCredentialReason.Incremental
+        }
+        paymentMethod
+            .charge(amount)
+            .withCurrency(currency)
+            .withStoredCredential(storedCredential)
+            .withCardBrandStorage(StoredCredentialInitiator.Merchant, cardBrandTransactionId)
+            .execute(Constants.DEFAULT_GPAPI_CONFIG)
+    }
+
     private suspend fun getAuthenticationData(serverTransactionId: String): ThreeDSecure = withContext(Dispatchers.IO) {
         Secure3dService
             .getAuthenticationData()
             .withServerTransactionId(serverTransactionId)
             .execute(Secure3dVersion.TWO, Constants.DEFAULT_GPAPI_CONFIG)
     }
-
 
     private suspend fun getCardEnrolmentCheck(
         tokenizedCard: CreditCardData,
@@ -165,6 +235,18 @@ class Secure3DSRepository {
             .withAmount(amount)
             .withAuthenticationSource(AuthenticationSource.MobileSDK)
             .execute(Constants.DEFAULT_GPAPI_CONFIG)
+    }
+
+    suspend fun getEcomCardEnrolmentCheck(
+        paymentMethod: RecurringPaymentMethod,
+        amount: BigDecimal,
+        currency: String
+    ): ThreeDSecure = withContext(Dispatchers.IO) {
+        Secure3dService
+            .checkEnrollment(paymentMethod)
+            .withAmount(amount)
+            .withCurrency(currency)
+            .execute()
     }
 
     companion object {

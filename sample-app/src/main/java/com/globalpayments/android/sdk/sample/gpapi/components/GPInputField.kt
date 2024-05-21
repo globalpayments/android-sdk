@@ -37,6 +37,7 @@ fun GPInputField(
     hint: String = "",
     enabled: Boolean = true,
     isMandatory: Boolean = false,
+    singleLine: Boolean = true,
     onValueChanged: (String) -> Unit
 ) {
     Column(
@@ -91,7 +92,8 @@ fun GPInputField(
             colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = borderColor, unfocusedBorderColor = borderColor),
             keyboardActions = keyboardActions,
             keyboardOptions = keyboardOptions,
-            visualTransformation = visualTransformation
+            visualTransformation = visualTransformation,
+            singleLine = singleLine
         )
     }
 }

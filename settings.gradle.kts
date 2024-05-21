@@ -20,3 +20,6 @@ rootProject.name = "GlobalPayments-Android-SDK"
 include(":globalpayments-android-sdk")
 include(":sample-app")
 include(":merchant3ds")
+
+//Temporary fix for https://issuetracker.google.com/issues/315023802
+gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:testClasses"))

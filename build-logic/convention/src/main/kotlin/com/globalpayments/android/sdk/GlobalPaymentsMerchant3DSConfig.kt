@@ -4,7 +4,7 @@ import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Project
 import java.util.Properties
 
-internal fun Project.configureMerchant3DSApp(commonExtension: CommonExtension<*, *, *, *, *>) {
+internal fun Project.configureMerchant3DSApp(commonExtension: CommonExtension<*, *, *, *, *, *>) {
     val configProperties = Properties()
     if (file("local.properties").exists()) {
         configProperties.load(file("local.properties").inputStream())
