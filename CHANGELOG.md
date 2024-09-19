@@ -4,7 +4,13 @@
 
 # Changelog
 
-## Latest Version - v1.1.35 (05/21/24)
+## Latest Version - v1.1.36 (09/19/24)
+
+### Enhancements:
+
+* [GP-API]: Added payers resources - https://developer.globalpay.com/api/payers
+
+## v1.1.35 (05/21/24)
 
 ### Enhancements:
 

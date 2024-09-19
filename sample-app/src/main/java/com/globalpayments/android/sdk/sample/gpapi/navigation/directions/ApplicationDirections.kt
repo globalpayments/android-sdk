@@ -142,3 +142,8 @@ object ConfigDirection : NavigationDirection {
     override val arguments: Bundle? = null
     override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
 }
+
+object PayersDirection : NavigationDirection {
+    override val arguments: Bundle? = null
+    override val navBuilder: NavOptionsBuilder.() -> Unit = { launchSingleTop = true }
+}
